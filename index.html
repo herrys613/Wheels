@@ -20,7 +20,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px 20px;
+      padding: 10px 20px;
       background: #333;
       color: white;
       position: fixed;
@@ -58,8 +58,8 @@
 
     .main-container {
       background: -#007bff;
-      margin: 70px 0px 0px 0px;
-      padding: 0px 0px 20px 0px;
+      margin: 0px 0px 0px 0px;
+      padding: 80px 0px 20px 0px;
       position: relative;
     }
 
@@ -432,6 +432,9 @@
         position: relative;
         /* So we can absolutely position bars */
       }
+      .main-container {
+      padding-top: 60px;
+      }
 
       .hamburger .bar {
         background-color: white;
@@ -569,66 +572,6 @@
         additional: "Premium Sound System",
         color: "White"
       },
-                  {
-        name: "Honda Accord",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "10000 Miles",
-        price: "$319",
-        due: "$2000",
-        features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
-        additional: "Premium Sound System",
-        color: "White"
-      },
-                  {
-        name: "Honda Accord",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "10000 Miles",
-        price: "$319",
-        due: "$2000",
-        features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
-        additional: "Premium Sound System",
-        color: "White"
-      },
-                  {
-        name: "Honda Accord",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "10000 Miles",
-        price: "$319",
-        due: "$2000",
-        features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
-        additional: "Premium Sound System",
-        color: "White"
-      },
-                  {
-        name: "Honda Accord",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "10000 Miles",
-        price: "$319",
-        due: "$2000",
-        features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
-        additional: "Premium Sound System",
-        color: "White"
-      },
-                  {
-        name: "Honda Accord",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "10000 Miles",
-        price: "$319",
-        due: "$2000",
-        features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
-        additional: "Premium Sound System",
-        color: "White"
-      },
       {
         name: "BMW 3 Series",
         image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
@@ -687,52 +630,57 @@
             `).join("");
     }
     generateCars();
-    // Show WhatsApp chat icon after 5 seconds
-    setTimeout(() => {
-      document.getElementById("whatsapp-chat").classList.add("show");
-    }, 5000);
-    // Close the WhatsApp chat icon
-    document.getElementById("close-chat").addEventListener("click", function() {
-      document.getElementById("whatsapp-chat").classList.remove("show");
-    });
-    window.addEventListener("scroll", function() {
-      let mainContainer = document.querySelector(".main-container");
-      let whatsappChat = document.getElementById("whatsapp-chat");
-      let mainBottom = mainContainer.offsetTop + mainContainer.offsetHeight;
-      let scrollPosition = window.scrollY + window.innerHeight;
-      if (scrollPosition >= mainBottom) {
-        whatsappChat.style.position = "absolute";
-        whatsappChat.style.bottom = "20px";
-        whatsappChat.style.opacity = "0"; // Fade out
-      } else {
-        whatsappChat.style.position = "fixed";
-        whatsappChat.style.bottom = "20px";
-        // Show only if it's not manually closed
-        if (!whatsappChat.classList.contains("closed")) {
-          whatsappChat.style.opacity = "1"; // Fully visible
-        }
-      }
-    });
-    // Close button functionality
-    document.getElementById("close-chat").addEventListener("click", function() {
-      let whatsappChat = document.getElementById("whatsapp-chat");
-      whatsappChat.classList.add("closed"); // Mark as closed
-      whatsappChat.style.opacity = "0"; // Hide it permanently
-    });
-    // Prevent reopening after closing manually
-    let lastScrollY = window.scrollY;
-    window.addEventListener("scroll", function() {
-      let whatsappChat = document.getElementById("whatsapp-chat");
-      if (!whatsappChat.classList.contains("closed")) { // Only show if NOT closed
-        if (window.scrollY < lastScrollY) {
-          whatsappChat.style.opacity = "1"; // Show when scrolling up
-        }
-      }
-      lastScrollY = window.scrollY;
-    });
-    document.getElementById("hamburger").addEventListener("click", function() {
-      document.querySelector(".nav-links").classList.toggle("show");
-    });
+    let chatVisible = false; // Track if the chat is shown
+let chatClosed = false;  // Track if the user manually closed it
+
+// Function to show chat after 5 seconds
+setTimeout(() => {
+  if (!chatClosed) { // Only show if not closed manually
+    document.getElementById("whatsapp-chat").classList.add("show");
+    chatVisible = true;
+  }
+}, 5000);
+
+// Scroll event - Prevent chat from showing before 5 seconds
+window.addEventListener("scroll", function () {
+  let whatsappChat = document.getElementById("whatsapp-chat");
+  let mainContainer = document.querySelector(".main-container");
+  let mainBottom = mainContainer.offsetTop + mainContainer.offsetHeight;
+  let scrollPosition = window.scrollY + window.innerHeight;
+
+  // Ensure chat is completely hidden before 5 seconds
+  if (!chatVisible) {
+    whatsappChat.style.opacity = "0"; // Hide it fully
+    return; // Exit function, don't show chat before 5s
+  }
+
+  // Hide chat if scrolled to the bottom
+  if (scrollPosition >= mainBottom) {
+    whatsappChat.style.position = "absolute";
+    whatsappChat.style.bottom = "20px";
+    whatsappChat.style.opacity = "0"; // Fade out
+  } else {
+    whatsappChat.style.position = "fixed";
+    whatsappChat.style.bottom = "20px";
+    if (!chatClosed) {
+      whatsappChat.style.opacity = "1"; // Fully visible
+    }
+  }
+});
+
+// Close chat when clicking the close button
+document.getElementById("close-chat").addEventListener("click", function () {
+  let whatsappChat = document.getElementById("whatsapp-chat");
+  whatsappChat.classList.add("closed");
+  whatsappChat.style.opacity = "0"; 
+  chatClosed = true; // Mark chat as manually closed
+});
+
+// Hamburger menu toggle
+document.getElementById("hamburger").addEventListener("click", function () {
+  document.querySelector(".nav-links").classList.toggle("show");
+});
+
 
     function toggleMenu() {
       const navLinks = document.querySelector('.nav-links');
