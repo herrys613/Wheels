@@ -64,12 +64,64 @@
     }
 
     .container {
+      background: -#007bff;
       max-width: 1200px;
-      margin: auto;
       justify-content: space-around;
       display: flex;
       flex-wrap: wrap;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .search-container {
+      text-align: center;
+      margin: 15px 15px 0px 15px;
+    }
+
+    #search-bar {
+      width: 310px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    #search-bar:focus {
+      border-color: #007bff;
+      box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+    }
+
+    .custom-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      max-height: 150px;
+      overflow-y: auto;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      z-index: 10;
+      display: none;
+      /* Hidden by default */
+    }
+
+    .custom-suggestions li {
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+    }
+
+    .custom-suggestions li:hover {
+      background-color: #f1f1f1;
+    }
+
+    .custom-suggestions li:active {
+      background-color: #e0e0e0;
     }
 
     .car-card {
@@ -113,6 +165,19 @@
       margin: 18px 0px;
       padding: 0px 0px;
       font-size: 13px;
+    }
+
+    .car-card .details>div>p:first-of-type {
+      font-size: 11px;
+      font-weight: 300;
+      margin: 4px 0;
+      color: #333;
+    }
+
+    .car-card .details>div>p:nth-of-type(2) {
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0px 0;
     }
 
     .details div {
@@ -432,8 +497,9 @@
         position: relative;
         /* So we can absolutely position bars */
       }
+
       .main-container {
-      padding-top: 60px;
+        padding-top: 60px;
       }
 
       .hamburger .bar {
@@ -504,6 +570,11 @@
   </header>
 
   <div class="main-container">
+    <div class="search-container">
+      <input type="text" id="search-bar" placeholder="Search cars..." onkeyup="filterCars()" oninput="updateSuggestions()" autocomplete="off">
+      <ul id="car-suggestions" class="custom-suggestions"></ul>
+    </div>
+
     <div class="container" id="car-container">
       <!-- Car posts will be dynamically inserted here -->
     </div>
@@ -572,66 +643,6 @@
         additional: "Premium Sound System",
         color: "White"
       },
-                  {
-        name: "Honda Accord",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "10000 Miles",
-        price: "$319",
-        due: "$2000",
-        features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
-        additional: "Premium Sound System",
-        color: "White"
-      },
-                  {
-        name: "Honda Accord",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "10000 Miles",
-        price: "$319",
-        due: "$2000",
-        features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
-        additional: "Premium Sound System",
-        color: "White"
-      },
-                  {
-        name: "Honda Accord",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "10000 Miles",
-        price: "$319",
-        due: "$2000",
-        features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
-        additional: "Premium Sound System",
-        color: "White"
-      },
-                  {
-        name: "Honda Accord",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "10000 Miles",
-        price: "$319",
-        due: "$2000",
-        features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
-        additional: "Premium Sound System",
-        color: "White"
-      },
-                  {
-        name: "Honda Accord",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "10000 Miles",
-        price: "$319",
-        due: "$2000",
-        features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
-        additional: "Premium Sound System",
-        color: "White"
-      },
       {
         name: "BMW 3 Series",
         image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
@@ -670,16 +681,16 @@
                     <p class="car-name" onclick="openModal(cars[${index}])">${car.name}</p>
                     <div class="details">
                         <div>
-                            <p style="font-size: 11px; font-weight: 300; margin: 4px;">Term</p>
-                            <p style="font-size: 14px; font-weight: 600; margin: 0px;">${car.term}</p>
+                            <p>Term</p>
+                            <p>${car.term}</p>
                         </div>
                         <div>
-                            <p style="font-size: 11px; font-weight: 300; margin: 4px;">Annual Mileage</p>
-                            <p style="font-size: 14px; font-weight: 600; margin: 0;">${car.mileage}</p>
+                            <p>Annual Mileage</p>
+                            <p>${car.mileage}</p>
                         </div>
                         <div>
-                            <p style="font-size: 11px; font-weight: 300; margin: 4px;">Due At Signing</p>
-                            <p style="font-size: 14px; font-weight: 600; margin: 0;">${car.due}</p>
+                            <p>Due At Signing</p>
+                            <p>${car.due}</p>
                         </div>
                     </div>
                     <div>
@@ -691,63 +702,66 @@
     }
     generateCars();
     let chatVisible = false; // Track if the chat is shown
-let chatClosed = false;  // Track if the user manually closed it
-
-// Function to show chat after 5 seconds
-setTimeout(() => {
-  if (!chatClosed) { // Only show if not closed manually
-    document.getElementById("whatsapp-chat").classList.add("show");
-    chatVisible = true;
-  }
-}, 5000);
-
-// Scroll event - Prevent chat from showing before 5 seconds
-window.addEventListener("scroll", function () {
-  let whatsappChat = document.getElementById("whatsapp-chat");
-  let mainContainer = document.querySelector(".main-container");
-  let mainBottom = mainContainer.offsetTop + mainContainer.offsetHeight;
-  let scrollPosition = window.scrollY + window.innerHeight;
-
-  // Ensure chat is completely hidden before 5 seconds
-  if (!chatVisible) {
-    whatsappChat.style.opacity = "0"; // Hide it fully
-    return; // Exit function, don't show chat before 5s
-  }
-
-  // Hide chat if scrolled to the bottom
-  if (scrollPosition >= mainBottom) {
-    whatsappChat.style.position = "absolute";
-    whatsappChat.style.bottom = "20px";
-    whatsappChat.style.opacity = "0"; // Fade out
-  } else {
-    whatsappChat.style.position = "fixed";
-    whatsappChat.style.bottom = "20px";
-    if (!chatClosed) {
-      whatsappChat.style.opacity = "1"; // Fully visible
-    }
-  }
-});
-
-// Close chat when clicking the close button
-document.getElementById("close-chat").addEventListener("click", function () {
-  let whatsappChat = document.getElementById("whatsapp-chat");
-  whatsappChat.classList.add("closed");
-  whatsappChat.style.opacity = "0"; 
-  chatClosed = true; // Mark chat as manually closed
-});
-
+    let chatClosed = false; // Track if the user manually closed it
+    // Function to show chat after 5 seconds
+    setTimeout(() => {
+      if (!chatClosed) { // Only show if not closed manually
+        document.getElementById("whatsapp-chat").classList.add("show");
+        chatVisible = true;
+      }
+    }, 5000);
+    // Scroll event - Prevent chat from showing before 5 seconds
+    window.addEventListener("scroll", function() {
+      let whatsappChat = document.getElementById("whatsapp-chat");
+      let mainContainer = document.querySelector(".main-container");
+      let mainBottom = mainContainer.offsetTop + mainContainer.offsetHeight;
+      let scrollPosition = window.scrollY + window.innerHeight;
+      // Ensure chat is completely hidden before 5 seconds
+      if (!chatVisible) {
+        whatsappChat.style.opacity = "0"; // Hide it fully
+        return; // Exit function, don't show chat before 5s
+      }
+      // Hide chat if scrolled to the bottom
+      if (scrollPosition >= mainBottom) {
+        whatsappChat.style.position = "absolute";
+        whatsappChat.style.bottom = "20px";
+        whatsappChat.style.opacity = "0"; // Fade out
+      } else {
+        whatsappChat.style.position = "fixed";
+        whatsappChat.style.bottom = "20px";
+        if (!chatClosed) {
+          whatsappChat.style.opacity = "1"; // Fully visible
+        }
+      }
+    });
+    // Close chat when clicking the close button
+    document.getElementById("close-chat").addEventListener("click", function() {
+      let whatsappChat = document.getElementById("whatsapp-chat");
+      whatsappChat.classList.add("closed");
+      whatsappChat.style.opacity = "0";
+      chatClosed = true; // Mark chat as manually closed
+    });
 // Hamburger menu toggle
-document.getElementById("hamburger").addEventListener("click", function () {
-  document.querySelector(".nav-links").classList.toggle("show");
+document.getElementById("hamburger").addEventListener("click", function() {
+  toggleMenu();
 });
 
+function toggleMenu() {
+  const navLinks = document.querySelector('.nav-links');
+  const hamburger = document.querySelector('.hamburger');
+  const body = document.body;
 
-    function toggleMenu() {
-      const navLinks = document.querySelector('.nav-links');
-      const hamburger = document.querySelector('.hamburger');
-      navLinks.classList.toggle('show');
-      hamburger.classList.toggle('open'); // Toggle the open state for the hamburger icon
-    }
+  // Toggle the show class for navLinks and open class for hamburger
+  navLinks.classList.toggle('show');
+  hamburger.classList.toggle('open'); 
+
+  // Disable or enable scrolling on the body when the nav is open
+  if (navLinks.classList.contains('show')) {
+    body.style.overflow = 'hidden'; // Disable scrolling
+  } else {
+    body.style.overflow = ''; // Enable scrolling
+  }
+}
   </script>
 
 </body>
