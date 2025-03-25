@@ -7,13 +7,17 @@
   <title>Car Deals</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
   <style>
+    html,
     body {
       font-family: Arial, sans-serif;
       color: #292929;
       background: #f4f4f4;
+      box-sizing: border-box;
+      height: 100%;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
     }
 
     .header {
@@ -30,16 +34,18 @@
     }
 
     .logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 0px; /* Adjust height as needed */
-}
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 0px;
+      /* Adjust height as needed */
+    }
 
-.logo img {
-    width: 100px; /* Adjust logo size */
-    height: auto;
-}
+    .logo img {
+      width: 100px;
+      /* Adjust logo size */
+      height: auto;
+    }
 
     .nav-links {
       display: flex;
@@ -68,6 +74,7 @@
       margin: 0px 0px 0px 0px;
       padding: 80px 0px 20px 0px;
       position: relative;
+      flex: 1;
     }
 
     .container {
@@ -81,7 +88,7 @@
 
     .search-container {
       text-align: center;
-      margin: 15px 15px 0px 15px;
+      margin: 15px 15px 5px 15px;
     }
 
     #search-bar {
@@ -97,7 +104,12 @@
       border-color: #007bff;
       box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
     }
-
+.no-match {
+    text-align: center;
+    font-size: 18px;
+    color: red;
+    margin-top: 20px;
+}
     .custom-suggestions {
       position: absolute;
       top: 100%;
@@ -562,9 +574,9 @@
 
 <body>
   <header class="header">
-   <div class="logo">
-    <img src="https://github.com/herrys613/driveway/blob/main/images/logo.png?raw=true" alt="Logo">
-</div>
+    <div class="logo">
+      <img src="https://github.com/herrys613/driveway/blob/main/images/logo.png?raw=true" alt="Logo">
+    </div>
     <ul class="nav-links">
       <li><a href="#">Home</a></li>
       <li><a href="about.html">About</a></li>
@@ -651,7 +663,7 @@
         features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
         additional: "Premium Sound System",
         color: "White"
-      },            
+      },
       {
         name: "Honda Accord",
         image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
@@ -663,9 +675,9 @@
         features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
         additional: "Premium Sound System",
         color: "White"
-      },            
+      },
       {
-        name: "Nissen ALtima",
+        name: "Nissen Altima",
         image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
         image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
         term: "36 Months",
@@ -675,8 +687,8 @@
         features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
         additional: "Premium Sound System",
         color: "White"
-      },           
-       {
+      },
+      {
         name: "Honda Passport",
         image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
         image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
@@ -687,7 +699,7 @@
         features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
         additional: "Premium Sound System",
         color: "White"
-      },           
+      },
       {
         name: "BMW 3 Series",
         image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
@@ -701,29 +713,27 @@
         color: "Black"
       }
     ];
-
-const carContainer = document.getElementById("car-container");
-const searchBar = document.getElementById("search-bar");
+    const carContainer = document.getElementById("car-container");
+    const searchBar = document.getElementById("search-bar");
     const modal = document.getElementById("car-modal");
 
-function openModal(car) {
-    document.getElementById("modal-title").innerText = car.name;
-    document.getElementById("modal-image2").src = car.image2;
-    document.getElementById("modal-features").innerHTML = car.features.map(feature => `<li>${feature}</li>`).join("");
-    document.getElementById("modal-additional").innerText = car.additional;
-    document.getElementById("modal-color").innerText = car.color;
-    modal.style.display = "flex";
-    document.body.style.overflow = "hidden";
-}
+    function openModal(car) {
+      document.getElementById("modal-title").innerText = car.name;
+      document.getElementById("modal-image2").src = car.image2;
+      document.getElementById("modal-features").innerHTML = car.features.map(feature => `<li>${feature}</li>`).join("");
+      document.getElementById("modal-additional").innerText = car.additional;
+      document.getElementById("modal-color").innerText = car.color;
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
 
-function closeModal() {
-    modal.style.display = "none";
-    document.body.style.overflow = "auto";
-}
-
-// Function to generate car cards
-function generateCars(filteredCars) {
-    carContainer.innerHTML = filteredCars.map((car, index) => `
+    function closeModal() {
+      modal.style.display = "none";
+      document.body.style.overflow = "auto";
+    }
+    // Function to generate car cards
+    function generateCars(filteredCars) {
+      carContainer.innerHTML = filteredCars.map((car, index) => `
         <div class="car-card">
             <img src="${car.image1}" alt="${car.name}">
             <p class="car-name" onclick="openModal(cars[${index}])">${car.name}</p>
@@ -748,13 +758,17 @@ function generateCars(filteredCars) {
             </div>
         </div>
     `).join("");
-}
-
-// Function to filter cars based on search input
+    }
+    // Function to filter cars based on search input
 function filterCars() {
     const query = searchBar.value.toLowerCase(); // Get the search query and convert to lowercase
     const filteredCars = cars.filter(car => car.name.toLowerCase().includes(query)); // Filter cars based on name
-    generateCars(filteredCars); // Call generateCars with filtered list
+
+    if (filteredCars.length === 0) {
+        carContainer.innerHTML = `<p class="no-match">Sorry, no match found...</p>`; // Display message if no match
+    } else {
+        generateCars(filteredCars); // Call generateCars with filtered list
+    }
 }
 
 // Event listener for the search bar
@@ -762,6 +776,7 @@ searchBar.addEventListener("input", filterCars);
 
 // Initial call to display all cars on page load
 generateCars(cars);
+    
     
     let chatVisible = false; // Track if the chat is shown
     let chatClosed = false; // Track if the user manually closed it
