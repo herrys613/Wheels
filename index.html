@@ -741,27 +741,17 @@
       whatsappChat.style.opacity = "0";
       chatClosed = true; // Mark chat as manually closed
     });
-// Hamburger menu toggle
-document.getElementById("hamburger").addEventListener("click", function() {
-  toggleMenu();
-});
+    // Hamburger menu toggle
+    document.getElementById("hamburger").addEventListener("click", function() {
+      document.querySelector(".nav-links").classList.toggle("show");
+    });
 
-function toggleMenu() {
-  const navLinks = document.querySelector('.nav-links');
-  const hamburger = document.querySelector('.hamburger');
-  const body = document.body;
-
-  // Toggle the show class for navLinks and open class for hamburger
-  navLinks.classList.toggle('show');
-  hamburger.classList.toggle('open'); 
-
-  // Disable or enable scrolling on the body when the nav is open
-  if (navLinks.classList.contains('show')) {
-    body.style.overflow = 'hidden'; // Disable scrolling
-  } else {
-    body.style.overflow = ''; // Enable scrolling
-  }
-}
+    function toggleMenu() {
+      const navLinks = document.querySelector('.nav-links');
+      const hamburger = document.querySelector('.hamburger');
+      navLinks.classList.toggle('show');
+      hamburger.classList.toggle('open'); // Toggle the open state for the hamburger icon
+    }
   </script>
 
 </body>
