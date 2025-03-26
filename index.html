@@ -113,7 +113,7 @@
       padding: 0;
       margin: 0;
       z-index: 10;
-      max-height: 200px;
+      max-height: 210px;
       /* Limit height */
       overflow-y: auto;
       /* Scroll if too many suggestions */
@@ -138,8 +138,7 @@
 
     .no-match {
       padding: 10px;
-      color: red;
-      font-style: italic;
+      color: grey;
     }
 
     .car-card {
@@ -642,10 +641,9 @@
   <script>
     // Reference list of all car models (customize this with real data)
     const allCarModels = [
-      "Toyota Corolla", "Toyota Camry", "Honda Accord", "Honda Civic",
-      "BMW 3 Series", "BMW X5", "Mercedes-Benz C-Class", "Audi A4",
-      "Ford Mustang", "Chevrolet Camaro", "Tesla Model 3", "Nissan Altima",
-      "Hyundai Sonata", "Mazda CX-5", "Kia Sportage", "Volkswagen Jetta"
+      "Ford", "Chevrolet", "GMC", "Cadillac", "Dodge", "Chrysler", "Jeep", "Ram", "Lincoln", "Tesla", "Buick", "BMW", "Mercedes-Benz", 
+      "Audi", "Volkswagen", "Jaguar", "Land Rover", "Bentley", "Maserati", "Alfa Romeo", "Fiat", "Peugeot", "Volvo", "Toyota", "Honda", 
+      "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"
     ];
     const cars = [{
         name: "BMW X5 2020",
