@@ -6,10 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Car Deals</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     html,
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Montserrat', sans-serif;
       color: #292929;
       background: #f4f4f4;
       box-sizing: border-box;
@@ -101,47 +102,44 @@
       outline: none;
     }
 
-    #search-bar:focus {
-      border-color: #007bff;
-      box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
-    }
-.no-match {
-    text-align: center;
-    font-size: 18px;
-    color: red;
-    margin-top: 20px;
-}
     .custom-suggestions {
       position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background-color: white;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      max-height: 150px;
-      overflow-y: auto;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      list-style-type: none;
+      width: 330px;
+      left: 50%;
+      transform: translateX(-50%); /* Center it */
+      background: white;
+      border: 1px solid #ddd;
+      list-style: none;
       padding: 0;
       margin: 0;
       z-index: 10;
+      max-height: 200px;
+      /* Limit height */
+      overflow-y: auto;
+      /* Scroll if too many suggestions */
       display: none;
-      /* Hidden by default */
+      /* Initially hidden */
+      border-radius: 5px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     }
 
     .custom-suggestions li {
       padding: 10px;
       cursor: pointer;
-      border-bottom: 1px solid #eee;
+      text-align: center; /* Center text */
+      font-size: 14px;
+      border-bottom: 1px solid #ddd;
+      transition: background 0.3s;
     }
 
     .custom-suggestions li:hover {
-      background-color: #f1f1f1;
+      background: #f0f0f0;
     }
 
-    .custom-suggestions li:active {
-      background-color: #e0e0e0;
+    .no-match {
+      padding: 10px;
+      color: red;
+      font-style: italic;
     }
 
     .car-card {
@@ -188,14 +186,14 @@
     }
 
     .car-card .details>div>p:first-of-type {
-      font-size: 11px;
-      font-weight: 300;
+      font-size: 10px;
+      font-weight: 500;
       margin: 4px 0;
       color: #333;
     }
 
     .car-card .details>div>p:nth-of-type(2) {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       margin: 0px 0;
     }
@@ -642,6 +640,13 @@
   </footer>
 
   <script>
+    // Reference list of all car models (customize this with real data)
+    const allCarModels = [
+      "Toyota Corolla", "Toyota Camry", "Honda Accord", "Honda Civic",
+      "BMW 3 Series", "BMW X5", "Mercedes-Benz C-Class", "Audi A4",
+      "Ford Mustang", "Chevrolet Camaro", "Tesla Model 3", "Nissan Altima",
+      "Hyundai Sonata", "Mazda CX-5", "Kia Sportage", "Volkswagen Jetta"
+    ];
     const cars = [{
         name: "BMW X5 2020",
         image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
@@ -717,6 +722,7 @@
     ];
     const carContainer = document.getElementById("car-container");
     const searchBar = document.getElementById("search-bar");
+    const suggestionsList = document.getElementById("car-suggestions");
     const modal = document.getElementById("car-modal");
 
     function openModal(car) {
@@ -735,51 +741,84 @@
     }
     // Function to generate car cards
     function generateCars(filteredCars) {
-      carContainer.innerHTML = filteredCars.map((car, index) => `
-        <div class="car-card">
-            <img src="${car.image1}" alt="${car.name}">
-            <p class="car-name" onclick="openModal(cars[${index}])">${car.name}</p>
-            <div class="details">
-                <div>
-                    <p>Term</p>
-                    <p>${car.term}</p>
+      carContainer.innerHTML = filteredCars.length > 0 ?
+        filteredCars.map((car, index) => `
+            <div class="car-card">
+                <img src="${car.image1}" alt="${car.name}">
+                <p class="car-name" onclick="openModal(cars[${index}])">${car.name}</p>
+                <div class="details">
+                    <div>
+                        <p>Term</p>
+                        <p>${car.term}</p>
+                    </div>
+                    <div>
+                        <p>Annual Mileage</p>
+                        <p>${car.mileage}</p>
+                    </div>
+                    <div>
+                        <p>Due At Signing</p>
+                        <p>${car.due}</p>
+                    </div>
                 </div>
                 <div>
-                    <p>Annual Mileage</p>
-                    <p>${car.mileage}</p>
-                </div>
-                <div>
-                    <p>Due At Signing</p>
-                    <p>${car.due}</p>
+                    <p class="price">${car.price}<span style="font-size: 15px; color:#292929;"> / Month</span>
+                    <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${car.name}" target="_blank" class="quote-btn">Get Quote</a>
+                    </p>
                 </div>
             </div>
-            <div>
-                <p class="price">${car.price}<span style="font-size: 15px; color:#292929;"> / Month</span>
-                <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${car.name}" target="_blank" class="quote-btn">Get Quote</a>
-                </p>
-            </div>
-        </div>
-    `).join("");
+        `).join("") :
+        `<p class="no-match">Sorry, no match found...</p>`;
     }
-    // Function to filter cars based on search input
-function filterCars() {
-    const query = searchBar.value.toLowerCase(); // Get the search query and convert to lowercase
-    const filteredCars = cars.filter(car => car.name.toLowerCase().includes(query)); // Filter cars based on name
-
-    if (filteredCars.length === 0) {
-        carContainer.innerHTML = `<p class="no-match">Sorry, no match found...</p>`; // Display message if no match
-    } else {
-        generateCars(filteredCars); // Call generateCars with filtered list
+    // Function to filter suggestions
+    function updateSuggestions(query) {
+      if (!query.trim()) {
+        suggestionsList.style.display = "none"; // Hide suggestions if no input
+        return;
+      }
+      // Filter models that match the user's input
+      const matchingSuggestions = allCarModels.filter(model =>
+        model.toLowerCase().includes(query.toLowerCase())
+      );
+      // Show suggestions or a "No results" message
+      if (matchingSuggestions.length > 0) {
+        suggestionsList.innerHTML = matchingSuggestions
+          .map(model => `<li onclick="selectSuggestion('${model}')">${model}</li>`)
+          .join("");
+        suggestionsList.style.display = "block"; // Show the dropdown
+      } else {
+        suggestionsList.innerHTML = `<li class="no-match">No matches found</li>`;
+        suggestionsList.style.display = "block";
+      }
     }
-}
-
-// Event listener for the search bar
-searchBar.addEventListener("input", filterCars);
-
-// Initial call to display all cars on page load
-generateCars(cars);
-    
-    
+    // Function to select a suggestion
+    function selectSuggestion(model) {
+      searchBar.value = model;
+      suggestionsList.style.display = "none"; // Hide suggestions
+      filterCars(); // Filter cars after selection
+    }
+    // Function to filter available cars
+    function filterCars() {
+      const query = searchBar.value.toLowerCase();
+      const filteredCars = cars.filter(car => car.name.toLowerCase().includes(query));
+      if (filteredCars.length === 0) {
+        carContainer.innerHTML = `<p class="no-match">Sorry, no match found...</p>`;
+      } else {
+        generateCars(filteredCars);
+      }
+    }
+    // Event listeners
+    searchBar.addEventListener("input", () => {
+      updateSuggestions(searchBar.value);
+      filterCars();
+    });
+    // Hide suggestions when clicking outside
+    document.addEventListener("click", (event) => {
+      if (!searchBar.contains(event.target) && !suggestionsList.contains(event.target)) {
+        suggestionsList.style.display = "none";
+      }
+    });
+    // Initial call to display all cars
+    generateCars(cars);
     let chatVisible = false; // Track if the chat is shown
     let chatClosed = false; // Track if the user manually closed it
     // Function to show chat after 5 seconds
