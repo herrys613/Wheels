@@ -367,6 +367,17 @@
         }
       });
     });
+    // Hamburger menu toggle
+    document.getElementById("hamburger").addEventListener("click", function() {
+      document.querySelector(".nav-links").classList.toggle("show");
+    });
+
+    function toggleMenu() {
+      const navLinks = document.querySelector('.nav-links');
+      const hamburger = document.querySelector('.hamburger');
+      navLinks.classList.toggle('show');
+      hamburger.classList.toggle('open'); // Toggle the open state for the hamburger icon
+    }
   </script>
 
 </body>
