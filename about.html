@@ -4,17 +4,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About Us</title>
+  <title>Car Deals</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
+    html,
     body {
       font-family: 'Montserrat', sans-serif;
       color: #292929;
       background: #f4f4f4;
+      box-sizing: border-box;
+      height: 100%;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
     }
 
     .header {
@@ -31,8 +35,17 @@
     }
 
     .logo {
-      font-size: 24px;
-      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 0px;
+      /* Adjust height as needed */
+    }
+
+    .logo img {
+      width: 100px;
+      /* Adjust logo size */
+      height: auto;
     }
 
     .nav-links {
@@ -55,6 +68,16 @@
 
     .nav-links a:hover {
       color: #00c853;
+    }
+
+    .main-container {
+      background: -#007bff;
+      margin: 0px 0px 0px 0px;
+      padding: 0px;
+      position: relative;
+      flex: 1;
+      align-items: flex-start;
+      justify-content: center;
     }
 
     /* About Us Section */
@@ -189,7 +212,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 20px;
+        padding: 20px 20px;
         background: #333;
         color: white;
         position: fixed;
@@ -292,12 +315,14 @@
 
 <body>
   <header class="header">
-    <div class="logo">My Logo</div>
+    <div class="logo">
+      <img src="images/logo.png" alt="Logo">
+    </div>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="#">About</a></li>
+      <li><a href="about.html">About</a></li>
       <li><a href="faq.html">FAQ</a></li>
-      <li><a href="contact-us.html">Contact Us</a></li>
+      <li><a href="#">Contact Us</a></li>
     </ul>
     <div class="hamburger" onclick="toggleMenu()">
       <div class="bar"></div>
@@ -306,7 +331,8 @@
     </div>
   </header>
 
-  <!-- About Us Section -->
+  <div class="main-container">
+<!-- About Us Section -->
   <section class="about-us" id="about-us">
     <!-- Added ID here for linking -->
     <h1>About Us</h1>
@@ -353,21 +379,28 @@
       </div>
     </div>
   </section>
+  </div>
 
   <footer class="footer">
     <div class="links">
       <a href="index.html">Home</a>
-      <a href="#">About</a>
+      <a href="about.html">About</a>
       <a href="faq.html">FAQ</a>
-      <a href="contact-us.html">Contact Us</a>
+      <a href="#">Contact Us</a>
     </div>
     <div class="social-icons">
-      <a href="https://twitter.com" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+      <a href="https://wa.me/9175837073" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
       <a href="https://instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a>
     </div>
     <p style="font-size: 12px;">&copy; 2025 Driveway. All rights reserved.</p>
   </footer>
+
   <script>
+    // Hamburger menu toggle
+    document.getElementById("hamburger").addEventListener("click", function() {
+      document.querySelector(".nav-links").classList.toggle("show");
+    });
+
     function toggleMenu() {
       const navLinks = document.querySelector('.nav-links');
       const hamburger = document.querySelector('.hamburger');
@@ -375,6 +408,7 @@
       hamburger.classList.toggle('open'); // Toggle the open state for the hamburger icon
     }
   </script>
+
 </body>
 
 </html>
