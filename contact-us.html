@@ -77,16 +77,18 @@
       position: relative;
       flex: 1;
       display: flex;
+      align-items: flex-start;
       justify-content: center;
     }
 
-    .container {
+    .form-container {
       background-color: #fff;
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       max-width: 600px;
-      width: 100%;
+      height: auto;
+      width: auto;
     }
 
     /* Form heading */
@@ -94,6 +96,7 @@
       font-size: 24px;
       color: #333;
       text-align: center;
+      margin: 0 0 20px 0;
       margin-bottom: 20px;
     }
 
@@ -190,7 +193,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 20px;
+        padding: 20px 20px;
         background: #333;
         color: white;
         position: fixed;
@@ -293,6 +296,16 @@
         display: flex;
       }
 
+      .form-container {
+        width: 75%;
+      }
+      .form-control {
+      font-size: 13px;
+      }
+      .btn {
+      font-size: 15px;
+    }
+
       .form-row {
         flex-direction: column;
       }
@@ -306,7 +319,7 @@
 <body>
   <header class="header">
     <div class="logo">
-      <img src="https://github.com/herrys613/driveway/blob/main/images/logo.png?raw=true" alt="Logo">
+      <img src="images/logo.png" alt="Logo">
     </div>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
@@ -322,7 +335,7 @@
   </header>
 
   <div class="main-container">
-    <div class="container">
+    <div class="form-container">
       <h1>Let's talk cars</h1>
       <form target="_blank" action="https://formsubmit.co/your@email.com" method="POST">
         <div class="form-group">
