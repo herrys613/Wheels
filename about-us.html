@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Car Deals</title>
+  <title>About Us</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
@@ -28,7 +28,7 @@
       padding: 10px 20px;
       background: #333;
       color: white;
-      position: fixed;
+      position: sticky;
       top: 0;
       width: 100%;
       z-index: 1000;
@@ -36,15 +36,11 @@
 
     .logo {
       display: flex;
-      align-items: center;
       justify-content: center;
-      height: 0px;
-      /* Adjust height as needed */
     }
 
     .logo img {
       width: 100px;
-      /* Adjust logo size */
       height: auto;
     }
 
@@ -67,23 +63,20 @@
     }
 
     .nav-links a:hover {
-      color: #00c853;
+      color: #007bff;
     }
 
     .main-container {
       background: -#007bff;
       margin: 0px 0px 0px 0px;
-      padding: 0px;
+      padding: 0px 0px;
       position: relative;
       flex: 1;
-      align-items: flex-start;
-      justify-content: center;
     }
 
-    /* About Us Section */
     .about-us {
       background-color: #fff;
-      padding: 80px 20px 60px 20px;
+      padding: 60px 20px 60px 20px;
       text-align: center;
     }
 
@@ -209,15 +202,7 @@
     /* Responsive Navigation */
     @media (max-width: 768px) {
       .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 20px;
-        background: #333;
-        color: white;
-        position: fixed;
-        top: 0;
-        width: 100%;
+        padding: 15px 20px;
         z-index: 1000;
         box-sizing: border-box;
       }
@@ -229,11 +214,9 @@
         top: 30px;
         left: 0;
         width: 100%;
-        /* Set to 100% for full width of the parent container */
         background: #333;
         text-align: center;
         align-items: center;
-        /* Centers the links horizontally */
         height: auto;
         padding: 10px 0;
       }
@@ -310,6 +293,7 @@
       .nav-links.show {
         display: flex;
       }
+    }
   </style>
 </head>
 
@@ -320,7 +304,7 @@
     </div>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="#">About</a></li>
+      <li><a href="#">About Us</a></li>
       <li><a href="faq.html">FAQ</a></li>
       <li><a href="contact-us.html">Contact Us</a></li>
     </ul>
@@ -332,59 +316,59 @@
   </header>
 
   <div class="main-container">
-<!-- About Us Section -->
-  <section class="about-us" id="about-us">
-    <!-- Added ID here for linking -->
-    <h1>About Us</h1>
-    <p>At Driveway, we are passionate about providing the best deals to our customers. With years of experience in the automotive industry, we strive to offer an exceptional car-leasing experience. Our team is here to help you find the perfect vehicle that suits your needs and budget.</p>
-  </section>
+    <!-- About Us Section -->
+    <section class="about-us" id="about-us">
+      <!-- Added ID here for linking -->
+      <h1>About Us</h1>
+      <p>At Driveway, we are passionate about providing the best deals to our customers. With years of experience in the automotive industry, we strive to offer an exceptional car-leasing experience. Our team is here to help you find the perfect vehicle that suits your needs and budget.</p>
+    </section>
 
-  <!-- Icon Section -->
-  <section class="icon-section">
-    <div class="icon-item">
-      <i class="fas fa-check-circle"></i>
-      <h3>Quality Assurance</h3>
-      <p>Every car is thoroughly inspected to meet our high standards for quality.</p>
-    </div>
-    <div class="icon-item">
-      <i class="fas fa-shield-alt"></i>
-      <h3>Trusted Warranty</h3>
-      <p>Our cars come with a reliable warranty for peace of mind.</p>
-    </div>
-    <div class="icon-item">
-      <i class="fas fa-headset"></i>
-      <h3>Customer Support</h3>
-      <p>Our dedicated team is here to assist you every step of the way.</p>
-    </div>
-  </section>
+    <!-- Icon Section -->
+    <section class="icon-section">
+      <div class="icon-item">
+        <i class="fas fa-check-circle"></i>
+        <h3>Quality Assurance</h3>
+        <p>Every car is thoroughly inspected to meet our high standards for quality.</p>
+      </div>
+      <div class="icon-item">
+        <i class="fas fa-shield-alt"></i>
+        <h3>Trusted Warranty</h3>
+        <p>Our cars come with a reliable warranty for peace of mind.</p>
+      </div>
+      <div class="icon-item">
+        <i class="fas fa-headset"></i>
+        <h3>Customer Support</h3>
+        <p>Our dedicated team is here to assist you every step of the way.</p>
+      </div>
+    </section>
 
-  <!-- Team Section -->
-  <section class="team-section">
-    <h2>Meet Our Team</h2>
-    <div class="team-cards">
-      <div class="team-card">
-        <img src="https://gordonclarkphotography.com/wp-content/uploads/2023/09/Ray.jpg" alt="Team Member 1">
-        <h3>John Doe</h3>
-        <p>CEO & Founder</p>
+    <!-- Team Section -->
+    <section class="team-section">
+      <h2>Meet Our Team</h2>
+      <div class="team-cards">
+        <div class="team-card">
+          <img src="https://gordonclarkphotography.com/wp-content/uploads/2023/09/Ray.jpg" alt="Team Member 1">
+          <h3>John Doe</h3>
+          <p>CEO & Founder</p>
+        </div>
+        <div class="team-card">
+          <img src="https://images.squarespace-cdn.com/content/v1/5f5c4c7df1fce135eb3c0984/c77a2c37-df5a-4273-b6b9-7c44de68b472/RamonLuquin.LakeshaMinerPhotography.September2024-3.jpg" alt="Team Member 2">
+          <h3>Jane Smith</h3>
+          <p>Sales Manager</p>
+        </div>
+        <div class="team-card">
+          <img src="https://images.squarespace-cdn.com/content/v1/56a52c0c05caa73d80ae1077/1662146798840-VBDJ6IIY9371R2EZ87JU/4Headshot-Photography-Atlanta-medical-professiona-Beth-Fornuto-Photography.jpg" alt="Team Member 3">
+          <h3>Michael Lee</h3>
+          <p>Customer Support Lead</p>
+        </div>
       </div>
-      <div class="team-card">
-        <img src="https://images.squarespace-cdn.com/content/v1/5f5c4c7df1fce135eb3c0984/c77a2c37-df5a-4273-b6b9-7c44de68b472/RamonLuquin.LakeshaMinerPhotography.September2024-3.jpg" alt="Team Member 2">
-        <h3>Jane Smith</h3>
-        <p>Sales Manager</p>
-      </div>
-      <div class="team-card">
-        <img src="https://images.squarespace-cdn.com/content/v1/56a52c0c05caa73d80ae1077/1662146798840-VBDJ6IIY9371R2EZ87JU/4Headshot-Photography-Atlanta-medical-professiona-Beth-Fornuto-Photography.jpg" alt="Team Member 3">
-        <h3>Michael Lee</h3>
-        <p>Customer Support Lead</p>
-      </div>
-    </div>
-  </section>
+    </section>
   </div>
 
   <footer class="footer">
     <div class="links">
       <a href="index.html">Home</a>
-      <a href="#">About</a>
+      <a href="#">About Us</a>
       <a href="faq.html">FAQ</a>
       <a href="contact-us.html">Contact Us</a>
     </div>
