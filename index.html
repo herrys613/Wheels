@@ -17,8 +17,6 @@
       height: 100%;
       margin: 0;
       padding: 0;
-      display: flex;
-      flex-direction: column;
     }
 
     .header {
@@ -28,7 +26,7 @@
       padding: 10px 20px;
       background: #333;
       color: white;
-      position: fixed;
+      position: sticky;
       top: 0;
       width: 100%;
       z-index: 1000;
@@ -36,15 +34,11 @@
 
     .logo {
       display: flex;
-      align-items: center;
       justify-content: center;
-      height: 0px;
-      /* Adjust height as needed */
     }
 
     .logo img {
       width: 100px;
-      /* Adjust logo size */
       height: auto;
     }
 
@@ -67,30 +61,21 @@
     }
 
     .nav-links a:hover {
-      color: #00c853;
+      color: #007bff;
     }
 
     .main-container {
       background: -#007bff;
       margin: 0px 0px 0px 0px;
-      padding: 80px 0px 20px 0px;
+      padding: 15px 0px;
       position: relative;
       flex: 1;
     }
 
-    .container {
-      background: -#007bff;
-      max-width: 1200px;
-      justify-content: space-around;
-      display: flex;
-      flex-wrap: wrap;
-      margin: 0 auto;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    }
-
     .search-container {
+      background: -#007bff;
       text-align: center;
-      margin: 15px 15px 5px 15px;
+      margin: 0px 0px 0px 0px;
     }
 
     #search-bar {
@@ -106,19 +91,17 @@
       position: absolute;
       width: 330px;
       left: 50%;
-      transform: translateX(-50%); /* Center it */
+      transform: translateX(-50%);
+      /* Center it */
       background: white;
       border: 1px solid #ddd;
       list-style: none;
       padding: 0;
       margin: 0;
       z-index: 10;
-      max-height: 210px;
-      /* Limit height */
-      overflow-y: auto;
-      /* Scroll if too many suggestions */
-      display: none;
-      /* Initially hidden */
+      max-height: 210px;/* Limit height */
+      overflow-y: auto;/* Scroll if too many suggestions */
+      display: none;/* Initially hidden */
       border-radius: 5px;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     }
@@ -126,7 +109,7 @@
     .custom-suggestions li {
       padding: 10px;
       cursor: pointer;
-      text-align: center; /* Center text */
+      text-align: center;/* Center text */
       font-size: 14px;
       border-bottom: 1px solid #ddd;
       transition: background 0.3s;
@@ -139,6 +122,15 @@
     .no-match {
       padding: 10px;
       color: grey;
+    }
+
+    .cars-container {
+      background: -#007bff;
+      max-width: 1200px;
+      justify-content: space-around;
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 auto;
     }
 
     .car-card {
@@ -462,15 +454,7 @@
     /* Responsive Navigation */
     @media (max-width: 768px) {
       .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
         padding: 15px 20px;
-        background: #333;
-        color: white;
-        position: fixed;
-        top: 0;
-        width: 100%;
         z-index: 1000;
         box-sizing: border-box;
       }
@@ -482,11 +466,9 @@
         top: 30px;
         left: 0;
         width: 100%;
-        /* Set to 100% for full width of the parent container */
         background: #333;
         text-align: center;
         align-items: center;
-        /* Centers the links horizontally */
         height: auto;
         padding: 10px 0;
       }
@@ -514,10 +496,6 @@
         /* Adjust height */
         position: relative;
         /* So we can absolutely position bars */
-      }
-
-      .main-container {
-        padding-top: 60px;
       }
 
       .hamburger .bar {
@@ -595,7 +573,7 @@
       <ul id="car-suggestions" class="custom-suggestions"></ul>
     </div>
 
-    <div class="container" id="car-container">
+    <div class="cars-container" id="cars-container">
       <!-- Car posts will be dynamically inserted here -->
     </div>
     <div id="whatsapp-chat">
@@ -641,8 +619,8 @@
   <script>
     // Reference list of all car models (customize this with real data)
     const allCarModels = [
-      "Ford", "Chevrolet", "GMC", "Cadillac", "Dodge", "Chrysler", "Jeep", "Ram", "Lincoln", "Tesla", "Buick", "BMW", "Mercedes-Benz", 
-      "Audi", "Volkswagen", "Jaguar", "Land Rover", "Bentley", "Maserati", "Alfa Romeo", "Fiat", "Peugeot", "Volvo", "Toyota", "Honda", 
+      "Ford", "Chevrolet", "GMC", "Cadillac", "Dodge", "Chrysler", "Jeep", "Ram", "Lincoln", "Tesla", "Buick", "BMW", "Mercedes-Benz",
+      "Audi", "Volkswagen", "Jaguar", "Land Rover", "Bentley", "Maserati", "Alfa Romeo", "Fiat", "Peugeot", "Volvo", "Toyota", "Honda",
       "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"
     ];
     const cars = [{
@@ -718,7 +696,7 @@
         color: "Black"
       }
     ];
-    const carContainer = document.getElementById("car-container");
+    const carsContainer = document.getElementById("cars-container");
     const searchBar = document.getElementById("search-bar");
     const suggestionsList = document.getElementById("car-suggestions");
     const modal = document.getElementById("car-modal");
@@ -739,7 +717,7 @@
     }
     // Function to generate car cards
     function generateCars(filteredCars) {
-      carContainer.innerHTML = filteredCars.length > 0 ?
+      carsContainer.innerHTML = filteredCars.length > 0 ?
         filteredCars.map((car, index) => `
             <div class="car-card">
                 <img src="${car.image1}" alt="${car.name}">
@@ -799,7 +777,7 @@
       const query = searchBar.value.toLowerCase();
       const filteredCars = cars.filter(car => car.name.toLowerCase().includes(query));
       if (filteredCars.length === 0) {
-        carContainer.innerHTML = `<p class="no-match">Sorry, no match found...</p>`;
+        carsContainer.innerHTML = `<p class="no-match">Sorry, no match found...</p>`;
       } else {
         generateCars(filteredCars);
       }
