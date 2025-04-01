@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Car Deals</title>
+  <title>Contact Us</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
@@ -27,8 +27,9 @@
       align-items: center;
       padding: 10px 20px;
       background: #333;
+      box-sizing: border-box;
       color: white;
-      position: fixed;
+      position: sticky;
       top: 0;
       width: 100%;
       z-index: 1000;
@@ -36,15 +37,11 @@
 
     .logo {
       display: flex;
-      align-items: center;
       justify-content: center;
-      height: 0px;
-      /* Adjust height as needed */
     }
 
     .logo img {
       width: 100px;
-      /* Adjust logo size */
       height: auto;
     }
 
@@ -52,7 +49,6 @@
       display: flex;
       list-style: none;
       margin-left: auto;
-      margin-right: 40px;
     }
 
     .nav-links li {
@@ -67,29 +63,27 @@
     }
 
     .nav-links a:hover {
-      color: #00c853;
+      color: #007bff;
     }
 
     .main-container {
       background: -#007bff;
       margin: 0px 0px 0px 0px;
-      padding: 0px;
+      padding: 15px 0px;
       position: relative;
       flex: 1;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
     }
 
     .form-container {
       background-color: #fff;
-      margin: 100px 30px 40px 30px;
+      margin: 0 auto;
       padding: 30px;
+      box-sizing: border-box;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       max-width: 600px;
       height: auto;
-      width: auto;
+      width: 90%;
     }
 
     /* Form heading */
@@ -189,17 +183,8 @@
     /* Responsive Navigation */
     @media (max-width: 768px) {
       .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 20px;
-        background: #333;
-        color: white;
-        position: fixed;
-        top: 0;
-        width: 100%;
+        padding: 15px 20px;
         z-index: 1000;
-        box-sizing: border-box;
       }
 
       .nav-links {
@@ -209,11 +194,9 @@
         top: 30px;
         left: 0;
         width: 100%;
-        /* Set to 100% for full width of the parent container */
         background: #333;
         text-align: center;
         align-items: center;
-        /* Centers the links horizontally */
         height: auto;
         padding: 10px 0;
       }
@@ -291,15 +274,13 @@
         display: flex;
       }
 
-      .form-container {
-        width: 100%;
-      }
       .form-control {
-      font-size: 13px;
+        font-size: 13px;
       }
+
       .btn {
-      font-size: 15px;
-    }
+        font-size: 15px;
+      }
 
       .form-row {
         flex-direction: column;
