@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Car Deals</title>
+  <title>FAQ</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
@@ -28,7 +28,7 @@
       padding: 10px 20px;
       background: #333;
       color: white;
-      position: fixed;
+      position: sticky;
       top: 0;
       width: 100%;
       z-index: 1000;
@@ -36,15 +36,11 @@
 
     .logo {
       display: flex;
-      align-items: center;
       justify-content: center;
-      height: 0px;
-      /* Adjust height as needed */
     }
 
     .logo img {
       width: 100px;
-      /* Adjust logo size */
       height: auto;
     }
 
@@ -67,24 +63,22 @@
     }
 
     .nav-links a:hover {
-      color: #00c853;
+      color: #007bff;
     }
 
     .main-container {
       background: -#007bff;
       margin: 0px 0px 0px 0px;
-      padding: 0px;
+      padding: 15px 0px;
       position: relative;
-      flex: 1; 
-      display: flex;
-      justify-content: center;
+      flex: 1;
     }
 
     .faq-container {
       background: -#007bff;
-      margin-top: 100px;
       max-width: 600px;
       width: 90%;
+      margin: 0 auto;
     }
 
     .faq-item {
@@ -161,15 +155,7 @@
     /* Responsive Navigation */
     @media (max-width: 768px) {
       .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 20px;
-        background: #333;
-        color: white;
-        position: fixed;
-        top: 0;
-        width: 100%;
+        padding: 15px 20px;
         z-index: 1000;
         box-sizing: border-box;
       }
@@ -181,11 +167,9 @@
         top: 30px;
         left: 0;
         width: 100%;
-        /* Set to 100% for full width of the parent container */
         background: #333;
         text-align: center;
         align-items: center;
-        /* Centers the links horizontally */
         height: auto;
         padding: 10px 0;
       }
@@ -262,8 +246,6 @@
       .nav-links.show {
         display: flex;
       }
-      .faq-container {
-      margin-top: 80px;
     }
   </style>
 </head>
@@ -351,8 +333,7 @@
     <p style="font-size: 12px;">&copy; 2025 Driveway. All rights reserved.</p>
   </footer>
 
-  <script>
-    document.querySelectorAll(".faq-item").forEach(item => {
+  <script>document.querySelectorAll(".faq-item").forEach(item => {
       const answer = item.querySelector(".faq-answer");
       item.addEventListener("click", () => {
         if (item.classList.contains("active")) {
@@ -368,6 +349,7 @@
         }
       });
     });
+    
     // Hamburger menu toggle
     document.getElementById("hamburger").addEventListener("click", function() {
       document.querySelector(".nav-links").classList.toggle("show");
