@@ -49,7 +49,6 @@
       display: flex;
       list-style: none;
       margin-left: auto;
-      margin-right: 40px;
     }
 
     .nav-links li {
@@ -158,7 +157,6 @@
       .header {
         padding: 15px 20px;
         z-index: 1000;
-        box-sizing: border-box;
       }
 
       .nav-links {
@@ -334,7 +332,8 @@
     <p style="font-size: 12px;">&copy; 2025 Driveway. All rights reserved.</p>
   </footer>
 
-  <script>document.querySelectorAll(".faq-item").forEach(item => {
+  <script>
+    document.querySelectorAll(".faq-item").forEach(item => {
       const answer = item.querySelector(".faq-answer");
       item.addEventListener("click", () => {
         if (item.classList.contains("active")) {
@@ -350,7 +349,6 @@
         }
       });
     });
-    
     // Hamburger menu toggle
     document.getElementById("hamburger").addEventListener("click", function() {
       document.querySelector(".nav-links").classList.toggle("show");
