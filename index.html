@@ -636,7 +636,7 @@
         color: "Blue"
       },
       {
-        name: "Chevy Trax",
+        name: "Chevrolet Trax 2025",
         image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
         image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
         term: "36 Months",
@@ -745,56 +745,94 @@
         `).join("") :
         `<p class="no-match">Sorry, no match found...</p>`;
     }
-    // Function to filter suggestions
-    function updateSuggestions(query) {
-      if (!query.trim()) {
-        suggestionsList.style.display = "none"; // Hide suggestions if no input
-        return;
-      }
-      // Filter models that match the user's input
-      const matchingSuggestions = allCarModels.filter(model =>
-        model.toLowerCase().includes(query.toLowerCase())
-      );
-      // Show suggestions or a "No results" message
-      if (matchingSuggestions.length > 0) {
-        suggestionsList.innerHTML = matchingSuggestions
-          .map(model => `<li onclick="selectSuggestion('${model}')">${model}</li>`)
-          .join("");
-        suggestionsList.style.display = "block"; // Show the dropdown
-      } else {
-        suggestionsList.innerHTML = `<li class="no-match">No matches found</li>`;
-        suggestionsList.style.display = "block";
-      }
-    }
-    // Function to select a suggestion
-    function selectSuggestion(model) {
-      searchBar.value = model;
-      suggestionsList.style.display = "none"; // Hide suggestions
-      filterCars(); // Filter cars after selection
-    }
-    // Function to filter available cars
-    function filterCars() {
-      const query = searchBar.value.toLowerCase();
-      const filteredCars = cars.filter(car => car.name.toLowerCase().includes(query));
-      if (filteredCars.length === 0) {
-        carsContainer.innerHTML = `<p class="no-match">Sorry, no match found...</p>`;
-      } else {
-        generateCars(filteredCars);
-      }
-    }
-    // Event listeners
-    searchBar.addEventListener("input", () => {
-      updateSuggestions(searchBar.value);
-      filterCars();
-    });
-    // Hide suggestions when clicking outside
-    document.addEventListener("click", (event) => {
-      if (!searchBar.contains(event.target) && !suggestionsList.contains(event.target)) {
-        suggestionsList.style.display = "none";
-      }
-    });
-    // Initial call to display all cars
-    generateCars(cars);
+ // Function to count occurrences of each car model's first word
+function getCarCounts() {
+  const carCounts = {};
+  cars.forEach(car => {
+    const firstWord = car.name.split(" ")[0].toLowerCase(); // Extract first word
+    carCounts[firstWord] = (carCounts[firstWord] || 0) + 1;
+  });
+  return carCounts;
+}
+
+// Function to update suggestions list
+function updateSuggestions(query) {
+  const carCounts = getCarCounts(); // Get updated car counts
+
+  if (!query.trim()) {
+    suggestionsList.style.display = "none"; // Hide suggestions if input is empty
+    return;
+  }
+
+  // Generate suggestions with counts based on the first word
+  let matchingSuggestions = allCarModels.map(model => {
+    const firstWord = model.split(" ")[0].toLowerCase(); // Extract first word
+    const count = carCounts[firstWord] || 0; // Get actual count
+    return `<li onclick="selectSuggestion('${model}')">${model} (${count})</li>`;
+  });
+
+  // Filter suggestions based on query
+  matchingSuggestions = matchingSuggestions.filter(item =>
+    item.toLowerCase().includes(query.toLowerCase())
+  );
+
+  // Show suggestions or hide if none found
+  if (matchingSuggestions.length > 0) {
+    suggestionsList.innerHTML = matchingSuggestions.join("");
+    suggestionsList.style.display = "block";
+  } else {
+    suggestionsList.style.display = "none"; // Hide if no matches
+  }
+}
+
+// Function to select a suggestion and filter cars
+function selectSuggestion(model) {
+  searchBar.value = model;
+  suggestionsList.style.display = "none"; // Hide suggestions
+  filterCars(); // Filter cars after selection
+}
+
+// Function to filter available cars
+function filterCars() {
+  const query = searchBar.value.trim().toLowerCase();
+  const filteredCars = query
+    ? cars.filter(car => car.name.toLowerCase().startsWith(query)) // Match first word
+    : cars; // Show all cars if query is empty
+
+  generateCars(filteredCars);
+}
+
+// Event listeners
+searchBar.addEventListener("input", () => {
+  updateSuggestions(searchBar.value);
+  filterCars();
+});
+
+// Hide suggestions when clicking outside
+document.addEventListener("click", (event) => {
+  if (!searchBar.contains(event.target) && !suggestionsList.contains(event.target)) {
+    suggestionsList.style.display = "none";
+  }
+});
+
+// Initial call to display all cars, but keep suggestions hidden
+generateCars(cars);
+suggestionsList.style.display = "none"; // Ensure suggestions are hidden by default
+
+
+// Hide suggestions when clicking outside
+document.addEventListener("click", (event) => {
+  if (!searchBar.contains(event.target) && !suggestionsList.contains(event.target)) {
+    suggestionsList.style.display = "none";
+  }
+});
+
+// Initial call to display all suggestions and all cars
+updateSuggestions(""); 
+generateCars(cars);
+
+
+    
     let chatVisible = false; // Track if the chat is shown
     let chatClosed = false; // Track if the user manually closed it
     // Function to show chat after 5 seconds
