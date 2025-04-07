@@ -69,16 +69,37 @@
     .main-container {
       background: -#007bff;
       margin: 0px 0px 0px 0px;
-      padding: 15px 0px;
+      padding: 15px 30px;
       position: relative;
       flex: 1;
+    }
+
+    .faq-intro-text {
+      text-align: center;
+      margin-bottom: 40px;
+      max-width: 600px;
+      margin: 30px auto;
+    }
+
+    .faq-intro-text h2 {
+      font-size: 30px;
+      font-weight: 600;
+      color: #333;
+      text-align: left;
+    }
+
+    .faq-intro-text p {
+      font-size: 16px;
+      color: #555;
+      margin: 0 auto;
+      text-align: left;
     }
 
     .faq-container {
       background: -#007bff;
       max-width: 600px;
-      width: 90%;
       margin: 0 auto;
+      text-align: center;
     }
 
     .faq-item {
@@ -88,8 +109,12 @@
       padding: 15px;
       cursor: pointer;
       transition: background 0.3s ease, box-shadow 0.3s ease;
-      border: 1px solid #ddd;
+      border-left: 5px solid #007bff;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .faq-item:hover {
+      background: #f2f2f2;
     }
 
     .faq-question {
@@ -123,6 +148,40 @@
 
     .faq-item.active .arrow {
       transform: rotate(180deg);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #load-more {
+      background: transparent;
+      color: black;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .cta {
+      background: #f8f8f8;
+      padding: 20px;
+      text-align: center;
+      border-top: 1px solid #ddd;
+      margin-top: 30px;
+    }
+
+    .cta a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .cta a:hover {
+      text-decoration: underline;
     }
 
     .footer {
@@ -267,6 +326,10 @@
   </header>
 
   <div class="main-container">
+    <div class="faq-intro-text">
+      <h2>We’re happy to help!</h2>
+      <p>Check out the answers to some frequently asked questions below. Got more questions? Contact us anytime! —we’re happy to help with anything you need!</p>
+    </div>
     <div class="faq-container">
       <div class="faq-item">
         <div class="faq-question">
@@ -314,6 +377,122 @@
           Some leasing companies may allow early termination of your lease, but this often comes with additional fees. It’s important to check the terms of your specific lease agreement for any early termination clauses.
         </div>
       </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>What happens if I exceed my mileage limit on a car lease?</span>
+          <svg class="arrow" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg">
+            <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Exceeding your mileage limit may result in additional fees. Be sure to review the terms of your lease to understand the costs associated with exceeding the mileage allowance.
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>How do I know if I qualify for a car lease?</span>
+          <svg class="arrow" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg">
+            <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Qualifications vary by leasing company, but generally, you’ll need a stable income, good credit, and a clean driving record. Contact us for specific eligibility requirements.
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>Do I need insurance for a leased car?</span>
+          <svg class="arrow" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg">
+            <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Yes, most leasing companies require full coverage insurance for the duration of the lease. Check with your leasing company for their insurance requirements.
+        </div>
+      </div>
+      <div class="faq-item hidden">
+        <div class="faq-question">
+          <span>What is Driveway?</span>
+          <svg class="arrow" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg">
+            <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Driveway is a platform that brings together the best car leasing deals from top leasing companies. We make it easy for you to find the perfect car at a great price, all in one place.
+        </div>
+      </div>
+
+      <div class="faq-item hidden">
+        <div class="faq-question">
+          <span>How does Driveway work?</span>
+          <svg class="arrow" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg">
+            <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Simply browse our website to find the best car leasing deals. Once you find a car you’re interested in, you can apply for the lease directly through our platform. We earn a commission when a lease is finalized.
+        </div>
+      </div>
+
+      <div class="faq-item hidden">
+        <div class="faq-question">
+          <span>Is there a fee for using Driveway?</span>
+          <svg class="arrow" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg">
+            <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          No, there is absolutely no fee for using Driveway. All of our services are completely free to car leasers. We earn a commission from the leasing companies when you complete a car lease through our platform.
+        </div>
+      </div>
+      <div class="faq-item hidden">
+        <div class="faq-question">
+          <span>Can I return the car before the lease term ends?</span>
+          <svg class="arrow" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg">
+            <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Some leasing companies may allow early termination of your lease, but this often comes with additional fees. It’s important to check the terms of your specific lease agreement for any early termination clauses.
+        </div>
+      </div>
+      <div class="faq-item hidden">
+        <div class="faq-question">
+          <span>What happens if I exceed my mileage limit on a car lease?</span>
+          <svg class="arrow" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg">
+            <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Exceeding your mileage limit may result in additional fees. Be sure to review the terms of your lease to understand the costs associated with exceeding the mileage allowance.
+        </div>
+      </div>
+      <div class="faq-item hidden">
+        <div class="faq-question">
+          <span>How do I know if I qualify for a car lease?</span>
+          <svg class="arrow" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg">
+            <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Qualifications vary by leasing company, but generally, you’ll need a stable income, good credit, and a clean driving record. Contact us for specific eligibility requirements.
+        </div>
+      </div>
+      <div class="faq-item hidden">
+        <div class="faq-question">
+          <span>Do I need insurance for a leased car?</span>
+          <svg class="arrow" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg">
+            <path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path>
+          </svg>
+        </div>
+        <div class="faq-answer">
+          Yes, most leasing companies require full coverage insurance for the duration of the lease. Check with your leasing company for their insurance requirements.
+        </div>
+      </div>
+      <button id="load-more" onclick="loadMoreFAQs()">Load more questions</button>
+      <div class="cta">
+        <p>If you have any more questions, <a href="contact-us.html">contact us</a> or message us on <a href="https://wa.me/9175837073">Whatsapp</a>. We’re happy to assist you!</p>
+      </div>
     </div>
   </div>
 
@@ -348,6 +527,14 @@
         }
       });
     });
+
+    function loadMoreFAQs() {
+      const hiddenItems = document.querySelectorAll('.faq-item.hidden');
+      hiddenItems.forEach(item => {
+        item.classList.remove('hidden');
+      });
+      document.getElementById('load-more').style.display = 'none'; // Hide the button after loading
+    }
     // Hamburger menu toggle
     document.getElementById("hamburger").addEventListener("click", function() {
       document.querySelector(".nav-links").classList.toggle("show");
