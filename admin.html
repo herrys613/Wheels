@@ -75,7 +75,7 @@
     }
 
     .form-container {
-      max-width: 600px;
+      max-width: 300px;
       margin: 40px auto;
       padding: 30px;
       background-color: white;
@@ -109,6 +109,25 @@
 
     button:hover {
       background-color: #0056b3;
+    }
+
+    #logout-btn {
+      display: none;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      width: 200px;
+      padding: 10px 20px;
+      margin: 20px auto;
+      display: block;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #logout-btn:hover {
+      background-color: #c82333;
     }
 
     .footer {
@@ -254,7 +273,13 @@
   </header>
 
   <div class="main-container">
-    <div class="form-container">
+    <div id="login-container" class="form-container">
+      <h2>Admin Login</h2>
+      <input type="email" id="login-email" placeholder="Email" required />
+      <input type="password" id="login-password" placeholder="Password" required />
+      <button onclick="login()">Login</button>
+    </div>
+    <div id="admin-form" class="form-container" style="display:none;">
       <h2>Add New Car</h2>
       <form id="car-form">
         <input type="text" id="car-name" placeholder="Car Name" required />
@@ -269,6 +294,7 @@
         <button type="button" onclick="submitCar()">Submit Car</button>
       </form>
     </div>
+    <button id="logout-btn" onclick="logout()">Logout</button>
   </div>
 
   <footer class="footer">
@@ -288,6 +314,7 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
   <script>
     const firebaseConfig = {
@@ -335,6 +362,47 @@
           console.error("Error: ", error);
         });
     }
+    
+  // Show/hide forms based on auth state
+firebase.auth().onAuthStateChanged((user) => {
+  const loginContainer = document.getElementById('login-container');
+  const adminForm = document.getElementById('admin-form');
+  const logoutBtn = document.getElementById('logout-btn');
+
+  if (user) {
+    // User is logged in
+    loginContainer.style.display = 'none';  // Hide login form
+    adminForm.style.display = 'block';  // Show admin form
+    logoutBtn.style.display = 'block';  // Show logout button
+  } else {
+    // User is logged out
+    loginContainer.style.display = 'block';  // Show login form
+    adminForm.style.display = 'none';  // Hide admin form
+    logoutBtn.style.display = 'none';  // Hide logout button
+  }
+});
+
+// Login function
+function login() {
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(() => {
+      alert('Login successful!');
+    })
+    .catch((error) => {
+      alert('Login failed: ' + error.message);
+    });
+}
+
+// Logout function
+function logout() {
+  firebase.auth().signOut().then(() => {
+    alert('Logged out!');
+  });
+}
+
     // Hamburger menu toggle
     document.getElementById("hamburger").addEventListener("click", function() {
       document.querySelector(".nav-links").classList.toggle("show");
