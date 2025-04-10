@@ -68,6 +68,9 @@
 
     .main-container {
       background: -#007bff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       margin: 0px 0px 0px 0px;
       padding: 15px 20px;
       position: relative;
@@ -75,12 +78,19 @@
     }
 
     .form-container {
-      max-width: 300px;
-      margin: 40px auto;
+      width: 100%;
+      max-width: 350px;
+      margin: 40px auto 15px;
       padding: 30px;
       background-color: white;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+    }
+
+    .login-form {
+      width: calc(100% - 40px);
+      /* Leaves 40px space on left & right */
     }
 
     h2 {
@@ -111,14 +121,27 @@
       background-color: #0056b3;
     }
 
+    #Submit-message {
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      color: green;
+      /* Optional styling */
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    #Submit-message.show {
+      opacity: 1;
+    }
+
     #logout-btn {
       display: none;
       background-color: #dc3545;
       color: white;
       border: none;
-      width: 200px;
+      width: 120px;
       padding: 10px 20px;
-      margin: 20px auto;
+      margin: 10px auto;
       display: block;
       border-radius: 5px;
       font-size: 16px;
@@ -260,7 +283,7 @@
       <img src="images/logo.png" alt="Logo">
     </div>
     <ul class="nav-links">
-      <li><a href="#">Home</a></li>
+      <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="faq.html">FAQ</a></li>
       <li><a href="contact-us.html">Contact Us</a></li>
@@ -273,8 +296,7 @@
   </header>
 
   <div class="main-container">
-    <div id="status-message"></div>
-    <div id="login-container" class="form-container">
+    <div id="login-container" class="form-container login-form">
       <h2>Admin Login</h2>
       <input type="email" id="login-email" placeholder="Email" required />
       <input type="password" id="login-password" placeholder="Password" required />
@@ -289,7 +311,7 @@
         <input type="text" id="car-term" placeholder="Lease Term (e.g., 36 Months)" required />
         <input type="text" id="car-mileage" placeholder="Mileage (e.g., 12000 Miles)" required />
         <input type="text" id="car-price" placeholder="Price (e.g., $299)" required />
-        <textarea id="car-features" placeholder="Features (comma-separated)" required></textarea>
+        <input id="car-features" placeholder="Features (comma-separated)" required />
         <textarea type="text" id="car-additional" placeholder="Additional Features" /></textarea>
         <input type="text" id="car-color" placeholder="Color" required />
         <button type="button" onclick="submitCar()">Submit Car</button>
@@ -301,7 +323,7 @@
 
   <footer class="footer">
     <div class="links">
-      <a href="#">Home</a>
+      <a href="index.html">Home</a>
       <a href="about.html">About</a>
       <a href="faq.html">FAQ</a>
       <a href="contact-us.html">Contact Us</a>
@@ -357,32 +379,40 @@
           color
         })
         .then(() => {
-          document.getElementById('Submit-message').innerHTML = 'Car added successfully!'; // Show success message
-          document.getElementById('car-form').reset(); // Reset the form
+          const msg = document.getElementById('Submit-message');
+          msg.innerHTML = 'Car added successfully!';
+          msg.classList.add('show');
+          // Hide after 3 seconds
+          setTimeout(() => {
+            msg.classList.remove('show');
+          }, 1500);
+          document.getElementById('car-form').reset(); // Reset form
         })
         .catch((error) => {
-          document.getElementById('status-message').innerHTML = 'Error adding car: ' + error.message; // Show error message
+          const errorMsg = document.getElementById('Submit-message');
+          errorMsg.innerHTML = 'Error adding car: ' + error.message;
+          errorMsg.style.color = 'red';
+          errorMsg.classList.add('show');
+          setTimeout(() => {
+            errorMsg.classList.remove('show');
+          }, 3000);
           console.error("Error: ", error);
         });
     }
-    // Show/hide forms based on auth state
+    
+    // Auth state change listener
     firebase.auth().onAuthStateChanged((user) => {
       const loginContainer = document.getElementById('login-container');
       const adminForm = document.getElementById('admin-form');
       const logoutBtn = document.getElementById('logout-btn');
-      const statusMessage = document.getElementById('status-message');
       if (user) {
-        // User is logged in
-        loginContainer.style.display = 'none'; // Hide login form
-        adminForm.style.display = 'block'; // Show admin form
-        logoutBtn.style.display = 'block'; // Show logout button
-        statusMessage.innerHTML = 'You are logged in as ' + user.email; // Show custom login message
+        loginContainer.style.display = 'none';
+        adminForm.style.display = 'block';
+        logoutBtn.style.display = 'block';
       } else {
-        // User is logged out
-        loginContainer.style.display = 'block'; // Show login form
-        adminForm.style.display = 'none'; // Hide admin form
-        logoutBtn.style.display = 'none'; // Hide logout button
-        statusMessage.innerHTML = ''; // Clear any messages
+        loginContainer.style.display = 'block';
+        adminForm.style.display = 'none';
+        logoutBtn.style.display = 'none';
       }
     });
     // Login function
@@ -390,18 +420,16 @@
       const email = document.getElementById('login-email').value;
       const password = document.getElementById('login-password').value;
       firebase.auth().signInWithEmailAndPassword(email, password)
-        .then(() => {
-          document.getElementById('status-message').innerHTML = 'Login successful!'; // Show custom login message
-        })
         .catch((error) => {
-          document.getElementById('status-message').innerHTML = 'Login failed: ' + error.message; // Show error message in HTML
+          console.error('Login failed:', error.message); // Optional for debugging
         });
     }
     // Logout function
     function logout() {
-      firebase.auth().signOut().then(() => {
-        document.getElementById('status-message').innerHTML = 'Logged out successfully!'; // Show custom logout message
-      });
+      firebase.auth().signOut()
+        .catch((error) => {
+          console.error('Logout failed:', error.message); // Optional for debugging
+        });
     }
     // Hamburger menu toggle
     document.getElementById("hamburger").addEventListener("click", function() {
