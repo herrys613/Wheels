@@ -273,6 +273,7 @@
   </header>
 
   <div class="main-container">
+    <div id="status-message"></div>
     <div id="login-container" class="form-container">
       <h2>Admin Login</h2>
       <input type="email" id="login-email" placeholder="Email" required />
@@ -292,6 +293,7 @@
         <textarea type="text" id="car-additional" placeholder="Additional Features" /></textarea>
         <input type="text" id="car-color" placeholder="Color" required />
         <button type="button" onclick="submitCar()">Submit Car</button>
+        <div id="Submit-message"></div>
       </form>
     </div>
     <button id="logout-btn" onclick="logout()">Logout</button>
@@ -327,7 +329,7 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-
+    // Submit Car function
     function submitCar() {
       const name = document.getElementById('car-name').value;
       const image1 = document.getElementById('car-image1').value;
@@ -339,9 +341,10 @@
       const additional = document.getElementById('car-additional').value;
       const color = document.getElementById('car-color').value;
       if (!name || !image1 || !term || !mileage || !price || features.length === 0 || !color) {
-        alert('Please fill in all required fields.');
+        document.getElementById('status-message').innerHTML = 'Please fill in all required fields.'; // Show error message
         return;
       }
+      // Add car to Firestore
       db.collection("cars").add({
           name,
           image1,
@@ -354,55 +357,52 @@
           color
         })
         .then(() => {
-          alert("Car added successfully!");
-          document.getElementById('car-form').reset();
+          document.getElementById('Submit-message').innerHTML = 'Car added successfully!'; // Show success message
+          document.getElementById('car-form').reset(); // Reset the form
         })
         .catch((error) => {
-          alert("Error adding car: " + error);
+          document.getElementById('status-message').innerHTML = 'Error adding car: ' + error.message; // Show error message
           console.error("Error: ", error);
         });
     }
-    
-  // Show/hide forms based on auth state
-firebase.auth().onAuthStateChanged((user) => {
-  const loginContainer = document.getElementById('login-container');
-  const adminForm = document.getElementById('admin-form');
-  const logoutBtn = document.getElementById('logout-btn');
-
-  if (user) {
-    // User is logged in
-    loginContainer.style.display = 'none';  // Hide login form
-    adminForm.style.display = 'block';  // Show admin form
-    logoutBtn.style.display = 'block';  // Show logout button
-  } else {
-    // User is logged out
-    loginContainer.style.display = 'block';  // Show login form
-    adminForm.style.display = 'none';  // Hide admin form
-    logoutBtn.style.display = 'none';  // Hide logout button
-  }
-});
-
-// Login function
-function login() {
-  const email = document.getElementById('login-email').value;
-  const password = document.getElementById('login-password').value;
-
-  firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(() => {
-      alert('Login successful!');
-    })
-    .catch((error) => {
-      alert('Login failed: ' + error.message);
+    // Show/hide forms based on auth state
+    firebase.auth().onAuthStateChanged((user) => {
+      const loginContainer = document.getElementById('login-container');
+      const adminForm = document.getElementById('admin-form');
+      const logoutBtn = document.getElementById('logout-btn');
+      const statusMessage = document.getElementById('status-message');
+      if (user) {
+        // User is logged in
+        loginContainer.style.display = 'none'; // Hide login form
+        adminForm.style.display = 'block'; // Show admin form
+        logoutBtn.style.display = 'block'; // Show logout button
+        statusMessage.innerHTML = 'You are logged in as ' + user.email; // Show custom login message
+      } else {
+        // User is logged out
+        loginContainer.style.display = 'block'; // Show login form
+        adminForm.style.display = 'none'; // Hide admin form
+        logoutBtn.style.display = 'none'; // Hide logout button
+        statusMessage.innerHTML = ''; // Clear any messages
+      }
     });
-}
-
-// Logout function
-function logout() {
-  firebase.auth().signOut().then(() => {
-    alert('Logged out!');
-  });
-}
-
+    // Login function
+    function login() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => {
+          document.getElementById('status-message').innerHTML = 'Login successful!'; // Show custom login message
+        })
+        .catch((error) => {
+          document.getElementById('status-message').innerHTML = 'Login failed: ' + error.message; // Show error message in HTML
+        });
+    }
+    // Logout function
+    function logout() {
+      firebase.auth().signOut().then(() => {
+        document.getElementById('status-message').innerHTML = 'Logged out successfully!'; // Show custom logout message
+      });
+    }
     // Hamburger menu toggle
     document.getElementById("hamburger").addEventListener("click", function() {
       document.querySelector(".nav-links").classList.toggle("show");
