@@ -101,9 +101,12 @@
       padding: 0;
       margin: 0;
       z-index: 10;
-      max-height: 210px;/* Limit height */
-      overflow-y: auto;/* Scroll if too many suggestions */
-      display: none;/* Initially hidden */
+      max-height: 210px;
+      /* Limit height */
+      overflow-y: auto;
+      /* Scroll if too many suggestions */
+      display: none;
+      /* Initially hidden */
       border-radius: 5px;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     }
@@ -111,7 +114,8 @@
     .custom-suggestions li {
       padding: 10px;
       cursor: pointer;
-      text-align: center;/* Center text */
+      text-align: center;
+      /* Center text */
       font-size: 14px;
       border-bottom: 1px solid #ddd;
       transition: background 0.3s;
@@ -613,265 +617,170 @@
       <a href="https://wa.me/9175837073" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
       <a href="https://instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a>
     </div>
-    <p style="font-size: 12px;">&copy; 2025 Driveway. All rights reserved.</p>
+    <p style="font-size: 12px;">&copy; 2025 Driveway. All rights reserved. <a href="admin.html">Admin</a></p>
   </footer>
 
-  <script>
-    // Reference list of all car models (customize this with real data)
-    const allCarModels = [
-      "Ford", "Chevrolet", "GMC", "Cadillac", "Dodge", "Chrysler", "Jeep", "Ram", "Lincoln", "Tesla", "Buick", "BMW", "Mercedes-Benz",
-      "Audi", "Volkswagen", "Jaguar", "Land Rover", "Bentley", "Maserati", "Alfa Romeo", "Fiat", "Peugeot", "Volvo", "Toyota", "Honda",
-      "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"
-    ];
-    const cars = [{
-        name: "BMW X5 2020",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "12000 Miles",
-        price: "$299",
-        due: "$2000",
-        features: ["Bluetooth", "Backup Camera", "Android Auto", "Sunroof", "Keyless Entry", "Leather Seats", "Apple CarPlay"],
-        additional: [],
-        color: "Blue"
-      },
-      {
-        name: "Chevrolet Trax 2025",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "10000 Miles",
-        price: "$319",
-        due: "$2000",
-        features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
-        additional: "Premium Sound System",
-        color: "White"
-      },
-      {
-        name: "Honda Accord",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "10000 Miles",
-        price: "$319",
-        due: "$2000",
-        features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
-        additional: "Premium Sound System",
-        color: "White"
-      },
-      {
-        name: "Nissen Altima",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "10000 Miles",
-        price: "$319",
-        due: "$2000",
-        features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
-        additional: "Premium Sound System",
-        color: "White"
-      },
-      {
-        name: "Honda Passport",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "10000 Miles",
-        price: "$319",
-        due: "$2000",
-        features: ["Heated Seats", "Lane Assist", "Wireless Charging"],
-        additional: "Premium Sound System",
-        color: "White"
-      },
-      {
-        name: "BMW 3 Series",
-        image1: "https://th.bing.com/th/id/OIP.C-o2qFdkTNFq68DYbHm-WwHaEK?rs=1&pid=ImgDetMain",
-        image2: "https://performancedrive.com.au/wp-content/uploads/2020/02/2020-BMW-X5-M-Competition-interior.jpg",
-        term: "36 Months",
-        mileage: "15000",
-        price: "$449",
-        due: "$2000",
-        features: ["Navigation", "Adaptive Cruise Control", "Sunroof"],
-        additional: "M-Sport Package",
-        color: "Black"
-      }
-    ];
+  <script type="module">
+    // Firebase Setup
+    import {
+      initializeApp
+    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyC25Tdl5GtnRXcHeBBGeIOuIcVX_WdiHP4",
+      authDomain: "cars-8bdd6.firebaseapp.com",
+      projectId: "cars-8bdd6",
+      storageBucket: "cars-8bdd6.appspot.com",
+      messagingSenderId: "597823500976",
+      appId: "1:597823500976:web:71f23d89e38a5cdb010175"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    // DOM Elements
     const carsContainer = document.getElementById("cars-container");
     const searchBar = document.getElementById("search-bar");
     const suggestionsList = document.getElementById("car-suggestions");
     const modal = document.getElementById("car-modal");
-
-    function openModal(car) {
+    // Data
+    const allCarModels = ["Ford", "Chevrolet", "GMC", "Cadillac", "Dodge", "Chrysler", "Jeep", "Ram", "Lincoln", "Tesla", "Buick", "BMW", "Mercedes-Benz",
+      "Audi", "Volkswagen", "Jaguar", "Land Rover", "Bentley", "Maserati", "Alfa Romeo", "Fiat", "Peugeot", "Volvo", "Toyota", "Honda",
+      "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"];
+    let cars = [];
+    // Load cars from Firestore
+    async function loadCars() {
+      const querySnapshot = await getDocs(collection(db, "cars"));
+      cars = [];
+      querySnapshot.forEach((doc) => cars.push(doc.data()));
+      generateCars(cars);
+      updateSuggestions("");
+    }
+    // Modal Functions
+    window.openModal = function(car) {
       document.getElementById("modal-title").innerText = car.name;
       document.getElementById("modal-image2").src = car.image2;
-      document.getElementById("modal-features").innerHTML = car.features.map(feature => `<li>${feature}</li>`).join("");
-      document.getElementById("modal-additional").innerText = car.additional;
+      document.getElementById("modal-features").innerHTML = car.features.map(f => `<li>${f}</li>`).join("");
+      document.getElementById("modal-additional").innerText = car.additional || "";
       document.getElementById("modal-color").innerText = car.color;
       modal.style.display = "flex";
       document.body.style.overflow = "hidden";
     }
-
-    function closeModal() {
+    window.closeModal = function() {
       modal.style.display = "none";
       document.body.style.overflow = "auto";
     }
-    // Function to generate car cards
+    window.openModalByIndex = function(index) {
+      openModal(cars[index]);
+    }
+    // Generate Car Cards
     function generateCars(filteredCars) {
       carsContainer.innerHTML = filteredCars.length > 0 ?
         filteredCars.map((car, index) => `
-            <div class="car-card">
-                <img src="${car.image1}" alt="${car.name}">
-                <p class="car-name" onclick="openModal(cars[${index}])">${car.name}</p>
-                <div class="details">
-                    <div>
-                        <p>Term</p>
-                        <p>${car.term}</p>
-                    </div>
-                    <div>
-                        <p>Annual Mileage</p>
-                        <p>${car.mileage}</p>
-                    </div>
-                    <div>
-                        <p>Due At Signing</p>
-                        <p>${car.due}</p>
-                    </div>
-                </div>
-                <div>
-                    <p class="price">${car.price}<span style="font-size: 15px; color:#292929;"> / Month</span>
-                    <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${car.name}" target="_blank" class="quote-btn">Get Quote</a>
-                    </p>
-                </div>
-            </div>
-        `).join("") :
+      <div class="car-card">
+        <img src="${car.image1}" alt="${car.name}">
+        <p class="car-name" onclick="openModalByIndex(${index})">${car.name}</p>
+        <div class="details">
+          <div><p>Term</p><p>${car.term}</p></div>
+          <div><p>Annual Mileage</p><p>${car.mileage}</p></div>
+          <div><p>Due At Signing</p><p>${car.due || "$0"}</p></div>
+        </div>
+        <div>
+          <p class="price">${car.price}<span style="font-size: 15px; color:#292929;"> / Month</span>
+            <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${car.name}" target="_blank" class="quote-btn">Get Quote</a>
+          </p>
+        </div>
+      </div>`).join("") :
         `<p class="no-match">Sorry, no match found...</p>`;
     }
- // Function to count occurrences of each car model's first word
+    // Suggestion Logic
 function getCarCounts() {
-  const carCounts = {};
+  const counts = {};
   cars.forEach(car => {
-    const firstWord = car.name.split(" ")[0].toLowerCase(); // Extract first word
-    carCounts[firstWord] = (carCounts[firstWord] || 0) + 1;
+    const firstWord = car.name.split(" ")[0].toLowerCase();
+    counts[firstWord] = (counts[firstWord] || 0) + 1;
   });
-  return carCounts;
+  return counts;
 }
 
-// Function to update suggestions list
 function updateSuggestions(query) {
-  const carCounts = getCarCounts(); // Get updated car counts
-
+  const counts = getCarCounts();
   if (!query.trim()) {
-    suggestionsList.style.display = "none"; // Hide suggestions if input is empty
+    suggestionsList.style.display = "none";
     return;
   }
 
-  // Generate suggestions with counts based on the first word
   let matchingSuggestions = allCarModels.map(model => {
-    const firstWord = model.split(" ")[0].toLowerCase(); // Extract first word
-    const count = carCounts[firstWord] || 0; // Get actual count
+    const firstWord = model.split(" ")[0].toLowerCase();
+    const count = counts[firstWord] || 0;
     return `<li onclick="selectSuggestion('${model}')">${model} (${count})</li>`;
-  });
+  }).filter(item => item.toLowerCase().includes(query.toLowerCase()));
 
-  // Filter suggestions based on query
-  matchingSuggestions = matchingSuggestions.filter(item =>
-    item.toLowerCase().includes(query.toLowerCase())
-  );
-
-  // Show suggestions or hide if none found
-  if (matchingSuggestions.length > 0) {
-    suggestionsList.innerHTML = matchingSuggestions.join("");
-    suggestionsList.style.display = "block";
-  } else {
-    suggestionsList.style.display = "none"; // Hide if no matches
-  }
+  suggestionsList.innerHTML = matchingSuggestions.join("");
+  suggestionsList.style.display = matchingSuggestions.length ? "block" : "none";
 }
 
-// Function to select a suggestion and filter cars
-function selectSuggestion(model) {
+window.selectSuggestion = function(model) {
   searchBar.value = model;
-  suggestionsList.style.display = "none"; // Hide suggestions
-  filterCars(); // Filter cars after selection
+  suggestionsList.style.display = "none";
+  filterCars();
 }
 
-// Function to filter available cars
 function filterCars() {
   const query = searchBar.value.trim().toLowerCase();
-  const filteredCars = query
-    ? cars.filter(car => car.name.toLowerCase().startsWith(query)) // Match first word
-    : cars; // Show all cars if query is empty
-
-  generateCars(filteredCars);
+  const filtered = query ? cars.filter(car => car.name.toLowerCase().includes(query)) : cars;
+  generateCars(filtered);
 }
 
-// Event listeners
 searchBar.addEventListener("input", () => {
   updateSuggestions(searchBar.value);
   filterCars();
 });
 
-// Hide suggestions when clicking outside
 document.addEventListener("click", (event) => {
   if (!searchBar.contains(event.target) && !suggestionsList.contains(event.target)) {
     suggestionsList.style.display = "none";
   }
 });
-
-// Initial call to display all cars, but keep suggestions hidden
-generateCars(cars);
-suggestionsList.style.display = "none"; // Ensure suggestions are hidden by default
-
-
-// Hide suggestions when clicking outside
-document.addEventListener("click", (event) => {
-  if (!searchBar.contains(event.target) && !suggestionsList.contains(event.target)) {
-    suggestionsList.style.display = "none";
-  }
-});
-
-// Initial call to display all suggestions and all cars
-updateSuggestions(""); 
-generateCars(cars);
-
-
-    
-    let chatVisible = false; // Track if the chat is shown
-    let chatClosed = false; // Track if the user manually closed it
-    // Function to show chat after 5 seconds
+    // Start loading cars
+    loadCars();
+    // WhatsApp Chat Auto-popup
+    let chatVisible = false;
+    let chatClosed = false;
     setTimeout(() => {
-      if (!chatClosed) { // Only show if not closed manually
+      if (!chatClosed) {
         document.getElementById("whatsapp-chat").classList.add("show");
         chatVisible = true;
       }
     }, 5000);
-    // Scroll event - Prevent chat from showing before 5 seconds
-    window.addEventListener("scroll", function() {
-      let whatsappChat = document.getElementById("whatsapp-chat");
-      let mainContainer = document.querySelector(".main-container");
-      let mainBottom = mainContainer.offsetTop + mainContainer.offsetHeight;
-      let scrollPosition = window.scrollY + window.innerHeight;
-      // Ensure chat is completely hidden before 5 seconds
+    window.addEventListener("scroll", () => {
+      const whatsappChat = document.getElementById("whatsapp-chat");
+      const mainContainer = document.querySelector(".main-container");
+      const mainBottom = mainContainer.offsetTop + mainContainer.offsetHeight;
+      const scrollPosition = window.scrollY + window.innerHeight;
       if (!chatVisible) {
-        whatsappChat.style.opacity = "0"; // Hide it fully
-        return; // Exit function, don't show chat before 5s
+        whatsappChat.style.opacity = "0";
+        return;
       }
-      // Hide chat if scrolled to the bottom
       if (scrollPosition >= mainBottom) {
         whatsappChat.style.position = "absolute";
         whatsappChat.style.bottom = "20px";
-        whatsappChat.style.opacity = "0"; // Fade out
+        whatsappChat.style.opacity = "0";
       } else {
         whatsappChat.style.position = "fixed";
         whatsappChat.style.bottom = "20px";
         if (!chatClosed) {
-          whatsappChat.style.opacity = "1"; // Fully visible
+          whatsappChat.style.opacity = "1";
         }
       }
     });
-    // Close chat when clicking the close button
-    document.getElementById("close-chat").addEventListener("click", function() {
-      let whatsappChat = document.getElementById("whatsapp-chat");
+    document.getElementById("close-chat").addEventListener("click", () => {
+      const whatsappChat = document.getElementById("whatsapp-chat");
       whatsappChat.classList.add("closed");
       whatsappChat.style.opacity = "0";
-      chatClosed = true; // Mark chat as manually closed
+      chatClosed = true;
     });
     // Hamburger menu toggle
     document.getElementById("hamburger").addEventListener("click", function() {
