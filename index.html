@@ -617,19 +617,12 @@
       <a href="https://wa.me/9175837073" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
       <a href="https://instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a>
     </div>
-    <p style="font-size: 12px;">&copy; 2025 Driveway. All rights reserved. <a href="admin.html">Admin</a></p>
+    <p style="font-size: 12px;">&copy; 2025 Driveway. All rights reserved.</p>
   </footer>
-
-  <script type="module">
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script>
     // Firebase Setup
-    import {
-      initializeApp
-    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      getDocs
-    } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
     const firebaseConfig = {
       apiKey: "AIzaSyC25Tdl5GtnRXcHeBBGeIOuIcVX_WdiHP4",
       authDomain: "cars-8bdd6.firebaseapp.com",
@@ -638,8 +631,8 @@
       messagingSenderId: "597823500976",
       appId: "1:597823500976:web:71f23d89e38a5cdb010175"
     };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
     // DOM Elements
     const carsContainer = document.getElementById("cars-container");
     const searchBar = document.getElementById("search-bar");
@@ -653,7 +646,14 @@
     let cars = [];
     // Load cars from Firestore
     async function loadCars() {
-      const querySnapshot = await getDocs(collection(db, "cars"));
+      db.collection("cars").get().then((querySnapshot) => {
+        cars = [];
+        querySnapshot.forEach((doc) => {
+          cars.push(doc.data());
+        });
+        generateCars(cars);
+        updateSuggestions("");
+      });
       cars = [];
       querySnapshot.forEach((doc) => cars.push(doc.data()));
       generateCars(cars);
@@ -779,11 +779,15 @@
       chatClosed = true;
     });
     // Hamburger menu toggle
-    window.toggleMenu = function() {
+    document.getElementById("hamburger").addEventListener("click", function() {
+      document.querySelector(".nav-links").classList.toggle("show");
+    });
+
+    function toggleMenu() {
       const navLinks = document.querySelector('.nav-links');
       const hamburger = document.querySelector('.hamburger');
       navLinks.classList.toggle('show');
-      hamburger.classList.toggle('open');
+      hamburger.classList.toggle('open'); // Toggle the open state for the hamburger icon
     }
   </script>
 
