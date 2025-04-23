@@ -648,7 +648,8 @@
     // Data
     const allCarModels = ["Ford", "Chevrolet", "GMC", "Cadillac", "Dodge", "Chrysler", "Jeep", "Ram", "Lincoln", "Tesla", "Buick", "BMW", "Mercedes-Benz",
       "Audi", "Volkswagen", "Jaguar", "Land Rover", "Bentley", "Maserati", "Alfa Romeo", "Fiat", "Peugeot", "Volvo", "Toyota", "Honda",
-      "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"];
+      "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"
+    ];
     let cars = [];
     // Load cars from Firestore
     async function loadCars() {
@@ -696,54 +697,49 @@
         `<p class="no-match">Sorry, no match found...</p>`;
     }
     // Suggestion Logic
-function getCarCounts() {
-  const counts = {};
-  cars.forEach(car => {
-    const firstWord = car.name.split(" ")[0].toLowerCase();
-    counts[firstWord] = (counts[firstWord] || 0) + 1;
-  });
-  return counts;
-}
+    function getCarCounts() {
+      const counts = {};
+      cars.forEach(car => {
+        const firstWord = car.name.split(" ")[0].toLowerCase();
+        counts[firstWord] = (counts[firstWord] || 0) + 1;
+      });
+      return counts;
+    }
 
-function updateSuggestions(query) {
-  const counts = getCarCounts();
-  if (!query.trim()) {
-    suggestionsList.style.display = "none";
-    return;
-  }
+    function updateSuggestions(query) {
+      const counts = getCarCounts();
+      if (!query.trim()) {
+        suggestionsList.style.display = "none";
+        return;
+      }
+      let matchingSuggestions = allCarModels.map(model => {
+        const firstWord = model.split(" ")[0].toLowerCase();
+        const count = counts[firstWord] || 0;
+        return `<li onclick="selectSuggestion('${model}')">${model} (${count})</li>`;
+      }).filter(item => item.toLowerCase().includes(query.toLowerCase()));
+      suggestionsList.innerHTML = matchingSuggestions.join("");
+      suggestionsList.style.display = matchingSuggestions.length ? "block" : "none";
+    }
+    window.selectSuggestion = function(model) {
+      searchBar.value = model;
+      suggestionsList.style.display = "none";
+      filterCars();
+    }
 
-  let matchingSuggestions = allCarModels.map(model => {
-    const firstWord = model.split(" ")[0].toLowerCase();
-    const count = counts[firstWord] || 0;
-    return `<li onclick="selectSuggestion('${model}')">${model} (${count})</li>`;
-  }).filter(item => item.toLowerCase().includes(query.toLowerCase()));
-
-  suggestionsList.innerHTML = matchingSuggestions.join("");
-  suggestionsList.style.display = matchingSuggestions.length ? "block" : "none";
-}
-
-window.selectSuggestion = function(model) {
-  searchBar.value = model;
-  suggestionsList.style.display = "none";
-  filterCars();
-}
-
-function filterCars() {
-  const query = searchBar.value.trim().toLowerCase();
-  const filtered = query ? cars.filter(car => car.name.toLowerCase().includes(query)) : cars;
-  generateCars(filtered);
-}
-
-searchBar.addEventListener("input", () => {
-  updateSuggestions(searchBar.value);
-  filterCars();
-});
-
-document.addEventListener("click", (event) => {
-  if (!searchBar.contains(event.target) && !suggestionsList.contains(event.target)) {
-    suggestionsList.style.display = "none";
-  }
-});
+    function filterCars() {
+      const query = searchBar.value.trim().toLowerCase();
+      const filtered = query ? cars.filter(car => car.name.toLowerCase().includes(query)) : cars;
+      generateCars(filtered);
+    }
+    searchBar.addEventListener("input", () => {
+      updateSuggestions(searchBar.value);
+      filterCars();
+    });
+    document.addEventListener("click", (event) => {
+      if (!searchBar.contains(event.target) && !suggestionsList.contains(event.target)) {
+        suggestionsList.style.display = "none";
+      }
+    });
     // Start loading cars
     loadCars();
     // WhatsApp Chat Auto-popup
@@ -783,15 +779,11 @@ document.addEventListener("click", (event) => {
       chatClosed = true;
     });
     // Hamburger menu toggle
-    document.getElementById("hamburger").addEventListener("click", function() {
-      document.querySelector(".nav-links").classList.toggle("show");
-    });
-
-    function toggleMenu() {
+    window.toggleMenu = function() {
       const navLinks = document.querySelector('.nav-links');
       const hamburger = document.querySelector('.hamburger');
       navLinks.classList.toggle('show');
-      hamburger.classList.toggle('open'); // Toggle the open state for the hamburger icon
+      hamburger.classList.toggle('open');
     }
   </script>
 
