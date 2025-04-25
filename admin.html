@@ -586,9 +586,10 @@
             </div>
             <div class="input-row">
               <input type="text" id="car-price" placeholder="Price" required />
-              <input type="text" id="car-features" placeholder="Features (comma-separated)" required />
+              <input type="text" id="car-label" placeholder="Label" />
             </div>
-            <textarea id="car-additional" placeholder="Additional Features"></textarea>
+            <input type="text" id="car-features" placeholder="Features (comma-separated)" required />
+            <input id="car-additional" placeholder="Additional Features"></input>
             <button type="button" class="submit-btn" onclick="submitCar()">Submit Car</button>
             <div id="Submit-message" class="submit-msg"></div>
           </form>
@@ -665,6 +666,7 @@
       const features = featuresInput.split(',').map(f => f.trim()).filter(f => f);
       const additional = document.getElementById('car-additional').value;
       const color = document.getElementById('car-color').value;
+      const label = document.getElementById('car-label').value;
       const msg = document.getElementById('Submit-message');
       msg.style.color = ''; // Reset color
       msg.classList.remove('show'); // Hide any old message immediately
@@ -688,7 +690,8 @@
           price,
           features,
           additional,
-          color
+          color,
+          label
         })
         .then(() => {
           msg.innerHTML = '✅ Car added successfully!';
@@ -873,7 +876,6 @@
       hamburger.classList.toggle('open'); // Toggle the open state for the hamburger icon
     }
   </script>
-
 
 </body>
 
