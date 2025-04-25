@@ -222,7 +222,6 @@
       border: 1px solid #ccc;
       border-radius: 5px;
       outline: none;
-      box-sizing: border-box;
     }
 
     .custom-suggestions {
@@ -280,10 +279,9 @@
       width: 300px;
       border-radius: 10px;
       margin: 15px;
-      padding: 15px;
+      padding: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       text-align: center;
-      box-sizing: border-box;
       transition: transform 0.3s ease;
     }
 
@@ -300,13 +298,26 @@
 
     .car-name {
       background: -#007bff;
-      font-size: 18px;
+      display: flex;
+      align-items: center;
+      font-size: 22px;
       font-weight: bold;
+      text-shadow: 0 0 0.5px currentColor;
       text-align: left;
-      text-decoration: underline;
       margin: 8px 10px;
       padding: 0px 0px;
       cursor: pointer;
+    }
+
+    .car-name::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 23px;
+      background: #007bff;
+      margin-right: 8px;
+      border-radius: 2px;
+      vertical-align: middle;
     }
 
     .details {
@@ -314,7 +325,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin: 18px 0px;
+      margin: 15px 0px;
       padding: 0px 0px;
       font-size: 13px;
     }
@@ -362,7 +373,7 @@
       font-size: 28px;
       font-weight: bold;
       text-align: left;
-      margin: 25px 10px 10px 10px;
+      margin: 20px 10px 10px 10px;
       padding: 0px 0px;
     }
 
@@ -433,7 +444,7 @@
     /* Responsive Navigation */
     @media (max-width: 768px) {
       .header {
-        padding: 15px 20px;
+        padding: 20px 20px;
         z-index: 1000;
       }
 
@@ -588,6 +599,7 @@
         <ul id="car-suggestions" class="custom-suggestions"></ul>
       </div>
       <div class="cars-container" id="cars-container">
+        <div id="loading-spinner" class="spinner" style="display: none;"></div>
         <!-- Car posts will be dynamically inserted here -->
       </div>
     </div>
@@ -861,6 +873,7 @@
       hamburger.classList.toggle('open'); // Toggle the open state for the hamburger icon
     }
   </script>
+
 
 </body>
 
