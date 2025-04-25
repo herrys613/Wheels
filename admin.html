@@ -68,9 +68,6 @@
 
     .main-container {
       background: -#007bff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
       margin: 0px 0px 0px 0px;
       padding: 0px 0px;
       position: relative;
@@ -88,6 +85,7 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       box-sizing: border-box;
     }
+
     .log-in-btn {
       background: #007bff;
       color: white;
@@ -104,13 +102,19 @@
     }
 
     .add-car-btn {
-      display: block;
+      position: fixed;
+      bottom: 30px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
       background-color: #007bff;
       color: white;
-      width: 200px;
-      margin: 25px auto;
-      text-align: center;
+      font-size: 24px;
+      border: none;
+      border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
       cursor: pointer;
+      z-index: 1000;
       transition: background-color 0.3s ease;
     }
 
@@ -138,6 +142,7 @@
       padding: 30px;
       border-radius: 8px;
       width: 90%;
+      max-width: 400px;
       position: relative;
       box-sizing: border-box;
       animation: fadeInUp 0.3s ease-in-out;
@@ -225,7 +230,7 @@
     .search-container {
       background: -#007bff;
       text-align: center;
-      margin: auto;
+      margin: 15px 0px 0px 0px;
     }
 
     #search-bar {
@@ -236,6 +241,7 @@
       border: 1px solid #ccc;
       border-radius: 5px;
       outline: none;
+      box-sizing: content-box;
     }
 
     .custom-suggestions {
@@ -301,6 +307,7 @@
 
     .car-card:hover {
       transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
     .car-card img {
@@ -579,7 +586,7 @@
       <div id="login-error" class="error-message" style="display: none; color: red; font-size: 10px;"></div>
     </div>
     <div id="admin-form" style="display:none;">
-      <button onclick="openAddCarModal()" class="add-car-btn">+ Add Car</button>
+      <button onclick="openAddCarModal()" class="add-car-btn">+</button>
       <div id="addCarModal" class="modal">
         <div class="modal-content">
           <span class="close" onclick="closeAddCarModal()">&times;</span>
@@ -701,6 +708,7 @@
           image2,
           term,
           mileage,
+          due,
           price,
           features,
           additional,
@@ -738,7 +746,7 @@
     let cars = [];
     // Load cars from Firestore
     async function loadCars() {
-      db.collection("cars").get().then((querySnapshot) => {
+      db.collection("cars").onSnapshot((querySnapshot) => {
         cars = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
@@ -765,7 +773,7 @@
           <p class="price">${car.price}<span style="font-size: 15px; color:#292929;"> / Month</span>
             <a onclick="deleteCar('${car.id}')" class="delete-btn">Delete</a>
           </p>
-          <div id="Delete-message" class="status-message"></div>
+          <div id="Delete-message" class="submit-msg"></div>
         </div>
       </div>`).join("") :
         `<p class="no-match">Sorry, no match found...</p>`;
