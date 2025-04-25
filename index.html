@@ -676,57 +676,6 @@
       "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"
     ];
     let cars = [];
-    // Load cars from Firestore (cleaned up with spinner and async/await)
-async function loadCars() {
-  document.getElementById("loading-spinner").style.display = "flex"; // show spinner
-  try {
-    const querySnapshot = await db.collection("cars").get();
-    cars = [];
-    querySnapshot.forEach((doc) => {
-      cars.push(doc.data());
-    });
-    generateCars(cars);
-    updateSuggestions("");
-  } catch (error) {
-    console.error("Error loading cars:", error);
-  } finally {
-    document.getElementById("loading-spinner").style.display = "none"; // hide spinner
-  }
-}
-    // Modal Functions
-    window.openModal = function(car) {
-      document.getElementById("modal-title").innerText = car.name;
-      document.getElementById("modal-image2").src = car.image2;
-      document.getElementById("modal-features").innerHTML = car.features.map(f => `<li>${f}</li>`).join("");
-      document.getElementById("modal-additional").innerText = car.additional || "";
-      document.getElementById("modal-color").innerText = car.color;
-      modal.style.display = "flex";
-      document.body.style.overflow = "hidden";
-    }
-    window.closeModal = function() {
-      modal.style.display = "none";
-      document.body.style.overflow = "auto";
-    }
-    // Generate Car Cards
-    function generateCars(filteredCars) {
-      carsContainer.innerHTML = filteredCars.length > 0 ?
-        filteredCars.map((car, index) => `
-      <div class="car-card">
-        <img src="${car.image1}" alt="${car.name}">
-        <p class="car-name" onclick='openModal(${JSON.stringify(car)})'>${car.name}</p>
-        <div class="details">
-          <div><p>Term</p><p>${car.term}</p></div>
-          <div><p>Annual Mileage</p><p>${car.mileage}</p></div>
-          <div><p>Due At Signing</p><p>${car.due || "$0"}</p></div>
-        </div>
-        <div>
-          <p class="price">${car.price}<span style="font-size: 15px; color:#292929;"> / Month</span>
-            <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${car.name}" target="_blank" class="quote-btn">Get Quote</a>
-          </p>
-        </div>
-      </div>`).join("") :
-        `<p class="no-match">Sorry, no match found...</p>`;
-    }
     // Suggestion Logic
     function getCarCounts() {
       const counts = {};
@@ -771,8 +720,59 @@ async function loadCars() {
         suggestionsList.style.display = "none";
       }
     });
-    loadCars();
-    
+    // Load cars from Firestore (cleaned up with spinner and async/await)
+    async function loadCars() {
+      document.getElementById("loading-spinner").style.display = "flex"; // show spinner
+      try {
+        const querySnapshot = await db.collection("cars").get();
+        cars = [];
+        querySnapshot.forEach((doc) => {
+          cars.push(doc.data());
+        });
+        generateCars(cars);
+        updateSuggestions("");
+      } catch (error) {
+        console.error("Error loading cars:", error);
+      } finally {
+        document.getElementById("loading-spinner").style.display = "none"; // hide spinner
+      }
+    }
+    // Add the DOMContentLoaded event listener
+    document.addEventListener("DOMContentLoaded", loadCars);
+    // Generate Car Cards
+    function generateCars(filteredCars) {
+      carsContainer.innerHTML = filteredCars.length > 0 ?
+        filteredCars.map((car, index) => `
+      <div class="car-card">
+        <img src="${car.image1}" alt="${car.name}">
+        <p class="car-name" onclick='openModal(${JSON.stringify(car)})'>${car.name}</p>
+        <div class="details">
+          <div><p>Term</p><p>${car.term}</p></div>
+          <div><p>Annual Mileage</p><p>${car.mileage}</p></div>
+          <div><p>Due At Signing</p><p>${car.due || "$0"}</p></div>
+        </div>
+        <div>
+          <p class="price">${car.price}<span style="font-size: 15px; color:#292929;"> / Month</span>
+            <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${car.name}" target="_blank" class="quote-btn">Get Quote</a>
+          </p>
+        </div>
+      </div>`).join("") :
+        `<p class="no-match">Sorry, no match found...</p>`;
+    }
+    // Modal Functions
+    window.openModal = function(car) {
+      document.getElementById("modal-title").innerText = car.name;
+      document.getElementById("modal-image2").src = car.image2;
+      document.getElementById("modal-features").innerHTML = car.features.map(f => `<li>${f}</li>`).join("");
+      document.getElementById("modal-additional").innerText = car.additional || "";
+      document.getElementById("modal-color").innerText = car.color;
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
+    window.closeModal = function() {
+      modal.style.display = "none";
+      document.body.style.overflow = "auto";
+    }
     // WhatsApp Chat Auto-popup
     let chatVisible = false;
     let chatClosed = false;
