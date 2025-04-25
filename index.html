@@ -160,6 +160,7 @@
     }
 
     .car-card {
+      position: relative;
       background: #fff;
       width: 300px;
       border-radius: 10px;
@@ -170,8 +171,27 @@
       transition: transform 0.3s ease;
     }
 
+    .image-container {
+      position: relative;
+      width: 100%;
+      border-radius: 10px;
+    }
+
     .car-card:hover {
       transform: scale(1.05);
+    }
+
+    .hot-deal-label {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      background-color: #e60000;
+      color: white;
+      padding: 5px 10px;
+      font-weight: bold;
+      font-size: 11px;
+      border-radius: 10px 0 10px 0;
+      white-space: nowrap;
     }
 
     .car-card img {
@@ -744,7 +764,10 @@
       carsContainer.innerHTML = filteredCars.length > 0 ?
         filteredCars.map((car, index) => `
       <div class="car-card">
+      <div class="image-container">
         <img src="${car.image1}" alt="${car.name}">
+        ${car.label && car.label.trim() !== "" ? `<div class="hot-deal-label">${car.label}</div>` : ""}
+      </div>
         <p class="car-name" onclick='openModal(${JSON.stringify(car)})'>${car.name}</p>
         <div class="details">
           <div><p>Term</p><p>${car.term}</p></div>
