@@ -12,7 +12,7 @@
     body {
       font-family: 'Montserrat', sans-serif;
       color: #292929;
-      background: #f4f4f4;
+      background: #EEEEEE;
       box-sizing: border-box;
       height: 100%;
       margin: 0;
@@ -74,6 +74,26 @@
       flex: 1;
     }
 
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #007bff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 40px auto;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
     .search-container {
       background: -#007bff;
       text-align: center;
@@ -81,7 +101,7 @@
     }
 
     #search-bar {
-      width: 305px;
+      width: 300px;
       padding: 10px;
       font-size: 16px;
       border: 1px solid #ccc;
@@ -144,7 +164,7 @@
       width: 300px;
       border-radius: 10px;
       margin: 15px;
-      padding: 15px;
+      padding: 10px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       text-align: center;
       transition: transform 0.3s ease;
@@ -163,13 +183,26 @@
 
     .car-name {
       background: -#007bff;
-      font-size: 18px;
+      display: flex;
+      align-items: center;
+      font-size: 22px;
       font-weight: bold;
+      text-shadow: 0 0 0.5px currentColor;
       text-align: left;
-      text-decoration: underline;
       margin: 8px 10px;
       padding: 0px 0px;
       cursor: pointer;
+    }
+
+    .car-name::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 23px;
+      background: #007bff;
+      margin-right: 8px;
+      border-radius: 2px;
+      vertical-align: middle;
     }
 
     .details {
@@ -177,7 +210,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin: 18px 0px;
+      margin: 15px 0px;
       padding: 0px 0px;
       font-size: 13px;
     }
@@ -225,7 +258,7 @@
       font-size: 28px;
       font-weight: bold;
       text-align: left;
-      margin: 25px 10px 10px 10px;
+      margin: 20px 10px 10px 10px;
       padding: 0px 0px;
     }
 
@@ -460,7 +493,7 @@
     /* Responsive Navigation */
     @media (max-width: 768px) {
       .header {
-        padding: 15px 20px;
+        padding: 20px 20px;
         z-index: 1000;
       }
 
@@ -468,7 +501,7 @@
         display: none;
         flex-direction: column;
         position: absolute;
-        top: 30px;
+        top: 25px;
         left: 0;
         width: 100%;
         background: #333;
@@ -546,10 +579,7 @@
         top: 8px;
         /* Moves it to the center */
       }
-
-      .nav-links.show {
-        display: flex;
-      }
+    }
   </style>
 </head>
 
@@ -578,8 +608,10 @@
     </div>
 
     <div class="cars-container" id="cars-container">
+      <div id="loading-spinner" class="spinner" style="display: none;"></div>
       <!-- Car posts will be dynamically inserted here -->
     </div>
+
     <div id="whatsapp-chat">
       <div id="whatsapp-bubble">Want a specific car?</div>
       <a href="https://wa.me/9175837073?text=I%20would%20like%20to%20lease%20a%20" target="_blank">
@@ -644,21 +676,23 @@
       "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"
     ];
     let cars = [];
-    // Load cars from Firestore
-    async function loadCars() {
-      db.collection("cars").get().then((querySnapshot) => {
-        cars = [];
-        querySnapshot.forEach((doc) => {
-          cars.push(doc.data());
-        });
-        generateCars(cars);
-        updateSuggestions("");
-      });
-      cars = [];
-      querySnapshot.forEach((doc) => cars.push(doc.data()));
-      generateCars(cars);
-      updateSuggestions("");
-    }
+    // Load cars from Firestore (cleaned up with spinner and async/await)
+async function loadCars() {
+  document.getElementById("loading-spinner").style.display = "flex"; // show spinner
+  try {
+    const querySnapshot = await db.collection("cars").get();
+    cars = [];
+    querySnapshot.forEach((doc) => {
+      cars.push(doc.data());
+    });
+    generateCars(cars);
+    updateSuggestions("");
+  } catch (error) {
+    console.error("Error loading cars:", error);
+  } finally {
+    document.getElementById("loading-spinner").style.display = "none"; // hide spinner
+  }
+}
     // Modal Functions
     window.openModal = function(car) {
       document.getElementById("modal-title").innerText = car.name;
@@ -673,16 +707,13 @@
       modal.style.display = "none";
       document.body.style.overflow = "auto";
     }
-    window.openModalByIndex = function(index) {
-      openModal(cars[index]);
-    }
     // Generate Car Cards
     function generateCars(filteredCars) {
       carsContainer.innerHTML = filteredCars.length > 0 ?
         filteredCars.map((car, index) => `
       <div class="car-card">
         <img src="${car.image1}" alt="${car.name}">
-        <p class="car-name" onclick="openModalByIndex(${index})">${car.name}</p>
+        <p class="car-name" onclick='openModal(${JSON.stringify(car)})'>${car.name}</p>
         <div class="details">
           <div><p>Term</p><p>${car.term}</p></div>
           <div><p>Annual Mileage</p><p>${car.mileage}</p></div>
@@ -740,8 +771,8 @@
         suggestionsList.style.display = "none";
       }
     });
-    // Start loading cars
     loadCars();
+    
     // WhatsApp Chat Auto-popup
     let chatVisible = false;
     let chatClosed = false;
