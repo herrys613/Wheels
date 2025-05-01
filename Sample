@@ -104,7 +104,7 @@
     /* Responsive Navigation */
     @media (max-width: 768px) {
       .header {
-        padding: 15px 20px;
+        padding: 20px 20px;
         z-index: 1000;
       }
 
@@ -204,7 +204,7 @@
       <img src="images/logo.png" alt="Logo">
     </div>
     <ul class="nav-links">
-      <li><a href="#">Home</a></li>
+      <li><a href="index.html">Home</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="faq.html">FAQ</a></li>
       <li><a href="contact-us.html">Contact Us</a></li>
@@ -222,7 +222,7 @@
 
   <footer class="footer">
     <div class="links">
-      <a href="#">Home</a>
+      <a href="index.html">Home</a>
       <a href="about.html">About</a>
       <a href="faq.html">FAQ</a>
       <a href="contact-us.html">Contact Us</a>
