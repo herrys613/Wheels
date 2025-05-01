@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    html,
+    body {
+      font-family: 'Montserrat', sans-serif;
+      color: #292929;
+      background: #f4f4f4;
+      box-sizing: border-box;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: #333;
+      box-sizing: border-box;
+      color: white;
+      position: sticky;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      justify-content: center;
+    }
+
+    .logo img {
+      width: 100px;
+      height: auto;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      margin-left: auto;
+    }
+
+    .nav-links li {
+      margin: 0px 15px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: white;
+      font-size: 18px;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #007bff;
+    }
+
+    .main-container {
+      background: -#007bff;
+      margin: 0px 0px 0px 0px;
+      padding: 15px 0px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex: 1;
+    }
+
+    .login-form {
+      width: 75%;
+      max-width: 350px;
+      margin: auto;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-sizing: border-box;
+    }
+
+    input,
+    textarea,
+    button {
+      width: 100%;
+      padding: 12px;
+      margin: 5px 0;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 10px;
+      box-sizing: border-box;
+    }
+
+    .log-in-btn {
+      background: #007bff;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .log-in-btn:hover {
+      background: #0056b3;
+    }
+
+    .error-message {
+      font-size: 10px;
+      color: red;
+    }
+
+    .footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 20px 0px 10px 0px;
+      margin: 0px 0px 0px 0px;
+      position: relative;
+    }
+
+    .footer .links a {
+      color: white;
+      font-size: 15px;
+      text-decoration: none;
+      margin: 0 15px;
+    }
+
+    .footer .social-icons {
+      margin-top: 20px;
+    }
+
+    .footer .social-icons a {
+      color: white;
+      margin: 0 10px;
+      font-size: 20px;
+      text-decoration: none;
+    }
+
+    /* Responsive Navigation */
+    @media (max-width: 768px) {
+      .header {
+        padding: 15px 20px;
+        z-index: 1000;
+      }
+
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 30px;
+        left: 0;
+        width: 100%;
+        background: #333;
+        text-align: center;
+        align-items: center;
+        height: auto;
+        padding: 10px 0;
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .nav-links li {
+        padding: 10px 0;
+        width: 100%;
+      }
+
+      .hamburger {
+        font-size: 25px;
+        cursor: pointer;
+        margin-left: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        width: 25px;
+        /* Adjust size */
+        height: 20px;
+        /* Adjust height */
+        position: relative;
+        /* So we can absolutely position bars */
+      }
+
+      .hamburger .bar {
+        background-color: white;
+        height: 3px;
+        /* Adjust thickness */
+        width: 100%;
+        transition: all 0.3s ease;
+        position: absolute;
+        /* Allow absolute positioning */
+        left: 0;
+      }
+
+      /* Positioning for the bars */
+      .hamburger .bar:nth-child(1) {
+        top: 0;
+      }
+
+      .hamburger .bar:nth-child(2) {
+        top: 8px;
+      }
+
+      .hamburger .bar:nth-child(3) {
+        top: 16px;
+      }
+
+      /* When the hamburger is in 'open' state (when menu is displayed) */
+      .hamburger.open .bar:nth-child(1) {
+        transform: rotate(45deg);
+        /* Top bar rotates */
+        top: 8px;
+        /* Moves it to the center */
+      }
+
+      .hamburger.open .bar:nth-child(2) {
+        opacity: 0;
+        /* Middle bar disappears */
+      }
+
+      .hamburger.open .bar:nth-child(3) {
+        transform: rotate(-45deg);
+        /* Bottom bar rotates */
+        top: 8px;
+        /* Moves it to the center */
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <div class="logo">
+      <img src="images/logo.png" alt="Logo">
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="contact-us.html">Contact Us</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMenu()">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <div class="login-form">
+      <h2>Admin Login</h2>
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button class="log-in-btn" onclick="login()">Login</button>
+      <p id="error" class="error-message"></p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+      <a href="contact-us.html">Contact Us</a>
+    </div>
+    <div class="social-icons">
+      <a href="https://wa.me/9175837073" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+      <a href="https://instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+    </div>
+    <p style="font-size: 12px;">&copy; 2025 Driveway. All rights reserved.</p>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyC25Tdl5GtnRXcHeBBGeIOuIcVX_WdiHP4",
+      authDomain: "cars-8bdd6.firebaseapp.com",
+      projectId: "cars-8bdd6",
+      storageBucket: "cars-8bdd6.appspot.com",
+      messagingSenderId: "597823500976",
+      appId: "1:597823500976:web:71f23d89e38a5cdb010175"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => {
+          window.location.href = "admin.html";
+        })
+        .catch(err => {
+          const errorBox = document.getElementById("error");
+          errorBox.style.color = "red";
+          errorBox.innerText = "Login failed: Incorrect email or password.";
+        });
+    }
+    // Hamburger menu toggle
+    document.getElementById("hamburger").addEventListener("click", function() {
+      document.querySelector(".nav-links").classList.toggle("show");
+    });
+
+    function toggleMenu() {
+      const navLinks = document.querySelector('.nav-links');
+      const hamburger = document.querySelector('.hamburger');
+      navLinks.classList.toggle('show');
+      hamburger.classList.toggle('open'); // Toggle the open state for the hamburger icon
+    }
+  </script>
+
+</body>
+
+</html>
