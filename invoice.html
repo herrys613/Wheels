@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    html,
+    body {
+      font-family: 'Montserrat', sans-serif;
+      color: #292929;
+      background: #f4f4f4;
+      box-sizing: border-box;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: #333;
+      box-sizing: border-box;
+      color: white;
+      position: sticky;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      justify-content: center;
+    }
+
+    .logo img {
+      width: 100px;
+      height: auto;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      margin-left: auto;
+    }
+
+    .nav-links li {
+      margin: 0px 15px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: white;
+      font-size: 18px;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #007bff;
+    }
+
+    .main-container {
+      background: -#007bff;
+      margin: 0px 0px 0px 0px;
+      padding: 15px 0px;
+      position: relative;
+      flex: 1;
+    }
+
+    .invoice-box {
+      margin: 20px;
+      padding: 40px;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+      box-sizing: border-box;
+    }
+
+    h2 {
+      font-size: 30px;
+      color: red;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header-section {
+      margin: 100px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .order-info {
+      width: 150px;
+      margin-right: 60px;
+      text-align: right;
+      font-size: 20px;
+      color: #555;
+    }
+
+    .order-info input[type="text"],
+    .order-info input[type="date"] {
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      background: none;
+      color: #333;
+    }
+
+    .items,
+    .summary {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .items th,
+    .items td,
+    .summary td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .items th {
+      background: #f2f2f2;
+      text-align: left;
+    }
+
+    .items th:nth-child(2),
+    .items td:nth-child(2) {
+      width: 150px;
+      text-align: left;
+    }
+
+    .summary {
+      width: 300px;
+      margin-left: auto;
+      margin-top: 20px;
+    }
+
+    .summary td {
+      width: 100px;
+      text-align: right;
+    }
+
+    .summary .total td {
+      font-weight: bold;
+      text-align: left;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"] {
+      width: 100%;
+      border: none;
+      background: none;
+      font-size: 14px;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus {
+      outline: none;
+      border-bottom: 1px solid #007bff;
+    }
+
+    .info {
+      margin-top: 100px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .box {
+      flex: 1 1 300px;
+    }
+
+    .box h3 {
+      margin-bottom: 5px;
+      color: #333;
+    }
+
+    button {
+      display: block;
+      width: 90%;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 20px 0px 10px 0px;
+      margin: 0px 0px 0px 0px;
+      position: relative;
+    }
+
+    .footer .links a {
+      color: white;
+      font-size: 15px;
+      text-decoration: none;
+      margin: 0 15px;
+    }
+
+    .footer .social-icons {
+      margin-top: 20px;
+    }
+
+    .footer .social-icons a {
+      color: white;
+      margin: 0 10px;
+      font-size: 20px;
+      text-decoration: none;
+    }
+
+    /* Responsive Navigation */
+    @media (max-width: 768px) {
+      .header {
+        padding: 20px 20px;
+        z-index: 1000;
+      }
+
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 30px;
+        left: 0;
+        width: 100%;
+        background: #333;
+        text-align: center;
+        align-items: center;
+        height: auto;
+        padding: 10px 0;
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+
+      .nav-links li {
+        padding: 10px 0;
+        width: 100%;
+      }
+
+      .hamburger {
+        font-size: 25px;
+        cursor: pointer;
+        margin-left: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        width: 25px;
+        /* Adjust size */
+        height: 20px;
+        /* Adjust height */
+        position: relative;
+        /* So we can absolutely position bars */
+      }
+
+      .hamburger .bar {
+        background-color: white;
+        height: 3px;
+        /* Adjust thickness */
+        width: 100%;
+        transition: all 0.3s ease;
+        position: absolute;
+        /* Allow absolute positioning */
+        left: 0;
+      }
+
+      /* Positioning for the bars */
+      .hamburger .bar:nth-child(1) {
+        top: 0;
+      }
+
+      .hamburger .bar:nth-child(2) {
+        top: 8px;
+      }
+
+      .hamburger .bar:nth-child(3) {
+        top: 16px;
+      }
+
+      /* When the hamburger is in 'open' state (when menu is displayed) */
+      .hamburger.open .bar:nth-child(1) {
+        transform: rotate(45deg);
+        /* Top bar rotates */
+        top: 8px;
+        /* Moves it to the center */
+      }
+
+      .hamburger.open .bar:nth-child(2) {
+        opacity: 0;
+        /* Middle bar disappears */
+      }
+
+      .hamburger.open .bar:nth-child(3) {
+        transform: rotate(-45deg);
+        /* Bottom bar rotates */
+        top: 8px;
+        /* Moves it to the center */
+      }
+
+      .nav-links.show {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="header">
+    <div class="logo">
+      <img src="images/logo.png" alt="Logo">
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="contact-us.html">Contact Us</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMenu()">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <div class="invoice-box" id="invoice">
+      <h2>Invoice</h2>
+      <div class="header-section">
+        <img src="images/logo.png" alt="Logo" class="logo">
+        <div class="order-info">
+          <input type="text" name="invoiceNumber" value="INVOICE #800000025" />
+          <input type="date" name="invoiceDate" value="MARCH 4TH 2016" />
+        </div>
+      </div>
+
+      <table class="items">
+        <tr class="heading">
+          <th>Description</th>
+          <th>Total</th>
+        </tr>
+        <tr>
+          <td><input type="text" name="item1Description" /></td>
+          <td><input type="text" name="item1Total" value="$00.0" /></td>
+        </tr>
+        <tr>
+          <td><input type="text" name="item2Description" /></td>
+          <td><input type="text" name="item2Total" /></td>
+        </tr>
+      </table>
+
+      <table class="summary">
+        <tr class="total">
+          <td>Sub Total:</td>
+          <td><input type="text" name="subtotal" value="$00.0" /></td>
+        </tr>
+      </table>
+
+      <section class="info">
+        <div class="box">
+          <h3>BILLING INFORMATION</h3>
+          <p>Driveway Auto Leasing<br>Monroe, NY<br>10950, United States<br>T: 202-555-0133</p>
+        </div>
+      </section>
+    </div>
+    <button onclick="downloadPDF()">Download PDF</button>
+  </div>
+
+  <footer class="footer">
+    <div class="links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="faq.html">FAQ</a>
+      <a href="contact-us.html">Contact Us</a>
+    </div>
+    <div class="social-icons">
+      <a href="https://wa.me/9175837073" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+      <a href="https://instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+    </div>
+    <p style="font-size: 12px;">&copy; 2025 Driveway. All rights reserved.</p>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyC25Tdl5GtnRXcHeBBGeIOuIcVX_WdiHP4",
+      authDomain: "cars-8bdd6.firebaseapp.com",
+      projectId: "cars-8bdd6",
+      storageBucket: "cars-8bdd6.appspot.com",
+      messagingSenderId: "597823500976",
+      appId: "1:597823500976:web:71f23d89e38a5cdb010175"
+    };
+    firebase.initializeApp(firebaseConfig);
+    firebase.auth().onAuthStateChanged(user => {
+      if (!user) {
+        // Not logged in, redirect to login
+        window.location.href = "login.html";
+      }
+    });
+
+   function downloadPDF() {
+  const element = document.getElementById("invoice");
+
+  const opt = {
+    margin: 0, // Set to 0 to avoid adding extra margins
+    filename: 'invoice.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: {
+      scale: 2,
+      useCORS: true,
+      scrollY: 0 // Prevents issues with scroll position
+    },
+    jsPDF: {
+      unit: 'px', // use 'px' for pixel-perfect rendering
+      format: [794, 1123], // Match your invoice-box size (px)
+      orientation: 'portrait'
+    }
+  };
+
+  html2pdf().set(opt).from(element).save();
+}
+    // Hamburger menu toggle
+    document.getElementById("hamburger").addEventListener("click", function() {
+      document.querySelector(".nav-links").classList.toggle("show");
+    });
+
+    function toggleMenu() {
+      const navLinks = document.querySelector('.nav-links');
+      const hamburger = document.querySelector('.hamburger');
+      navLinks.classList.toggle('show');
+      hamburger.classList.toggle('open'); // Toggle the open state for the hamburger icon
+    }
+  </script>
+
+</body>
+
+</html>
