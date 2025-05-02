@@ -74,29 +74,47 @@
       flex: 1;
     }
 
-   .go-back-btn {
-  position: relative;
-     padding: 10px;
-  top: 10px;
-  left: 20px;
-  width: auto;
-  height: auto;
-  background-color: white;
-  color: #333;
-  border: 1px solid #ccc;
-  border-radius: 10%;
-  font-size: 12px;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-.go-back-btn:hover {
-  background-color: #f0f0f0;
-}
+    .go-back-btn {
+      position: relative;
+      padding: 10px;
+      top: 10px;
+      left: 20px;
+      width: auto;
+      background: #f4f4f4;
+      height: auto;
+      font-size: 20px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
 
+    .go-back-btn i {
+      margin-right: 8px;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #007bff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 40px auto;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
 
     .add-car-btn {
       position: fixed;
@@ -557,8 +575,8 @@
 
   <div class="main-container">
     <button onclick="window.history.back()" class="go-back-btn">
-  <i class="fas fa-arrow-left"></i>Go back
-</button>
+      <i class="fas fa-arrow-left"></i> Car List
+    </button>
     <button onclick="openAddCarModal()" class="add-car-btn">+</button>
     <div id="addCarModal" class="modal">
       <div class="modal-content">
@@ -720,40 +738,6 @@
       "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"
     ];
     let cars = [];
-    // Load cars from Firestore
-    async function loadCars() {
-      db.collection("cars").onSnapshot((querySnapshot) => {
-        cars = [];
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          data.id = doc.id; // Store document ID for deletion
-          cars.push(data);
-        });
-        generateCars(cars);
-        updateSuggestions("");
-      });
-    }
-    // Generate Car Cards
-    function generateCars(filteredCars) {
-      carsContainer.innerHTML = filteredCars.length > 0 ?
-        filteredCars.map((car, index) => `
-      <div class="car-card">
-        <img src="${car.image1}" alt="${car.name}">
-        <p class="car-name" onclick="openModalByIndex(${index})">${car.name}</p>
-        <div class="details">
-          <div><p>Term</p><p>${car.term}</p></div>
-          <div><p>Annual Mileage</p><p>${car.mileage}</p></div>
-          <div><p>Due At Signing</p><p>${car.due || "$0"}</p></div>
-        </div>
-        <div>
-          <p class="price">${car.price}<span style="font-size: 15px; color:#292929;"> / Month</span>
-            <a onclick="deleteCar('${car.id}')" class="delete-btn">Delete</a>
-          </p>
-          <div id="Delete-message" class="submit-msg"></div>
-        </div>
-      </div>`).join("") :
-        `<p class="no-match">Sorry, no match found...</p>`;
-    }
     // Suggestion Logic
     function getCarCounts() {
       const counts = {};
@@ -798,8 +782,46 @@
         suggestionsList.style.display = "none";
       }
     });
-    // Start loading cars
-    loadCars();
+    // Load cars from Firestore (cleaned up with spinner and async/await)
+    async function loadCars() {
+      document.getElementById("loading-spinner").style.display = "flex"; // show spinner
+      try {
+        const querySnapshot = await db.collection("cars").get();
+        cars = [];
+        querySnapshot.forEach((doc) => {
+          cars.push(doc.data());
+        });
+        generateCars(cars);
+        updateSuggestions("");
+      } catch (error) {
+        console.error("Error loading cars:", error);
+      } finally {
+        document.getElementById("loading-spinner").style.display = "none"; // hide spinner
+      }
+    }
+    // Add the DOMContentLoaded event listener
+    document.addEventListener("DOMContentLoaded", loadCars);
+    // Generate Car Cards
+    function generateCars(filteredCars) {
+      carsContainer.innerHTML = filteredCars.length > 0 ?
+        filteredCars.map((car, index) => `
+      <div class="car-card">
+        <img src="${car.image1}" alt="${car.name}">
+        <p class="car-name" onclick="openModalByIndex(${index})">${car.name}</p>
+        <div class="details">
+          <div><p>Term</p><p>${car.term}</p></div>
+          <div><p>Annual Mileage</p><p>${car.mileage}</p></div>
+          <div><p>Due At Signing</p><p>${car.due || "$0"}</p></div>
+        </div>
+        <div>
+          <p class="price">${car.price}<span style="font-size: 15px; color:#292929;"> / Month</span>
+            <a onclick="deleteCar('${car.id}')" class="delete-btn">Delete</a>
+          </p>
+          <div id="Delete-message" class="submit-msg"></div>
+        </div>
+      </div>`).join("") :
+        `<p class="no-match">Sorry, no match found...</p>`;
+    }
     // Delete Car Function
     function deleteCar(carId) {
       const msg = document.getElementById('Delete-message');
