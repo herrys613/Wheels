@@ -71,14 +71,35 @@
       margin: 0px 0px 0px 0px;
       padding: 15px 15px;
       position: relative;
-      display: grid;
-      place-items: center;
+      flex: 1;
+    }
+
+    .go-back-btn {
+      position: relative;
+      padding: 10px;
+      top: 10px;
+      left: 20px;
+      width: auto;
+      background: #f4f4f4;
+      height: auto;
+      font-size: 20px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .go-back-btn i {
+      margin-right: 8px;
     }
 
     .invoice-box {
       width: 100%;
       max-width: 816px;
-      margin: 0;
+      margin: 15px auto;
       padding: 40px;
       background: white;
       box-sizing: border-box;
@@ -166,7 +187,7 @@
       color: #333;
     }
 
-    button {
+    .download-btn {
       margin: 30px auto 0;
       display: block;
       background-color: #007bff;
@@ -178,7 +199,7 @@
       cursor: pointer;
     }
 
-    button:hover {
+    .download-btnn:hover {
       background-color: #0056b3;
     }
 
@@ -335,6 +356,9 @@
   </header>
 
   <div class="main-container">
+    <button onclick="window.history.back()" class="go-back-btn">
+      <i class="fas fa-arrow-left"></i> Menu
+    </button>
     <div class="invoice-box" id="invoice">
       <table>
         <tr class="top">
@@ -412,7 +436,7 @@
       </div>
     </div>
 
-    <button onclick="downloadInvoice()">Download PDF</button>
+    <button class="download-btn" onclick="downloadInvoice()">Download PDF</button>
   </div>
 
   <footer class="footer">
