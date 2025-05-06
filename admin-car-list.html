@@ -783,22 +783,22 @@
       }
     });
     // Load cars from Firestore (cleaned up with spinner and async/await)
-    async function loadCars() {
-      document.getElementById("loading-spinner").style.display = "flex"; // show spinner
-      try {
-        const querySnapshot = await db.collection("cars").get();
-        cars = [];
-        querySnapshot.forEach((doc) => {
-          cars.push(doc.data());
-        });
-        generateCars(cars);
-        updateSuggestions("");
-      } catch (error) {
-        console.error("Error loading cars:", error);
-      } finally {
-        document.getElementById("loading-spinner").style.display = "none"; // hide spinner
-      }
-    }
+    function loadCars() {
+  document.getElementById("loading-spinner").style.display = "flex"; // show spinner
+
+  db.collection("cars").onSnapshot((snapshot) => {
+    cars = [];
+    snapshot.forEach((doc) => {
+      cars.push({ id: doc.id, ...doc.data() });
+    });
+    generateCars(cars);
+    updateSuggestions("");
+    document.getElementById("loading-spinner").style.display = "none"; // hide spinner
+  }, (error) => {
+    console.error("Error loading cars:", error);
+    document.getElementById("loading-spinner").style.display = "none"; // hide spinner even on error
+  });
+}
     // Add the DOMContentLoaded event listener
     document.addEventListener("DOMContentLoaded", loadCars);
     // Generate Car Cards
