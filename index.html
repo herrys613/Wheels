@@ -6,9 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tailwind Header</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 <style>
   [x-cloak] {
@@ -89,7 +87,7 @@
 
   <!-- Featuress -->
   <section class="bg-white dark:bg-gray-900">
-    <div data-aos="fade-up" class="container px-6 py-10 mx-auto">
+    <div class="container px-6 py-10 mx-auto">
       <h1 class="text-2xl font-semibold text-center text-gray-800 capitalize lg:text-4xl dark:text-white">Built for Your <span class="text-blue-500">Convenience</span></h1>
 
       <div class="grid grid-cols-1 gap-8 mt-8 xl:mt-12 xl:gap-16 md:grid-cols-3">
@@ -194,28 +192,28 @@
   </section>
 
   <!-- Partner -->
-  <section class="bg-whitedark:bg-gray-900">
-    <div data-aos="fade-up" class="container flex flex-col items-center px-6 py-10 mx-auto text-center">
+  <section class="bg-white dark:bg-gray-900">
+    <div class="container flex flex-col items-center px-16 py-16 mx-auto text-center">
       <h2 class="max-w-2xl mx-auto text-3xl font-semibold tracking-tight text-gray-800 xl:text-3xl dark:text-white">
         <span class="text-blue-500">Partner</span> with us.
-      </h2>
+        </h2>
 
-      <p class="max-w-4xl mt-6 text-center text-gray-500 dark:text-gray-300">
-        Are you a dealership, broker, or leasing agency? Let’s grow together. Partner with us and reach thousands of ready-to-lease customers through a seamless, high-visibility platform.
-      </p>
+    <p class="max-w-4xl mt-6 text-center text-gray-500 dark:text-gray-300">
+      Are you a dealership, broker, or leasing agency? Let’s grow together. Partner with us and reach thousands of ready-to-lease customers through a seamless, high-visibility platform.
+    </p>
 
-      <div class="inline-flex mt-6">
-        <a href="/contact" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 rounded-xl shadow-md transition">
-          Let’s Talk <i class="fas fa-rocket text-base"></i>
-        </a>
-      </div>
+    <div class="inline-flex mt-6">
+      <a href="/contact" class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 rounded-xl shadow-md transition">
+        Let’s Talk <i class="fas fa-rocket text-base"></i>
+      </a>
     </div>
   </section>
 
+  <!-- Footer -->
   <footer class="bg-white dark:bg-gray-900">
     <div class="container border-t p-6 mx-auto">
       <div class="lg:flex">
-        <div class="w-full -mx-6 lg:w-2/5">
+        <div class="w-full -mx-6 py-7 lg:w-2/5">
           <div class="px-6">
             <a href="#">
               <img class="w-auto h-5" src="https://github.com/herrys613/driveway/blob/1ff797e1fae6b887a8180ba940d23195dd44df2f/images/logo.png?raw=true" alt="">
@@ -267,9 +265,7 @@
     </div>
   </footer>
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <script>
     const buttons = document.querySelectorAll('[data-accordion-button]');
     buttons.forEach((button) => {
@@ -296,15 +292,6 @@
         }
       });
     });
-  </script>
-  <script>
-    AOS.init();
-    AOS.init({
-    duration: 600,         // default animation duration (ms)
-    easing: 'ease-in-out',  // default easing
-    once: false,             // optional: only animate once
-    offset: 50,             // optional: offset before animation starts
-  });
   </script>
 </body>
 
