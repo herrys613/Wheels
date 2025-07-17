@@ -110,7 +110,7 @@
     </nav>
   </section>
 
-  <section id="main-section" class="bg-[#f9f9f9]  min-h-[60vh]">
+  <section id="main-section" class="bg-[#f9f9f9]/80  min-h-[100vh]">
     <div class="container px-7 py-5 mx-auto">
       <div class="relative w-full text-center">
         <!-- Search Input -->
@@ -123,18 +123,18 @@
         </span>
         <input id="search-bar" type="text" placeholder="Search cars..." onkeyup="filterCars()"
           oninput="updateSuggestions()" autocomplete="off"
-          class="w-full text-xs pl-10 pr-4 py-2 text-gray-700 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent" />
+          class="w-full text-sm pl-10 pr-4 py-2 text-gray-700 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent" />
 
         <!-- Suggestions Dropdown -->
         <ul id="car-suggestions"
-          class="absolute z-10 w-full mt-0.5 bg-white border border-gray-200 rounded-md shadow-lg max-h-52 overflow-y-auto no-scrollbar hidden text-sm">
+          class="absolute z-10 w-full mt-0.5 bg-white border border-gray-200 rounded-lg shadow-lg max-h-52 overflow-y-auto no-scrollbar hidden text-sm">
         </ul>
       </div>
     </div>
 
     <div class="container px-8 mx-auto">
       <div class="w-full flex justify-center items-center my-0">
-        <div id="loading-spinner" class="w-10 h-10 mt-6 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"
+        <div id="loading-spinner" class="w-10 h-10 mt-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"
           style="display: none;">
         </div>
       </div>
