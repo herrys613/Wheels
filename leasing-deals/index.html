@@ -12,11 +12,11 @@
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Leasing Deals | Wheels">
-<meta property="og:description" content="Explore current car lease deals from trusted dealerships.">  
+  <meta property="og:description" content="Explore current car lease deals from trusted dealerships.">
   <meta property="og:url" content="https://wheelsautoleasing.com/leasing-deals/">
-  <meta property="og:image" content="/images/leasing-deals-social-preview.png">
+  <meta property="og:image" content="https://wheelsautoleasing.com/images/home-social-preview.png">
 
- <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
   <link rel="canonical" href="https://wheelsautoleasing.com/leasing-deals/">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -61,7 +61,7 @@
 </style>
 
 <body>
-  <section class="bg-white dark:bg-gray-900 border-b">
+  <section class="bg-white  border-b">
     <nav x-data="{ isOpen: false }" class="container p-5 mx-auto lg:flex lg:justify-between lg:items-center">
       <div class="flex items-center justify-between">
         <a href="/">
@@ -71,7 +71,7 @@
         <!-- Mobile menu button -->
         <div class="flex lg:hidden">
           <button x-cloak @click="isOpen = !isOpen" type="button"
-            class="text-gray-500 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400"
+            class="text-gray-500  hover:text-gray-600  focus:outline-none focus:text-gray-600 "
             aria-label="toggle menu">
             <svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
               stroke="currentColor" stroke-width="2">
@@ -88,17 +88,17 @@
 
       <!-- Mobile Menu open: "block", Menu closed: "hidden"-->
       <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
-        class="absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white shadow-md lg:bg-transparent lg:dark:bg-transparent lg:shadow-none dark:bg-gray-900 lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center">
+        class="absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white shadow-md lg:bg-transparent lg: lg:shadow-none  lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center">
         <div class="flex flex-col space-y-3 lg:mt-0 lg:flex-row lg:-px-8 lg:space-y-0">
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5 dark:text-gray-200 dark:hover:text-blue-400 hover:text-blue-500"
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
             href="/">Home</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5 dark:text-gray-200 dark:hover:text-blue-400 hover:text-blue-500"
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5 hover:text-blue-500"
             href="/leasing-deals/">Leasing Deals</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5 dark:text-gray-200 dark:hover:text-blue-400 hover:text-blue-500"
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5 hover:text-blue-500"
             href="/about-us/">About us</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5 dark:text-gray-200 dark:hover:text-blue-400 hover:text-blue-500"
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5 hover:text-blue-500"
             href="/blog/">Blog</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5 dark:text-gray-200 dark:hover:text-blue-400 hover:text-blue-500"
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5 hover:text-blue-500"
             href="/contact/">Contact</a>
         </div>
 
@@ -110,21 +110,32 @@
     </nav>
   </section>
 
-  <section id="main-section" class="bg-gray-100 dark:bg-gray-900 min-h-[60vh]">
-    <div class="container px-6 py-6 mx-auto">
+  <section id="main-section" class="bg-[#f9f9f9]  min-h-[60vh]">
+    <div class="container px-7 py-5 mx-auto">
       <div class="relative w-full text-center">
         <!-- Search Input -->
-        <input id="search-bar" type="text" placeholder="Search cars..." onkeyup="filterCars()" oninput="updateSuggestions()" autocomplete="off" class="w-full px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+          </svg>
+        </span>
+        <input id="search-bar" type="text" placeholder="Search cars..." onkeyup="filterCars()"
+          oninput="updateSuggestions()" autocomplete="off"
+          class="w-full text-xs pl-10 pr-4 py-2 text-gray-700 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent" />
 
         <!-- Suggestions Dropdown -->
-        <ul id="car-suggestions" class="absolute z-10 w-full mt-0.5 bg-white border border-gray-200 rounded-md shadow-lg max-h-52 overflow-y-auto no-scrollbar hidden text-sm">
+        <ul id="car-suggestions"
+          class="absolute z-10 w-full mt-0.5 bg-white border border-gray-200 rounded-md shadow-lg max-h-52 overflow-y-auto no-scrollbar hidden text-sm">
         </ul>
       </div>
     </div>
 
-    <div class="container px-6 mx-auto">
+    <div class="container px-8 mx-auto">
       <div class="w-full flex justify-center items-center my-0">
-        <div id="loading-spinner" class="w-10 h-10 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin" style="display: none;">
+        <div id="loading-spinner" class="w-10 h-10 mt-6 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"
+          style="display: none;">
         </div>
       </div>
 
@@ -132,16 +143,21 @@
       </div>
 
       <!-- Modal -->
-      <div id="car-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center z-50 hidden transition-opacity duration-300">
-        <div class="bg-white rounded-xl shadow-lg p-5 w-full mx-6 max-w-md relative animate-fadeInUp duration-300 text-left">
-          <button onclick="closeModal()" class="absolute top-4 right-5 text-gray-500 hover:text-gray-700 text-xl leading-none focus:outline-none" aria-label="Close modal">
+      <div id="car-modal"
+        class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <div
+          class="bg-white rounded-xl shadow-lg p-5 w-full mx-6 max-w-md relative animate-fadeInUp duration-300 text-left">
+          <button onclick="closeModal()"
+            class="absolute top-4 right-5 text-gray-500 hover:text-gray-700 text-xl leading-none focus:outline-none"
+            aria-label="Close modal">
             <i class="fas fa-times"></i>
           </button>
           <h2 id="modal-title" class="text-xl font-bold my-3"></h2>
           <img id="modal-image2" src="" alt="Car Image" class="w-full h-44 object-cover rounded-lg mb-3" />
           <div class="px-1">
             <h3 class="text-lg font-semibold pb-1">Features</h3>
-            <ul id="modal-features" class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-3 list-disc list-inside"></ul>
+            <ul id="modal-features"
+              class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-3 list-disc list-inside"></ul>
 
             <h3 class="text-lg font-semibold pt-3">Additional Features</h3>
             <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
@@ -153,14 +169,20 @@
       </div>
 
       <!-- WhatsApp Chat Bubble -->
-      <div id="whatsapp-chat" class="fixed bottom-5 right-5 bg-green-500 w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 scale-90 transition-opacity transition-transform duration-400 z-40">
-        <div id="whatsapp-bubble" class="absolute bottom-16 right-0 bg-white text-gray-800 px-3 py-1.5 rounded-lg text-xs shadow-md opacity-0 translate-y-2 transition-opacity transition-transform duration-300 whitespace-nowrap">
+      <div id="whatsapp-chat"
+        class="fixed bottom-5 right-5 bg-green-500 w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 scale-90 transition-opacity transition-transform duration-400 z-40">
+        <div id="whatsapp-bubble"
+          class="absolute bottom-16 right-0 bg-white text-gray-800 px-3 py-1.5 rounded-lg text-xs shadow-md opacity-0 translate-y-2 transition-opacity transition-transform duration-300 whitespace-nowrap">
           Want a specific car?
         </div>
-        <a href="https://wa.me/9175837073?text=I%20would%20like%20to%20lease%20a%20" target="_blank" rel="noopener noreferrer" class="block w-10 h-10 flex justify-center items-center text-3xl text-white bg-green-500 rounded-full">
+        <a href="https://wa.me/9175837073?text=I%20would%20like%20to%20lease%20a%20" target="_blank"
+          rel="noopener noreferrer"
+          class="block w-10 h-10 flex justify-center items-center text-3xl text-white bg-green-500 rounded-full">
           <i class="fab fa-whatsapp"></i>
         </a>
-        <button id="close-chat" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center cursor-pointer hidden hover:bg-red-700 focus:outline-none" aria-label="Close chat">
+        <button id="close-chat"
+          class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center cursor-pointer hidden hover:bg-red-700 focus:outline-none"
+          aria-label="Close chat">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -168,14 +190,14 @@
   </section>
 
   <!-- Footer -->
-  <footer class="bg-white dark:bg-gray-900 border-t">
+  <footer class="bg-white  border-t">
     <div class="container p-6 mx-auto">
       <div class="lg:flex">
         <div class="w-full py-6 lg:w-2/5">
           <a href="/">
             <img class="w-auto h-5" src="/images/logo-blue.png" alt="logo">
           </a>
-          <p class="max-w-sm mt-2 text-gray-500 dark:text-gray-400">A simple auto leasing platform.</p>
+          <p class="max-w-sm mt-2 text-gray-500 ">A simple auto leasing platform.</p>
           <div class="flex space-x-4 mt-4">
             <a href="https://wa.me/9175837073" target="_blank" class="text-gray-700 text-gray-700 text-2xl"
               aria-label="Chat on WhatsApp">
@@ -191,37 +213,36 @@
         <div class="mt-0 lg:mt-0 lg:flex-1">
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
             <div>
-              <h3 class="text-gray-700 font-semibold dark:text-white">Company</h3>
-              <a href="/leasing-deals/"
-                class="block mt-2 text-sm text-gray-500 dark:text-gray-400 hover:underline">Leasing Deals</a>
-              <a href="/about-us/" class="block mt-2 text-sm text-gray-500 dark:text-gray-400 hover:underline">About
+              <h3 class="text-gray-700 font-semibold ">Company</h3>
+              <a href="/leasing-deals/" class="block mt-2 text-sm text-gray-500  hover:underline">Leasing Deals</a>
+              <a href="/about-us/" class="block mt-2 text-sm text-gray-500  hover:underline">About
                 Us</a>
-              <a href="/contact/" class="block mt-2 text-sm text-gray-500 dark:text-gray-400 hover:underline">Partner
+              <a href="/contact/" class="block mt-2 text-sm text-gray-500  hover:underline">Partner
                 with Us</a>
             </div>
 
             <div>
-              <h3 class="text-gray-700 font-semibold dark:text-white">Support</h3>
-              <a href="#" class="block mt-2 text-sm text-gray-500 dark:text-gray-400 hover:underline">FAQ</a>
-              <a href="/contact/" class="block mt-2 text-sm text-gray-500 dark:text-gray-400 hover:underline">Contact
+              <h3 class="text-gray-700 font-semibold ">Support</h3>
+              <a href="#" class="block mt-2 text-sm text-gray-500  hover:underline">FAQ</a>
+              <a href="/contact/" class="block mt-2 text-sm text-gray-500  hover:underline">Contact
                 Us</a>
-              <a href="#" class="block mt-2 text-sm text-gray-500 dark:text-gray-400 hover:underline">Docs &
+              <a href="#" class="block mt-2 text-sm text-gray-500  hover:underline">Docs &
                 Forms</a>
             </div>
 
             <div>
-              <h3 class="text-gray-700 font-semibold dark:text-white">Get in touch</h3>
-              <span class="block mt-2 text-sm text-gray-500 dark:text-gray-400 hover:underline">+1 917 583 7073</span>
-              <span class="block mt-2 text-sm text-gray-500 dark:text-gray-400 hover:underline">hello@whelsautoleasing.com</span>
+              <h3 class="text-gray-700 font-semibold ">Get in touch</h3>
+              <span class="block mt-2 text-sm text-gray-500  hover:underline">+1 917 583 7073</span>
+              <span class="block mt-2 text-sm text-gray-500  hover:underline">hello@whelsautoleasing.com</span>
             </div>
           </div>
         </div>
       </div>
 
-      <hr class="h-px my-6 bg-gray-200 border-none dark:bg-gray-700">
+      <hr class="h-px my-6 bg-gray-200 border-none ">
 
       <div>
-        <p class="text-center text-gray-500 dark:text-gray-400">&copy;
+        <p class="text-center text-gray-500 ">&copy;
           <script>
             document.write(new Date().getFullYear())
           </script> Wheels. All rights reserved.
@@ -280,7 +301,7 @@
       suggestionsList.innerHTML = matchingSuggestions.join("");
       suggestionsList.style.display = matchingSuggestions.length ? "block" : "none";
     }
-    window.selectSuggestion = function(model) {
+    window.selectSuggestion = function (model) {
       searchBar.value = model;
       suggestionsList.style.display = "none";
       filterCars();
@@ -364,7 +385,7 @@
   </p>
   <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${car.name}" 
      target="_blank" 
-     class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1.5 px-4 rounded-lg">
+     class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium ml-3 py-1.5 px-4 rounded-lg">
     Get Quote
   </a>
         </div>
@@ -372,7 +393,7 @@
         `<p class="text-center text-gray-500 pb-24">Sorry, no match found...</p>`;
     }
     // Modal Functions
-    window.openModal = function(car) {
+    window.openModal = function (car) {
       document.getElementById("modal-title").innerText = car.name;
       document.getElementById("modal-image2").src = car.image2;
       document.getElementById("modal-features").innerHTML = car.features.map(f => `<li>${f}</li>`).join("");
@@ -381,7 +402,7 @@
       modal.style.display = "flex";
       document.body.style.overflow = "hidden";
     }
-    window.closeModal = function() {
+    window.closeModal = function () {
       modal.style.display = "none";
       document.body.style.overflow = "auto";
     }
