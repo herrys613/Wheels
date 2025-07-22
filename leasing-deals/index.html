@@ -143,30 +143,39 @@
       </div>
 
       <!-- Modal -->
-      <div id="car-modal"
-        class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center z-50 hidden transition-opacity duration-300">
-        <div
-          class="bg-white rounded-xl shadow-lg p-5 w-full mx-6 max-w-md relative animate-fadeInUp duration-300 text-left">
-          <button onclick="closeModal()"
-            class="absolute top-4 right-5 text-gray-500 hover:text-gray-700 text-xl leading-none focus:outline-none"
-            aria-label="Close modal">
-            <i class="fas fa-times"></i>
-          </button>
-          <h2 id="modal-title" class="text-xl font-bold my-3"></h2>
-          <img id="modal-image2" src="" alt="Car Image" class="w-full h-44 object-cover rounded-lg mb-3" />
-          <div class="px-1">
-            <h3 class="text-lg font-semibold pb-1">Features</h3>
-            <ul id="modal-features"
-              class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-3 list-disc list-inside"></ul>
+<div id="car-modal"
+  class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center z-50 hidden transition-opacity duration-300">
+  <div class="bg-white rounded-xl shadow-lg p-5 w-full mx-6 max-w-md relative animate-fadeInUp duration-300 text-left">
+    <button onclick="closeModal()"
+      class="absolute top-4 right-5 text-gray-500 hover:text-gray-700 text-xl leading-none focus:outline-none"
+      aria-label="Close modal">
+      <i class="fas fa-times"></i>
+    </button>
 
-            <h3 class="text-lg font-semibold pt-3">Additional Features</h3>
-            <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
+    <h2 id="modal-title" class="text-xl font-bold my-3"></h2>
 
-            <h3 class="text-lg font-semibold pt-3">Color</h3>
-            <p id="modal-color" class="text-sm text-gray-700pb-3"></p>
-          </div>
-        </div>
-      </div>
+    <img id="modal-image2" src="" alt="Car Image" class="w-full h-44 object-cover rounded-lg mb-4" />
+
+    <div class="px-1">
+      <h3 class="text-lg font-semibold pb-2">
+        <i class="fas fa-list-alt text-blue-600 mr-2"></i>Features
+      </h3>
+      <ul id="modal-features"
+        class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-5 list-disc list-inside"></ul>
+
+      <h3 class="text-lg font-semibold pt-4 pb-2">
+        <i class="fas fa-plus text-blue-600 mr-2"></i>Additional Features
+      </h3>
+      <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
+
+      <h3 class="text-lg font-semibold pt-4 pb-2">
+       Color
+      </h3>
+      <p id="modal-color" class="text-sm text-gray-700 pb-3"></p>
+    </div>
+  </div>
+</div>
+
 
       <!-- WhatsApp Chat Bubble -->
       <div id="whatsapp-chat"
@@ -355,9 +364,11 @@
 
   <!-- Car Name -->
   <p onclick='openModal(${JSON.stringify(car)})' class="flex items-center text-left font-bold text-xl text-gray-800 mt-3 cursor-pointer mx-2">
-    <span class="inline-block w-1 h-6 bg-blue-600 rounded-sm mr-1.5"></span>
-    ${car.name}
-  </p>
+  <span class="inline-block w-1 h-5 bg-blue-600 rounded-sm mr-1.5"></span>
+  ${car.name}
+  <i class="fas fa-circle-info text-sm ml-2 text-gray-800"></i>
+</p>
+
 
   <!-- Details -->
   <div class="flex justify-between items-center text-sm text-gray-800 my-4">

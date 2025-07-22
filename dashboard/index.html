@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | Wheels</title>
+  <meta name="title" content="Login | Wheels">
+  <meta name="description" content="Log in to manage lease deals, saved listings, and more.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Login | Wheels">
+  <meta property="og:description" content="Log in to manage lease deals, saved listings, and more.">
+  <meta property="og:url" content="https://wheelsautoleasing.com/login/">
+  <meta property="og:image" content="https://wheelsautoleasing.com/images/login-social-preview.png">
+
+  <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
+  <link rel="canonical" href="https://wheelsautoleasing.com/login/">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<style>
+  [x-cloak] {
+    display: none !important;
+  }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+  }
+  .main-container {
+      background: -#007bff;
+      margin: 0px 0px 0px 0px;
+      padding: 0px 0px;
+      position: relative;
+      flex: 1;
+    }
+
+    .go-back-btn {
+      position: relative;
+      padding: 10px;
+      top: 10px;
+      left: 20px;
+      width: auto;
+      background: #f4f4f4;
+      height: auto;
+      font-size: 20px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .go-back-btn i {
+      margin-right: 8px;
+    }
+
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #007bff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 40px auto;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .add-car-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background-color: #007bff;
+      color: white;
+      font-size: 24px;
+      border: none;
+      border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      z-index: 1000;
+      transition: background-color 0.3s ease;
+    }
+
+    .add-car-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 99;
+      padding-top: 60px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      transition: opacity 0.3s ease;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 50px auto;
+      padding: 30px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+      box-sizing: border-box;
+      animation: fadeInUp 0.3s ease-in-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .close {
+      color: #888;
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+
+    h2 {
+      text-align: center;
+      margin: 10px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .input-row input {
+      flex: 1;
+    }
+
+    textarea {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    input,
+    textarea,
+    button {
+      width: 100%;
+      padding: 12px;
+      margin: 5px 0;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 10px;
+      box-sizing: border-box;
+    }
+
+    .submit-btn {
+      background-color: #007bff;
+      color: white;
+      width: 100%;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .submit-msg {
+      margin-top: 0px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .submit-msg.show {
+      opacity: 1;
+    }
+
+    .search-container {
+      background: -#007bff;
+      text-align: center;
+      margin: 15px 0px 0px 0px;
+    }
+
+    #search-bar {
+      width: 300px;
+      padding: 10px;
+      margin: 0px 15px 0px 15px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+      box-sizing: content-box;
+    }
+
+    .custom-suggestions {
+      position: absolute;
+      width: 330px;
+      left: 50%;
+      transform: translateX(-50%);
+      /* Center it */
+      background: white;
+      border: 1px solid #ddd;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      z-index: 10;
+      max-height: 210px;
+      /* Limit height */
+      overflow-y: auto;
+      /* Scroll if too many suggestions */
+      display: none;
+      /* Initially hidden */
+      border-radius: 5px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .custom-suggestions li {
+      padding: 10px;
+      cursor: pointer;
+      text-align: center;
+      /* Center text */
+      font-size: 14px;
+      border-bottom: 1px solid #ddd;
+      transition: background 0.3s;
+    }
+
+    .custom-suggestions li:hover {
+      background: #f0f0f0;
+    }
+
+    .no-match {
+      padding: 10px;
+      color: grey;
+    }
+
+    .cars-container {
+      background: -#007bff;
+      max-width: 1200px;
+      justify-content: space-around;
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 auto;
+    }
+
+    .car-card {
+      background: #fff;
+      width: 300px;
+      border-radius: 10px;
+      margin: 15px;
+      padding: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .car-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .car-card img {
+      width: 100%;
+      height: 175px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .car-name {
+      background: -#007bff;
+      display: flex;
+      align-items: center;
+      font-size: 22px;
+      font-weight: bold;
+      text-shadow: 0 0 0.5px currentColor;
+      text-align: left;
+      margin: 8px 10px;
+      padding: 0px 0px;
+      cursor: pointer;
+    }
+
+    .car-name::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 23px;
+      background: #007bff;
+      margin-right: 8px;
+      border-radius: 2px;
+      vertical-align: middle;
+    }
+
+    .details {
+      background: -#007bff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 15px 0px;
+      padding: 0px 0px;
+      font-size: 13px;
+    }
+
+    .car-card .details>div>p:first-of-type {
+      font-size: 10px;
+      font-weight: 500;
+      margin: 4px 0;
+      color: #333;
+    }
+
+    .car-card .details>div>p:nth-of-type(2) {
+      font-size: 13px;
+      font-weight: 600;
+      margin: 0px 0;
+    }
+
+    .details div {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      /* Required for ::after to work */
+      padding: 0px 0px;
+      /* Adds spacing */
+    }
+
+    .details div:not(:last-child)::after {
+      content: "";
+      display: block;
+      width: 1px;
+      /* Border thickness */
+      height: 18px;
+      /* Limit border height */
+      background: #ccc;
+      /* Border color */
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      /* Centers the border */
+    }
+
+    .price {
+      background: -#007bff;
+      font-size: 28px;
+      font-weight: bold;
+      text-align: left;
+      margin: 20px 10px 10px 10px;
+      padding: 0px 0px;
+    }
+
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 0px 0px;
+      float: right;
+    }
+
+    .delete-btn:hover {
+      background: #c82333;
+    }
+</style>
+
+<body>
+  <section class="bg-white  border-b">
+    <nav x-data="{ isOpen: false }" class="container p-5 mx-auto lg:flex lg:justify-between lg:items-center">
+      <div class="flex items-center justify-between">
+        <a href="/">
+          <img class="w-auto h-5 sm:h-7" src="/images/logo-blue.png" alt="logo">
+        </a>
+
+        <!-- Mobile menu button -->
+        <div class="flex lg:hidden">
+          <button x-cloak @click="isOpen = !isOpen" type="button"
+            class="text-gray-500  hover:text-gray-600  focus:outline-none focus:text-gray-600 "
+            aria-label="toggle menu">
+            <svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
+            </svg>
+
+            <svg x-show="isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu open: "block", Menu closed: "hidden"-->
+      <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
+        class="absolute inset-x-0 z-20 w-full px-6 py-6 transition-all duration-300 ease-in-out bg-white shadow-md lg:bg-transparent lg: lg:shadow-none  lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center">
+        <div class="flex flex-col space-y-4 lg:mt-0 lg:flex-row lg:-px-8 lg:space-y-0">
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
+            href="/">Home</a>
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
+            href="/leasing-deals/">Leasing Deals</a>
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
+            href="/about-us/">About us</a>
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
+            href="/blog/">Blog</a>
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
+            href="/contact/">Contact</a>
+        </div>
+
+        <a id="logout-btn" class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-red-600 rounded-lg lg:mt-0 hover:bg-red-500 lg:w-auto"
+          href="/login/">
+          Log out
+        </a>
+      </div>
+    </nav>
+  </section>
+
+  <div class="main-container">
+    <button onclick="window.history.back()" class="go-back-btn">
+      <i class="fas fa-arrow-left"></i> Menu
+    </button>
+    <button onclick="openAddCarModal()" class="add-car-btn">+</button>
+    <div id="addCarModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeAddCarModal()">&times;</span>
+        <h2>Add New Car</h2>
+        <form id="car-form">
+          <div class="input-row">
+            <input type="text" id="car-name" placeholder="Car Name" required />
+            <input type="text" id="car-color" placeholder="Color" required />
+          </div>
+          <div class="input-row">
+            <input type="text" id="car-image1" placeholder="Primary Image URL" required />
+            <input type="text" id="car-image2" placeholder="Secondary Image URL" />
+          </div>
+          <div class="input-row">
+            <input type="text" id="car-term" placeholder="Lease Term" required />
+            <input type="text" id="car-mileage" placeholder="Mileage" required />
+            <input type="text" id="car-due" placeholder="Due" required />
+          </div>
+          <div class="input-row">
+            <input type="text" id="car-price" placeholder="Price" required />
+            <input type="text" id="car-label" placeholder="Label" />
+          </div>
+          <input type="text" id="car-features" placeholder="Features (comma-separated)" required />
+          <input id="car-additional" placeholder="Additional Features"></input>
+          <button type="button" class="submit-btn" onclick="submitCar()">Submit Car</button>
+          <div id="Submit-message" class="submit-msg"></div>
+        </form>
+      </div>
+    </div>
+    <div class="search-container">
+      <input type="text" id="search-bar" placeholder="Search cars..." onkeyup="filterCars()" oninput="updateSuggestions()" autocomplete="off">
+      <ul id="car-suggestions" class="custom-suggestions"></ul>
+    </div>
+    <div class="cars-container" id="cars-container">
+      <div id="loading-spinner" class="spinner" style="display: none;"></div>
+      <!-- Car posts will be dynamically inserted here -->
+    </div>
+  </div>
+
+      <!-- Footer -->
+    <footer class="bg-white  border-t">
+        <div class="container p-6 mx-auto">
+            <div class="lg:flex">
+                <div class="w-full py-6 lg:w-2/5">
+                    <a href="/">
+                        <img class="w-auto h-5" src="/images/logo-blue.png" alt="logo">
+                    </a>
+                    <p class="max-w-sm mt-2 text-gray-500 ">A simple auto leasing platform.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="https://wa.me/9175837073" target="_blank" class="text-gray-700 text-gray-700 text-2xl"
+                            aria-label="Chat on WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://instagram.com/wheelsautoleasing" target="_blank"
+                            class="text-gray-700 text-gray-700 text-2xl" aria-label="Visit Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-0 lg:mt-0 lg:flex-1">
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+                        <div>
+                            <h3 class="text-gray-700 font-semibold ">Company</h3>
+                            <a href="/leasing-deals/" class="block mt-2 text-sm text-gray-500  hover:underline">Leasing
+                                Deals</a>
+                            <a href="/about-us/" class="block mt-2 text-sm text-gray-500  hover:underline">About Us</a>
+                            <a href="/blog/" class="block mt-2 text-sm text-gray-500  hover:underline">Blog</a>
+                            <a href="/contact/" class="block mt-2 text-sm text-gray-500  hover:underline">Partner with
+                                Us</a>
+                        </div>
+
+                        <div>
+                            <h3 class="text-gray-700 font-semibold ">Support</h3>
+                            <a href="/#faq" class="block mt-2 text-sm text-gray-500  hover:underline">FAQ</a>
+                            <a href="/contact/" class="block mt-2 text-sm text-gray-500  hover:underline">Contact
+                                Us</a>
+                            <a href="/docs-&-forms/" class="block mt-2 text-sm text-gray-500  hover:underline">Docs &
+                                Forms</a>
+                        </div>
+
+                        <div>
+                            <h3 class="text-gray-700 font-semibold ">Get in touch</h3>
+                            <span class="block mt-2 text-sm text-gray-500  hover:underline">+1 917 583 7073</span>
+                            <span
+                                class="block mt-2 text-sm text-gray-500  hover:underline">hello@whelsautoleasing.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="h-px my-6 bg-gray-200 border-none ">
+
+            <div>
+                <p class="text-center text-gray-500 ">&copy;
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script> Wheels. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyC25Tdl5GtnRXcHeBBGeIOuIcVX_WdiHP4",
+      authDomain: "cars-8bdd6.firebaseapp.com",
+      projectId: "cars-8bdd6",
+      storageBucket: "cars-8bdd6.appspot.com",
+      messagingSenderId: "597823500976",
+      appId: "1:597823500976:web:71f23d89e38a5cdb010175"
+    };
+    firebase.initializeApp(firebaseConfig);
+    firebase.auth().onAuthStateChanged(user => {
+      if (!user) {
+        // Not logged in, redirect to login
+        window.location.href = "/";
+      }
+    });
+
+    function openAddCarModal() {
+      document.getElementById('addCarModal').style.display = 'block';
+    }
+
+    function closeAddCarModal() {
+      document.getElementById('addCarModal').style.display = 'none';
+    }
+    // Optional: Close modal when clicking outside of it
+    window.onclick = function(event) {
+      const modal = document.getElementById('addCarModal');
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+    // Submit Car function
+    function submitCar() {
+      const name = document.getElementById('car-name').value;
+      const image1 = document.getElementById('car-image1').value;
+      const image2 = document.getElementById('car-image2').value;
+      const term = document.getElementById('car-term').value;
+      const mileage = document.getElementById('car-mileage').value;
+      const due = document.getElementById('car-due').value;
+      const price = document.getElementById('car-price').value;
+      const featuresInput = document.getElementById('car-features').value;
+      const features = featuresInput.split(',').map(f => f.trim()).filter(f => f);
+      const additional = document.getElementById('car-additional').value;
+      const color = document.getElementById('car-color').value;
+      const label = document.getElementById('car-label').value;
+      const msg = document.getElementById('Submit-message');
+      msg.style.color = ''; // Reset color
+      msg.classList.remove('show'); // Hide any old message immediately
+      // Validation
+      if (!name || !image1 || !image2 || !term || !mileage || !due || !price || features.length === 0 || !color) {
+        msg.innerHTML = '❗Please fill in all required fields.';
+        msg.style.color = 'red';
+        msg.classList.add('show');
+        setTimeout(() => {
+          msg.classList.remove('show');
+        }, 3000);
+        return;
+      }
+      // Add to Firestore
+      db.collection("cars").add({
+          name,
+          image1,
+          image2,
+          term,
+          mileage,
+          due,
+          price,
+          features,
+          additional,
+          color,
+          label
+        })
+        .then(() => {
+          msg.innerHTML = '✅ Car added successfully!';
+          msg.style.color = 'green';
+          msg.classList.add('show');
+          setTimeout(() => {
+            msg.classList.remove('show');
+          }, 3000);
+          document.getElementById('car-form').reset();
+        })
+        .catch((error) => {
+          msg.innerHTML = '❌ Error adding car: ' + error.message;
+          msg.style.color = 'red';
+          msg.classList.add('show');
+          setTimeout(() => {
+            msg.classList.remove('show');
+          }, 4000);
+          console.error("Error: ", error);
+        });
+    }
+    // DOM Elements
+    const carsContainer = document.getElementById("cars-container");
+    const searchBar = document.getElementById("search-bar");
+    const suggestionsList = document.getElementById("car-suggestions");
+    const db = firebase.firestore();
+    // Data
+    const allCarModels = ["Ford", "Chevrolet", "GMC", "Cadillac", "Dodge", "Chrysler", "Jeep", "Ram", "Lincoln", "Tesla", "Buick", "BMW", "Mercedes-Benz",
+      "Audi", "Volkswagen", "Jaguar", "Land Rover", "Bentley", "Maserati", "Alfa Romeo", "Fiat", "Peugeot", "Volvo", "Toyota", "Honda",
+      "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"
+    ];
+    let cars = [];
+    // Suggestion Logic
+    function getCarCounts() {
+      const counts = {};
+      cars.forEach(car => {
+        const firstWord = car.name.split(" ")[0].toLowerCase();
+        counts[firstWord] = (counts[firstWord] || 0) + 1;
+      });
+      return counts;
+    }
+
+    function updateSuggestions(query) {
+      const counts = getCarCounts();
+      if (!query.trim()) {
+        suggestionsList.style.display = "none";
+        return;
+      }
+      let matchingSuggestions = allCarModels.map(model => {
+        const firstWord = model.split(" ")[0].toLowerCase();
+        const count = counts[firstWord] || 0;
+        return `<li onclick="selectSuggestion('${model}')">${model} (${count})</li>`;
+      }).filter(item => item.toLowerCase().includes(query.toLowerCase()));
+      suggestionsList.innerHTML = matchingSuggestions.join("");
+      suggestionsList.style.display = matchingSuggestions.length ? "block" : "none";
+    }
+    window.selectSuggestion = function(model) {
+      searchBar.value = model;
+      suggestionsList.style.display = "none";
+      filterCars();
+    }
+
+    function filterCars() {
+      const query = searchBar.value.trim().toLowerCase();
+      const filtered = query ? cars.filter(car => car.name.toLowerCase().includes(query)) : cars;
+      generateCars(filtered);
+    }
+    searchBar.addEventListener("input", () => {
+      updateSuggestions(searchBar.value);
+      filterCars();
+    });
+    document.addEventListener("click", (event) => {
+      if (!searchBar.contains(event.target) && !suggestionsList.contains(event.target)) {
+        suggestionsList.style.display = "none";
+      }
+    });
+    // Load cars from Firestore (cleaned up with spinner and async/await)
+    function loadCars() {
+  document.getElementById("loading-spinner").style.display = "flex"; // show spinner
+
+  db.collection("cars").onSnapshot((snapshot) => {
+    cars = [];
+    snapshot.forEach((doc) => {
+      cars.push({ id: doc.id, ...doc.data() });
+    });
+    generateCars(cars);
+    updateSuggestions("");
+    document.getElementById("loading-spinner").style.display = "none"; // hide spinner
+  }, (error) => {
+    console.error("Error loading cars:", error);
+    document.getElementById("loading-spinner").style.display = "none"; // hide spinner even on error
+  });
+}
+    // Add the DOMContentLoaded event listener
+    document.addEventListener("DOMContentLoaded", loadCars);
+    // Generate Car Cards
+    function generateCars(filteredCars) {
+      carsContainer.innerHTML = filteredCars.length > 0 ?
+        filteredCars.map((car, index) => `
+      <div class="car-card">
+        <img src="${car.image1}" alt="${car.name}">
+        <p class="car-name" onclick="openModalByIndex(${index})">${car.name}</p>
+        <div class="details">
+          <div><p>Term</p><p>${car.term}</p></div>
+          <div><p>Annual Mileage</p><p>${car.mileage}</p></div>
+          <div><p>Due At Signing</p><p>${car.due || "$0"}</p></div>
+        </div>
+        <div>
+          <p class="price">${car.price}<span style="font-size: 15px; color:#292929;"> / Month</span>
+            <a onclick="deleteCar('${car.id}')" class="delete-btn">Delete</a>
+          </p>
+          <div id="Delete-message" class="submit-msg"></div>
+        </div>
+      </div>`).join("") :
+        `<p class="no-match">Sorry, no match found...</p>`;
+    }
+    // Delete Car Function
+    function deleteCar(carId) {
+      const msg = document.getElementById('Delete-message');
+      msg.style.color = ''; // Reset color
+      if (confirm("Are you sure you want to delete this car?")) {
+        db.collection("cars").doc(carId).delete()
+          .then(() => {
+            msg.innerHTML = 'Car deleted successfully!';
+            msg.classList.add('show');
+            setTimeout(() => {
+              msg.classList.remove('show');
+            }, 2000);
+            loadCars(); // Reload cars
+          })
+          .catch((error) => {
+            msg.innerHTML = 'Error deleting car: ' + error.message;
+            msg.style.color = 'red';
+            msg.classList.add('show');
+            setTimeout(() => {
+              msg.classList.remove('show');
+            }, 3000);
+            console.error("Delete error:", error);
+          });
+      }
+    }</script>
+</body>
+
+</html>
