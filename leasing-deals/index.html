@@ -6,9 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Leasing Deals | Wheels</title>
   <meta name="title" content="Leasing Deals | Wheels">
-  <meta name="description" content="Explore current car lease deals from trusted dealerships.
-
-">
+  <meta name="description" content="Explore current car lease deals from trusted dealerships.">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Leasing Deals | Wheels">
@@ -30,17 +28,6 @@
 
   body {
     font-family: 'Montserrat', sans-serif;
-  }
-
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    /* IE and Edge */
-    scrollbar-width: none;
-    /* Firefox */
   }
 
   @keyframes fadeInUp {
@@ -110,7 +97,7 @@
     </nav>
   </section>
 
-  <section id="main-section" class="bg-[#f9f9f9]/80  min-h-[100vh]">
+  <section class="bg-[#f9f9f9]/80">
     <div class="container px-7 py-5 mx-auto">
       <div class="relative w-full text-center">
         <!-- Search Input -->
@@ -134,7 +121,8 @@
 
     <div class="container px-8 mx-auto">
       <div class="w-full flex justify-center items-center my-0">
-        <div id="loading-spinner" class="w-10 h-10 mt-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"
+        <div id="loading-spinner"
+          class="w-10 h-10 mt-12 mb-[100vh] border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"
           style="display: none;">
         </div>
       </div>
@@ -143,38 +131,39 @@
       </div>
 
       <!-- Modal -->
-<div id="car-modal"
-  class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center z-50 hidden transition-opacity duration-300">
-  <div class="bg-white rounded-xl shadow-lg p-5 w-full mx-6 max-w-md relative animate-fadeInUp duration-300 text-left">
-    <button onclick="closeModal()"
-      class="absolute top-4 right-5 text-gray-500 hover:text-gray-700 text-xl leading-none focus:outline-none"
-      aria-label="Close modal">
-      <i class="fas fa-times"></i>
-    </button>
+      <div id="car-modal"
+        class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <div
+          class="bg-white rounded-xl shadow-lg p-5 w-full mx-6 max-w-md relative animate-fadeInUp duration-300 text-left">
+          <button onclick="closeModal()"
+            class="absolute top-4 right-5 text-gray-500 hover:text-gray-700 text-xl leading-none focus:outline-none"
+            aria-label="Close modal">
+            <i class="fas fa-times"></i>
+          </button>
 
-    <h2 id="modal-title" class="text-xl font-bold my-3"></h2>
+          <h2 id="modal-title" class="text-xl font-bold my-3"></h2>
 
-    <img id="modal-image2" src="" alt="Car Image" class="w-full h-44 object-cover rounded-lg mb-4" />
+          <img id="modal-image2" loading="lazy" src="" alt="Car Image" class="w-full h-44 object-cover rounded-lg mb-4" />
 
-    <div class="px-1">
-      <h3 class="text-lg font-semibold pb-2">
-        <i class="fas fa-list-alt text-blue-600 mr-2"></i>Features
-      </h3>
-      <ul id="modal-features"
-        class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-5 list-disc list-inside"></ul>
+          <div class="px-1">
+            <h3 class="text-lg font-semibold pb-2">
+              <i class="fas fa-list-alt text-blue-600 mr-2"></i>Features
+            </h3>
+            <ul id="modal-features"
+              class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-5 list-disc list-inside"></ul>
 
-      <h3 class="text-lg font-semibold pt-4 pb-2">
-        <i class="fas fa-plus text-blue-600 mr-2"></i>Additional Features
-      </h3>
-      <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
+            <h3 class="text-lg font-semibold pt-4 pb-2">
+              <i class="fas fa-plus text-blue-600 mr-2"></i>Additional Features
+            </h3>
+            <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
 
-      <h3 class="text-lg font-semibold pt-4 pb-2">
-       Color
-      </h3>
-      <p id="modal-color" class="text-sm text-gray-700 pb-3"></p>
-    </div>
-  </div>
-</div>
+            <h3 class="text-lg font-semibold pt-4 pb-2">
+              Color
+            </h3>
+            <p id="modal-color" class="text-sm text-gray-700 pb-3"></p>
+          </div>
+        </div>
+      </div>
 
 
       <!-- WhatsApp Chat Bubble -->
@@ -241,7 +230,7 @@
             <div>
               <h3 class="text-gray-700 font-semibold ">Get in touch</h3>
               <span class="block mt-2 text-sm text-gray-500  hover:underline">+1 917 583 7073</span>
-              <span class="block mt-2 text-sm text-gray-500  hover:underline">hello@whelsautoleasing.com</span>
+              <span class="block mt-2 text-sm text-gray-500  hover:underline">hello@wheelsautoleasing.com</span>
             </div>
           </div>
         </div>
@@ -355,7 +344,7 @@
       <div class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 relative">
   <!-- Image container -->
   <div class="relative w-full rounded-lg overflow-hidden">
-    <img src="${car.image1}" alt="${car.name}" class="w-full h-[200px] object-cover rounded-lg">
+    <img loading="lazy" src="${car.image1}" alt="Car Image" class="w-full h-[200px] object-cover rounded-lg">
     ${car.label && car.label.trim() !== "" ? `
       <div class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-br-lg whitespace-nowrap">
         ${car.label}
@@ -400,9 +389,9 @@
   </a>
         </div>
       </div>`).join("") :
-        `<p class="text-center text-gray-500 pb-24">Sorry, no match found...</p>`;
+        `<p class="text-center text-gray-500 pb-48">Sorry, no match found...</p>`;
     }
-    
+
     // Modal Functions
     window.openModal = function (car) {
       document.getElementById("modal-title").innerText = car.name;
@@ -421,7 +410,6 @@
       const chat = document.getElementById('whatsapp-chat');
       const bubble = document.getElementById('whatsapp-bubble');
       const closeBtn = document.getElementById('close-chat');
-      const section = document.getElementById('main-section');
       let chatVisible = false;
       let chatClosed = false;
       // Show chat after 5 seconds
