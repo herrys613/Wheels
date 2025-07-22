@@ -127,7 +127,7 @@
                     style="display: none;">
                 </div>
             </div>
-            <div id="alert-box" class="fixed top-5 right-5 max-w-xs"></div>
+            <div id="alert-box" class="fixed top-5 right-5 max-w-xs z-50 hidden"></div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-0 pb-6" id="cars-container">
             </div>
@@ -444,20 +444,22 @@
                 }
 
                 function showAlert(message, type = "success") {
-                    const color = type === "success" ? "green" : "red";
-                    alertBox.innerHTML = `
-        <div class="bg-${color}-100 border border-${color}-400 text-${color}-700 px-4 py-3 rounded shadow-lg flex items-center space-x-2" role="alert">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="${type === 'success' ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12'}"/>
-          </svg>
-          <span>${message}</span>
-        </div>`;
-                    alertBox.classList.remove("hidden");
-
-                    setTimeout(() => {
-                        alertBox.classList.add("hidden");
-                    }, 3000);
-                }
+  const color = type === "success" ? "green" : "red";
+  alertBox.innerHTML = `
+    <div class="bg-${color}-100 border border-${color}-400 text-${color}-700 px-4 py-3 rounded shadow-lg flex items-center space-x-2" role="alert">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="${type === 'success' ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12'}"/>
+      </svg>
+      <span>${message}</span>
+    </div>`;
+  
+  alertBox.classList.remove("hidden");  // Show alert
+  
+  // Auto-dismiss after 3 seconds
+  setTimeout(() => {
+    alertBox.classList.add("hidden");  // Hide alert
+  }, 3000);
+}
             </script>
 </body>
 
