@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Documents & Forms | Wheels</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
+  </head>
+  <body class="bg-gray-50 text-gray-800">
+    <div class="max-w-4xl mx-auto px-6 py-12">
+      <h1 class="text-3xl font-bold mb-2 text-center">Documents & Forms</h1>
+      <p class="text-gray-600 text-center mb-10">
+        Download everything you need to get started with your lease or service.
+      </p>
+
+      <div class="grid gap-6 sm:grid-cols-2">
+        <!-- Form Item -->
+        <div class="bg-white p-5 rounded-xl shadow-sm border hover:shadow-md transition">
+          <div class="flex items-center gap-4 mb-3">
+            <i class="fas fa-file-contract text-blue-600 text-2xl"></i>
+            <h2 class="font-semibold text-lg">Lease Agreement Form</h2>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">Download and complete this form to start your lease process.</p>
+          <a
+            href="/docs/lease-agreement.pdf"
+            class="inline-block text-blue-600 hover:underline text-sm font-medium"
+            download
+            >Download PDF</a
+          >
+        </div>
+
+        <!-- Another Form Item -->
+        <div class="bg-white p-5 rounded-xl shadow-sm border hover:shadow-md transition">
+          <div class="flex items-center gap-4 mb-3">
+            <i class="fas fa-id-card text-green-600 text-2xl"></i>
+            <h2 class="font-semibold text-lg">Driver’s License Upload</h2>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">Upload a copy of your valid driver’s license for verification.</p>
+          <a
+            href="/docs/license-upload.pdf"
+            class="inline-block text-blue-600 hover:underline text-sm font-medium"
+            download
+            >Download PDF</a
+          >
+        </div>
+
+        <!-- More documents as needed -->
+        <div class="bg-white p-5 rounded-xl shadow-sm border hover:shadow-md transition">
+          <div class="flex items-center gap-4 mb-3">
+            <i class="fas fa-wrench text-orange-500 text-2xl"></i>
+            <h2 class="font-semibold text-lg">Service Request Form</h2>
+          </div>
+          <p class="text-sm text-gray-600 mb-4">Request maintenance or service for your leased vehicle.</p>
+          <a
+            href="/docs/service-request.pdf"
+            class="inline-block text-blue-600 hover:underline text-sm font-medium"
+            download
+            >Download PDF</a
+          >
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

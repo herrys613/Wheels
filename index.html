@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
   <meta charset="UTF-8" />
@@ -73,8 +73,8 @@
 
       <!-- Mobile Menu open: "block", Menu closed: "hidden"-->
       <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
-        class="absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white shadow-md lg:bg-transparent lg: lg:shadow-none  lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center">
-        <div class="flex flex-col space-y-3 lg:mt-0 lg:flex-row lg:-px-8 lg:space-y-0">
+        class="absolute inset-x-0 z-20 w-full px-6 py-6 transition-all duration-300 ease-in-out bg-white shadow-md lg:bg-transparent lg: lg:shadow-none  lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center">
+        <div class="flex flex-col space-y-4 lg:mt-0 lg:flex-row lg:-px-8 lg:space-y-0">
           <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
             href="/">Home</a>
           <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
@@ -96,11 +96,11 @@
   </section>
 
   <!-- Hero -->
-  <section class="bg-white ">
+  <section class="bg-white">
     <div class="container px-6 py-10 pt-16 mx-auto text-center">
       <div class="max-w-3xl mx-auto">
-        <h1 class="text-5xl font-semibold text-gray-800  lg:text-7xl">A <span
-            class="text-blue-600">simple</span> auto leasing platform.
+        <h1 class="text-5xl font-semibold text-gray-800  lg:text-7xl">A <span class="text-blue-600">simple</span> auto
+          leasing platform.
         </h1>
         <p class="mt-6 text-gray-500 ">We make it easy to view and compare all available lease deals
           in one place—no confusion, no complications. Our clean, user-friendly interface puts everything up front so
@@ -215,6 +215,7 @@
       </div>
     </div>
   </div>
+  
 
   <!-- Featuress -->
   <section class="bg-white ">
@@ -224,10 +225,8 @@
       </h1>
 
       <div class="grid grid-cols-1 gap-8 mt-8 xl:mt-12 xl:gap-16 md:grid-cols-3">
-        <div
-          class="flex flex-col items-center p-6 space-y-3 text-center border border-r-gray-200 rounded-2xl ">
-          <span
-            class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-500  ">
+        <div class="flex flex-col items-center p-6 space-y-3 text-center border border-r-gray-200 rounded-2xl ">
+          <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-500  ">
             <i class="fas fa-arrows-rotate text-2xl"></i>
           </span>
 
@@ -239,10 +238,8 @@
           </p>
         </div>
 
-        <div
-          class="flex flex-col items-center p-6 space-y-3 text-center border border-r-gray-200 rounded-2xl ">
-          <span
-            class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-500  ">
+        <div class="flex flex-col items-center p-6 space-y-3 text-center border border-r-gray-200 rounded-2xl ">
+          <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-500  ">
             <i class="fa-solid fa-thumbs-up text-2xl"></i>
           </span>
 
@@ -255,10 +252,8 @@
           </p>
         </div>
 
-        <div
-          class="flex flex-col items-center p-6 space-y-3 text-center border border-r-gray-200 rounded-2xl ">
-          <span
-            class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-500  ">
+        <div class="flex flex-col items-center p-6 space-y-3 text-center border border-r-gray-200 rounded-2xl ">
+          <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-500  ">
             <i class="fas fa-headset text-2xl"></i>
           </span>
 
@@ -274,13 +269,13 @@
   </section>
 
   <!-- FAQ -->
-  <section class="bg-white ">
-    <div class="max-w-2xl mx-auto px-6 py-4 pb-8">
+  <section id="faq" class="bg-gray-50">
+    <div class="max-w-2xl mx-auto px-6 py-10 pb-8">
       <h2 class="text-xl font-semibold text-center text-gray-800  mb-6">
         Frequently Asked Questions
       </h2>
       <div id="accordion" class="space-y-2">
-        <div class="bg-zinc-100 rounded-xl overflow-hidden">
+        <div class="bg-zinc-100/80 rounded-xl overflow-hidden">
           <button data-accordion-button
             class="w-full text-base text-left p-3 font-medium text-gray-700 flex justify-between items-center">
             What is wheels?
@@ -296,7 +291,7 @@
           </div>
         </div>
 
-        <div class="bg-zinc-100 rounded-xl overflow-hidden">
+        <div class="bg-zinc-100/80 rounded-xl overflow-hidden">
           <button data-accordion-button
             class="w-full text-base text-left p-3 font-medium text-gray-700 flex justify-between items-center">
             Is there a fee when leasing through wheels?
@@ -313,7 +308,7 @@
           </div>
         </div>
 
-        <div class="bg-zinc-100 rounded-xl overflow-hidden">
+        <div class="bg-zinc-100/80 rounded-xl overflow-hidden">
           <button data-accordion-button
             class="w-full text-base text-left p-3 font-medium text-gray-700 flex justify-between items-center">
             Do you offer deals from multiple dealerships?
@@ -329,7 +324,7 @@
           </div>
         </div>
 
-        <div class="bg-zinc-100 rounded-xl overflow-hidden">
+        <div class="bg-zinc-100/80 rounded-xl overflow-hidden">
           <button data-accordion-button
             class="w-full text-base text-left p-3 font-medium text-gray-700 flex justify-between items-center">
             Are the prices listed final or do they change?
@@ -399,20 +394,18 @@
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
             <div>
               <h3 class="text-gray-700 font-semibold ">Company</h3>
-              <a href="/leasing-deals/"
-                class="block mt-2 text-sm text-gray-500  hover:underline">Leasing Deals</a>
-              <a href="/about-us/" class="block mt-2 text-sm text-gray-500  hover:underline">About
-                Us</a>
-              <a href="/contact/" class="block mt-2 text-sm text-gray-500  hover:underline">Partner
-                with Us</a>
+              <a href="/leasing-deals/" class="block mt-2 text-sm text-gray-500  hover:underline">Leasing Deals</a>
+              <a href="/about-us/" class="block mt-2 text-sm text-gray-500  hover:underline">About Us</a>
+              <a href="/blog/" class="block mt-2 text-sm text-gray-500  hover:underline">Blog</a>
+              <a href="/contact/" class="block mt-2 text-sm text-gray-500  hover:underline">Partner with Us</a>
             </div>
 
             <div>
               <h3 class="text-gray-700 font-semibold ">Support</h3>
-              <a href="#" class="block mt-2 text-sm text-gray-500  hover:underline">FAQ</a>
+              <a href="#faq" class="block mt-2 text-sm text-gray-500  hover:underline">FAQ</a>
               <a href="/contact/" class="block mt-2 text-sm text-gray-500  hover:underline">Contact
                 Us</a>
-              <a href="#" class="block mt-2 text-sm text-gray-500  hover:underline">Docs &
+              <a href="/docs-&-forms/" class="block mt-2 text-sm text-gray-500  hover:underline">Docs &
                 Forms</a>
             </div>
 
