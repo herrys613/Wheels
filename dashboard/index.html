@@ -406,29 +406,30 @@
   <div class="flex justify-between items-center text-sm text-gray-800 my-4">
     <div class="flex-1 text-center relative px-2">
       <p class="text-[0.6rem] font-medium text-gray-500">Term</p>
-      <p class="font-semibold">${car.term}</p>
+      <p class="font-semibold">${car.term} Months</p>
       <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
     </div>
     <div class="flex-1 text-center relative px-2">
       <p class="text-[0.6rem] font-medium text-gray-500">Annual Mileage</p>
-      <p class="font-semibold">${car.mileage}</p>
+      <p class="font-semibold">${car.mileage} Miles</p>
       <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
     </div>
     <div class="flex-1 text-center px-2">
       <p class="text-[0.6rem] font-medium text-gray-500">Due At Signing</p>
-      <p class="font-semibold">${car.due || "$0"}</p>
+      <p class="font-semibold">$${car.due || "$0"}</p>
     </div>
   </div>
 
   <!-- Price + Button -->
  <div class="mx-2 py-2 flex items-center justify-between">
-  <p class="text-3xl font-bold text-gray-800">${car.price}
+  <p class="text-3xl font-bold text-gray-800">$${car.price}
     <span class="text-sm text-gray-600 font-semibold">/ Month</span>
   </p>
-  <button onclick='deleteCar("${car.id}")' 
-  class="bg-red-600 hover:bg-red-700 text-white text-sm font-medium ml-3 py-1.5 px-4 rounded-lg">
-  Delete
-</button>
+  <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${car.name}" 
+     target="_blank" 
+     class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium ml-3 py-1.5 px-4 rounded-lg">
+    Get Quote
+  </a>
         </div>
       </div>`).join("") :
                     `<p class="text-center text-gray-500 pb-48">Sorry, no match found...</p>`;
