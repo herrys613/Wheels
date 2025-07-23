@@ -4,18 +4,18 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Leasing Deals | Wheels</title>
-    <meta name="title" content="Leasing Deals | Wheels">
-    <meta name="description" content="Explore current car lease deals from trusted dealerships.">
+    <title>Dashboard | Wheels</title>
+    <meta name="title" content="Dashboard | Wheels">
+    <meta name="description" content="Admin Dashboard">
 
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Leasing Deals | Wheels">
-    <meta property="og:description" content="Explore current car lease deals from trusted dealerships.">
-    <meta property="og:url" content="https://wheelsautoleasing.com/leasing-deals/">
-    <meta property="og:image" content="https://wheelsautoleasing.com/images/leasing-deals.png">
+    <meta property="og:title" content="Dashboard | Wheels">
+    <meta property="og:description" content="Admin Dashboard">
+    <meta property="og:url" content="https://wheelsautoleasing.com/dashboard/">
+    <meta property="og:image" content="https://wheelsautoleasing.com/images/dashboard-social-preview.png">
 
     <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
-    <link rel="canonical" href="https://wheelsautoleasing.com/leasing-deals/">
+    <link rel="canonical" href="https://wheelsautoleasing.com/dashboard/">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -47,7 +47,7 @@
     }
 </style>
 
-<body>
+<body class="hidden">
     <section class="bg-white  border-b">
         <nav x-data="{ isOpen: false }" class="container p-5 mx-auto lg:flex lg:justify-between lg:items-center">
             <div class="flex items-center justify-between">
@@ -149,14 +149,14 @@
 
                     <div class="px-1">
                         <h3 class="text-lg font-semibold pb-2">
-                            <i class="fas fa-list-alt text-blue-600 mr-2"></i>Features
+                            <i class="fas fa-list-alt text-gray-900 mr-2"></i>Features
                         </h3>
                         <ul id="modal-features"
                             class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-5 list-disc list-inside">
                         </ul>
 
                         <h3 class="text-lg font-semibold pt-4 pb-2">
-                            <i class="fas fa-plus text-blue-600 mr-2"></i>Additional Features
+                            <i class="fas fa-plus text-gray-900 mr-2"></i>Additional Features
                         </h3>
                         <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
 
@@ -272,12 +272,14 @@
                 appId: "1:597823500976:web:71f23d89e38a5cdb010175"
             };
             firebase.initializeApp(firebaseConfig);
-
             const db = firebase.firestore();
 
             // Redirect to login if not signed in
             firebase.auth().onAuthStateChanged(user => {
-                if (!user) {
+                if (user) {
+                    document.body.classList.remove('hidden');
+                    loadCars(); // Or whatever function you use to load content
+                } else {
                     window.location.href = "/login/";
                 }
             });
@@ -299,8 +301,6 @@
                         window.location.href = "/login/";
                     }
                 });
-
-                loadCars();
             });
 
             // UI Elements
@@ -317,6 +317,7 @@
                 "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"
             ];
             let cars = [];
+
             // Suggestion Logic
             function getCarCounts() {
                 const counts = {};
@@ -361,9 +362,10 @@
                     suggestionsList.style.display = "none";
                 }
             });
-            // Load cars from Firestore (cleaned up with spinner and async/await)
+
+            // Load cars from Firestore
             async function loadCars() {
-                document.getElementById("loading-spinner").style.display = "flex"; // show spinner
+                document.getElementById("loading-spinner").style.display = "flex";
                 try {
                     const querySnapshot = await db.collection("cars").get();
                     cars = [];
@@ -375,11 +377,10 @@
                 } catch (error) {
                     console.error("Error loading cars:", error);
                 } finally {
-                    document.getElementById("loading-spinner").style.display = "none"; // hide spinner
+                    document.getElementById("loading-spinner").style.display = "none";
                 }
             }
-            // Add the DOMContentLoaded event listener
-            document.addEventListener("DOMContentLoaded", loadCars);
+
             // Generate Car Cards
             function generateCars(filteredCars) {
                 carsContainer.innerHTML = filteredCars.length > 0 ?
@@ -449,63 +450,90 @@
             }
 
             // Delete Function
-      let carIdToDelete = null;
+            let carIdToDelete = null;
 
-      function deleteCar(carId) {
-        carIdToDelete = carId;
-        document.getElementById("delete-modal").classList.remove("hidden");
-      }
-      // Modal button actions
-      document.getElementById("cancel-delete").addEventListener("click", () => {
-        carIdToDelete = null;
-        document.getElementById("delete-modal").classList.add("hidden");
-      });
-      document.getElementById("confirm-delete").addEventListener("click", async () => {
-        if (!carIdToDelete) return;
-        try {
-          await db.collection("cars").doc(carIdToDelete).delete();
-          showAlert("Car deleted successfully.", "success");
-          loadCars(); // Refresh the list
-        } catch (error) {
-          console.error("Error deleting car:", error);
-          showAlert("Error deleting car. Please try again.", "error");
-        }
-        document.getElementById("delete-modal").classList.add("hidden");
-        carIdToDelete = null;
-      });
+            function deleteCar(carId) {
+                carIdToDelete = carId;
+                document.getElementById("delete-modal").classList.remove("hidden");
+            }
+            // Modal button actions
+            document.getElementById("cancel-delete").addEventListener("click", () => {
+                carIdToDelete = null;
+                document.getElementById("delete-modal").classList.add("hidden");
+            });
+            document.getElementById("confirm-delete").addEventListener("click", async () => {
+                if (!carIdToDelete) return;
+                try {
+                    await db.collection("cars").doc(carIdToDelete).delete();
+                    showAlert("Car deleted successfully.", "success");
+                    loadCars(); // Refresh the list
+                } catch (error) {
+                    console.error("Error deleting car:", error);
+                    showAlert("Error deleting car. Please try again.", "error");
+                }
+                document.getElementById("delete-modal").classList.add("hidden");
+                carIdToDelete = null;
+            });
 
-      function showAlert(message, type = "success") {
-  const alertBox = document.getElementById("alert-box");
-  const color = type === "success" ? "green" : "red";
+            //Alert msg
+            function showAlert(message, type = "success") {
+                const alertBox = document.getElementById("alert-box");
 
-  alertBox.innerHTML = `
-    <div class="flex items-start justify-between gap-3 bg-${color}-100 border border-${color}-400 text-${color}-700 px-4 py-2 rounded-md shadow-md animate-fade-in">
-      <div class="flex items-start gap-2 text-sm font-semibold">
-        <svg class="w-4 h-4 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path d="${type === 'success' ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12'}" />
+                const colors = {
+                    success: {
+                        bg: "bg-white dark:bg-gray-800",
+                        iconBg: "bg-emerald-500",
+                        iconPath: "M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z",
+                        titleClass: "font-semibold text-emerald-500 dark:text-emerald-400",
+                        messageClass: "text-sm text-gray-600 dark:text-gray-200",
+                        title: "Success",
+                    },
+                    error: {
+                        bg: "bg-white dark:bg-gray-800",
+                        iconBg: "bg-red-500",
+                        iconPath: "M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM26.6667 13.3333L23.3334 16.6666L20 20L16.6667 23.3333L13.3334 26.6666L10 23.3333L13.3334 20L16.6667 16.6666L20 13.3333L23.3334 10L26.6667 13.3333Z",
+                        titleClass: "font-semibold text-red-500 dark:text-red-400",
+                        messageClass: "text-sm text-red-700 dark:text-red-300",
+                        title: "Error",
+                    }
+                };
+
+                const c = type === "success" ? colors.success : colors.error;
+
+                alertBox.innerHTML = `
+    <div class="flex w-full max-w-sm overflow-hidden rounded-lg shadow-md ${c.bg}">
+      <div class="flex items-center justify-center w-12 ${c.iconBg}">
+        <svg class="w-6 h-6 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <path d="${c.iconPath}" />
         </svg>
-        <div>${message}</div>
+      </div>
+      <div class="px-4 py-2 -mx-3">
+        <div class="mx-3">
+          <span class="${c.titleClass}">${c.title}</span>
+          <p class="${c.messageClass}">${message}</p>
+        </div>
       </div>
     </div>
   `;
 
-  alertBox.classList.remove("hidden");
-  alertBox.style.opacity = "1";
+                alertBox.classList.remove("hidden");
+                alertBox.style.opacity = "1";
 
-  // Auto-hide after 3s
-  setTimeout(() => {
-    hideAlert();
-  }, 2000);
-}
+                // Auto-hide after 2 seconds
+                setTimeout(() => {
+                    hideAlert();
+                }, 2000);
+            }
 
-function hideAlert() {
-  const alertBox = document.getElementById("alert-box");
-  alertBox.style.opacity = "0";
-  setTimeout(() => {
-    alertBox.classList.add("hidden");
-    alertBox.innerHTML = "";
-  }, 300);
-}
+            function hideAlert() {
+                const alertBox = document.getElementById("alert-box");
+                alertBox.style.opacity = "0";
+                setTimeout(() => {
+                    alertBox.classList.add("hidden");
+                    alertBox.innerHTML = "";
+                }, 300);
+            }
+
         </script>
 </body>
 

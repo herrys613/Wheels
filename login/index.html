@@ -31,7 +31,7 @@
   }
 </style>
 
-<body>
+<body class="hidden">
   <section class="bg-white  border-b">
     <nav x-data="{ isOpen: false }" class="container p-5 mx-auto lg:flex lg:justify-between lg:items-center">
       <div class="flex items-center justify-between">
@@ -209,14 +209,17 @@
   };
   firebase.initializeApp(firebaseConfig);
 
-  // ✅ Redirect to dashboard if already logged in
+  // Redirect to dashboard if already logged in
   firebase.auth().onAuthStateChanged(user => {
-    if (user) {
-      window.location.href = "/dashboard/";
-    }
-  });
+  if (user) {
+    window.location.href = "/dashboard/";
+  } else {
+    // User not logged in, show login page
+    document.body.style.visibility = 'visible';
+  }
+});
 
-  // 🔐 Login function
+  //  Login function
   function login() {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
