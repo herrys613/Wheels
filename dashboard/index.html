@@ -169,6 +169,70 @@
             </div>
         </div>
 
+        <!-- Floating Add Car Button with Icon -->
+        <button onclick="openAddCarModal()"
+            class="fixed bottom-8 right-6 w-12 h-12 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-500 transition z-50 flex items-center justify-center group"
+            aria-label="Add Car">
+            <i class="fas fa-plus text-xl"></i>
+        </button>
+
+        <!-- Add Car Modal -->
+        <div id="addCarModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+            <div class="bg-white mx-6 max-w-2xl rounded-lg shadow-lg p-6 relative">
+
+                <!-- Close Button -->
+                <button onclick="closeAddCarModal()"
+                    class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-3xl">&times;</button>
+
+                <h2 class="text-2xl font-semibold mb-4 text-center text-gray-800">Add New Car</h2>
+
+                <form id="car-form" class="space-y-4">
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="car-name" placeholder="Car Name" required
+                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input type="text" id="car-color" placeholder="Color" required
+                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="car-image1" placeholder="Primary Image URL" required
+                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input type="text" id="car-image2" placeholder="Secondary Image URL"
+                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4">
+                        <input type="text" id="car-term" placeholder="Lease Term" required
+                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input type="text" id="car-mileage" placeholder="Mileage" required
+                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input type="text" id="car-due" placeholder="Due" required
+                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="car-price" placeholder="Price" required
+                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input type="text" id="car-label" placeholder="Label"
+                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    </div>
+
+                    <input type="text" id="car-features" placeholder="Features (comma-separated)" required
+                        class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <input type="text" id="car-additional" placeholder="Additional Features"
+                        class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                    <button type="button" onclick="submitCar()"
+                        class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-500 transition">
+                        Submit Car
+                    </button>
+
+                    <div id="Submit-message" class="text-center text-sm text-green-600 mt-2"></div>
+                </form>
+            </div>
+        </div>
+
         <!-- Delete Confirmation Modal -->
         <div id="delete-modal"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
@@ -363,22 +427,21 @@
                 }
             });
 
-            // Load cars from Firestore
-            async function loadCars() {
-                document.getElementById("loading-spinner").style.display = "flex";
-                try {
-                    const querySnapshot = await db.collection("cars").get();
+            function loadCars() {
+                document.getElementById("loading-spinner").style.display = "flex"; // show spinner
+
+                db.collection("cars").onSnapshot((snapshot) => {
                     cars = [];
-                    querySnapshot.forEach((doc) => {
+                    snapshot.forEach((doc) => {
                         cars.push({ id: doc.id, ...doc.data() });
                     });
                     generateCars(cars);
-                    updateSuggestions("");
-                } catch (error) {
+                    document.getElementById("loading-spinner").style.display = "none"; // hide spinner
+                    updateSuggestions(""); // update search suggestions if you have this
+                }, (error) => {
                     console.error("Error loading cars:", error);
-                } finally {
-                    document.getElementById("loading-spinner").style.display = "none";
-                }
+                    document.getElementById("loading-spinner").style.display = "none"; // hide spinner even on error
+                });
             }
 
             // Generate Car Cards
@@ -447,6 +510,80 @@
             window.closeModal = function () {
                 modal.style.display = "none";
                 document.body.style.overflow = "auto";
+            }
+
+            // add Car Button
+            function openAddCarModal() {
+                const modal = document.getElementById("addCarModal");
+                modal.classList.remove("hidden");
+                modal.classList.add("flex"); // For Tailwind's flex modal centering
+            }
+
+            function closeAddCarModal() {
+                const modal = document.getElementById("addCarModal");
+                modal.classList.add("hidden");
+                modal.classList.remove("flex");
+            }
+
+            // Submit Car Function
+            function submitCar() {
+                const name = document.getElementById('car-name').value;
+                const image1 = document.getElementById('car-image1').value;
+                const image2 = document.getElementById('car-image2').value;
+                const term = document.getElementById('car-term').value;
+                const mileage = document.getElementById('car-mileage').value;
+                const due = document.getElementById('car-due').value;
+                const price = document.getElementById('car-price').value;
+                const featuresInput = document.getElementById('car-features').value;
+                const features = featuresInput.split(',').map(f => f.trim()).filter(f => f);
+                const additional = document.getElementById('car-additional').value;
+                const color = document.getElementById('car-color').value;
+                const label = document.getElementById('car-label').value;
+                const msg = document.getElementById('Submit-message');
+                msg.style.color = ''; // Reset color
+                msg.classList.remove('show'); // Hide any old message immediately
+                // Validation
+                if (!name || !image1 || !image2 || !term || !mileage || !due || !price || features.length === 0 || !color) {
+                    msg.innerHTML = '❗Please fill in all required fields.';
+                    msg.style.color = 'red';
+                    msg.classList.add('show');
+                    setTimeout(() => {
+                        msg.classList.remove('show');
+                    }, 3000);
+                    return;
+                }
+                // Add to Firestore
+                db.collection("cars").add({
+                    name,
+                    image1,
+                    image2,
+                    term,
+                    mileage,
+                    due,
+                    price,
+                    features,
+                    additional,
+                    color,
+                    label
+                })
+                    .then(() => {
+                        msg.innerHTML = '✅ Car added successfully!';
+                        msg.style.color = 'green';
+                        msg.classList.add('show');
+                        setTimeout(() => {
+                            msg.classList.remove('show');
+                        }, 3000);
+                        document.getElementById('car-form').reset();
+                    })
+                    .catch((error) => {
+                        msg.innerHTML = '❌ Error adding car: ' + error.message;
+                        msg.style.color = 'red';
+                        msg.classList.add('show');
+                        setTimeout(() => {
+                            msg.classList.remove('show');
+                        }, 4000);
+                        console.error("Error: ", error);
+                    });
             }
 
             // Delete Function
