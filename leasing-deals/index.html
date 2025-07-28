@@ -97,8 +97,8 @@
     </nav>
   </section>
 
-  <section class="bg-[#f9f9f9]/80">
-    <div class="container px-7 py-5 mx-auto">
+  <section id="main-section" class="bg-[#f9f9f9]/80">
+    <div class="container px-8 py-5 mx-auto">
       <div class="relative w-full text-center">
         <!-- Search Input -->
         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -134,33 +134,33 @@
       <div id="car-modal"
         class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center z-50 hidden transition-opacity duration-300">
         <div
-          class="bg-white rounded-xl shadow-lg p-5 w-full mx-6 max-w-md relative animate-fadeInUp duration-300 text-left">
-          <button onclick="closeModal()"
-            class="absolute top-4 right-5 text-gray-500 hover:text-gray-700 text-xl leading-none focus:outline-none"
-            aria-label="Close modal">
-            <i class="fas fa-times"></i>
-          </button>
+          class="bg-white rounded-xl shadow-lg w-full mx-6 max-w-md relative animate-fadeInUp duration-300 text-left">
+          <img id="modal-image2" loading="lazy" src="" alt="Car Image"
+            class="w-full h-44 object-cover rounded-t-lg mb-3" />
+          <div class="px-6 pb-3">
+            <h2 id="modal-title" class="text-xl text-center font-bold mb-4"></h2>
+            <div class="px-1">
+              <h3 class="text-lg font-semibold pb-2">
+                <i class="fas fa-list-alt text-gray-900 mr-2"></i>Features
+              </h3>
+              <ul id="modal-features"
+                class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-5 list-disc list-inside"></ul>
 
-          <h2 id="modal-title" class="text-xl font-bold my-3"></h2>
+              <h3 class="text-lg font-semibold pt-4 pb-2">
+                <i class="fas fa-plus text-gray-900 mr-2"></i>Additional Features
+              </h3>
+              <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
 
-          <img id="modal-image2" loading="lazy" src="" alt="Car Image" class="w-full h-44 object-cover rounded-lg mb-4" />
-
-          <div class="px-1">
-            <h3 class="text-lg font-semibold pb-2">
-              <i class="fas fa-list-alt text-gray-900 mr-2"></i>Features
-            </h3>
-            <ul id="modal-features"
-              class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-5 list-disc list-inside"></ul>
-
-            <h3 class="text-lg font-semibold pt-4 pb-2">
-              <i class="fas fa-plus text-gray-900 mr-2"></i>Additional Features
-            </h3>
-            <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
-
-            <h3 class="text-lg font-semibold pt-4 pb-2">
-              Color
-            </h3>
-            <p id="modal-color" class="text-sm text-gray-700 pb-3"></p>
+              <h3 class="text-lg font-semibold pt-4 pb-2">
+                Color
+              </h3>
+              <p id="modal-color" class="text-sm text-gray-700 pb-3"></p>
+            </div>
+            <button onclick="closeModal()"
+              class="absolute top-4 right-5 text-white hover:text-gray-700 text-xl leading-none focus:outline-none"
+              aria-label="Close modal">
+              <i class="fas fa-times"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -188,7 +188,7 @@
   </section>
 
   <!-- Footer -->
-  <footer class="bg-white  border-t">
+  <footer id="footer" class="bg-white  border-t hidden">
     <div class="container p-6 mx-auto">
       <div class="lg:flex">
         <div class="w-full py-6 lg:w-2/5">
@@ -329,6 +329,8 @@
         });
         generateCars(cars);
         updateSuggestions("");
+        const footer = document.getElementById("footer");
+        footer.classList.remove("hidden");
       } catch (error) {
         console.error("Error loading cars:", error);
       } finally {
@@ -343,7 +345,7 @@
         filteredCars.map((car, index) => `
       <div class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 relative">
   <!-- Image container -->
-  <div class="relative w-full rounded-lg overflow-hidden">
+  <div class="relative w-full rounded-lg overflow-hidden pt-8">
     <img loading="lazy" src="${car.image1}" alt="Car Image" class="w-full h-[200px] object-cover rounded-lg">
     ${car.label && car.label.trim() !== "" ? `
       <div class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-br-lg whitespace-nowrap">
@@ -352,10 +354,14 @@
   </div>
 
   <!-- Car Name -->
-  <p onclick='openModal(${JSON.stringify(car)})' class="flex items-center text-left font-bold text-xl text-gray-800 mt-3 cursor-pointer mx-2">
+  <p class="flex items-center text-left font-bold text-xl text-gray-800 mt-3 mx-2">
   <span class="inline-block w-1 h-5 bg-blue-600 rounded-sm mr-1.5"></span>
   ${car.name}
-  <i class="fas fa-circle-info text-sm ml-2 text-gray-800"></i>
+  <button 
+    onclick='openModal(${JSON.stringify(car)}, "specs")' https://vehicle-images.dealerinspire.com/baca-110007272/1HGCY2F76SA007829/f948ade8a40a75b75446659a44490774.png
+    class="ml-2  text-[0.6rem] font-medium text-gray-500 underline hover:text-blue-800 focus:outline-none">
+    see specs
+  </button>
 </p>
 
 
@@ -368,7 +374,7 @@
     </div>
     <div class="flex-1 text-center relative px-2">
       <p class="text-[0.6rem] font-medium text-gray-500">Annual Mileage</p>
-      <p class="font-semibold">${car.mileage} Miles</p>
+      <p class="font-semibold">${car.mileage} MPY</p>
       <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
     </div>
     <div class="flex-1 text-center px-2">
@@ -379,7 +385,7 @@
 
   <!-- Price + Button -->
  <div class="mx-2 py-2 flex items-center justify-between">
-  <p class="text-3xl font-bold text-gray-800">$${car.price}
+  <p class="text-[clamp(0.65rem,6vw,1.7rem)] font-bold text-gray-800">$${car.price}
     <span class="text-sm text-gray-600 font-semibold">/ Month</span>
   </p>
   <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${car.name}" 
@@ -407,9 +413,12 @@
       document.body.style.overflow = "auto";
     }
     document.addEventListener('DOMContentLoaded', () => {
+
+      // WhatsApp Chat Auto-popup
       const chat = document.getElementById('whatsapp-chat');
       const bubble = document.getElementById('whatsapp-bubble');
       const closeBtn = document.getElementById('close-chat');
+      const section = document.getElementById('main-section');
       let chatVisible = false;
       let chatClosed = false;
       // Show chat after 5 seconds
@@ -447,7 +456,7 @@
         bubble.classList.add('opacity-0', 'translate-y-2');
         bubble.classList.remove('opacity-100', 'translate-y-0');
         closeBtn.classList.add('hidden');
-        chatClosed = true;
+        chatClosed = true; hhih
       });
     });
   </script>
