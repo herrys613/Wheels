@@ -30,6 +30,14 @@
         font-family: 'Montserrat', sans-serif;
     }
 
+    body.modal-open {
+        overflow-y: scroll;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -130,24 +138,19 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-0 pb-6" id="cars-container">
             </div>
+            <p id="no-match-message" class="text-center text-gray-500 pb-48 hidden">
+                Sorry, no match found...
+            </p>
 
             <!-- Modal -->
             <div id="car-modal"
                 class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center z-50 hidden transition-opacity duration-300">
                 <div
-                    class="bg-white rounded-xl shadow-lg p-5 w-full mx-6 max-w-md relative animate-fadeInUp duration-300 text-left">
-                    <button onclick="closeModal()"
-                        class="absolute top-4 right-5 text-gray-500 hover:text-gray-700 text-xl leading-none focus:outline-none"
-                        aria-label="Close modal">
-                        <i class="fas fa-times"></i>
-                    </button>
-
-                    <h2 id="modal-title" class="text-xl font-bold my-3"></h2>
-
+                    class="bg-white rounded-xl shadow-lg w-full mx-6 max-w-md p-3 relative animate-fadeInUp duration-300 text-left">
                     <img id="modal-image2" loading="lazy" src="" alt="Car Image"
-                        class="w-full h-44 object-cover rounded-lg mb-4" />
-
+                        class="w-full h-44 object-cover rounded-lg mb-3" />
                     <div class="px-1">
+                        <h2 id="modal-title" class="text-xl font-bold mb-3"></h2>
                         <h3 class="text-lg font-semibold pb-2">
                             <i class="fas fa-list-alt text-gray-900 mr-2"></i>Features
                         </h3>
@@ -165,289 +168,307 @@
                         </h3>
                         <p id="modal-color" class="text-sm text-gray-700 pb-3"></p>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Floating Add Car Button with Icon -->
-        <button onclick="openAddCarModal()"
-            class="fixed bottom-8 right-6 w-12 h-12 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-500 transition z-50 flex items-center justify-center group"
-            aria-label="Add Car">
-            <i class="fas fa-plus text-xl"></i>
-        </button>
-
-        <!-- Add Car Modal -->
-        <div id="addCarModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-            <div class="bg-white mx-6 max-w-2xl rounded-lg shadow-lg p-6 relative">
-
-                <!-- Close Button -->
-                <button onclick="closeAddCarModal()"
-                    class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-3xl">&times;</button>
-
-                <h2 class="text-2xl font-semibold mb-4 text-center text-gray-800">Add New Car</h2>
-
-                <form id="car-form" class="space-y-4">
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="text" id="car-name" placeholder="Car Name" required
-                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        <input type="text" id="car-color" placeholder="Color" required
-                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="text" id="car-image1" placeholder="Primary Image URL" required
-                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        <input type="text" id="car-image2" placeholder="Secondary Image URL"
-                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-4">
-                        <input type="text" id="car-term" placeholder="Lease Term" required
-                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        <input type="text" id="car-mileage" placeholder="Mileage" required
-                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        <input type="text" id="car-due" placeholder="Due" required
-                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="text" id="car-price" placeholder="Price" required
-                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        <input type="text" id="car-label" placeholder="Label"
-                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                    </div>
-
-                    <input type="text" id="car-features" placeholder="Features (comma-separated)" required
-                        class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                    <input type="text" id="car-additional" placeholder="Additional Features"
-                        class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-
-                    <button type="button" onclick="submitCar()"
-                        class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-500 transition">
-                        Submit Car
+                    <button onclick="closeModal()"
+                        class="absolute top-4 right-5 text-white hover:text-gray-700 text-xl leading-none focus:outline-none"
+                        aria-label="Close modal">
+                        <i class="fas fa-times"></i>
                     </button>
-
-                    <div id="Submit-message" class="text-center text-sm text-green-600 mt-2"></div>
-                </form>
-            </div>
-        </div>
-
-        <!-- Delete Confirmation Modal -->
-        <div id="delete-modal"
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-            <div class="bg-white mx-4 rounded-lg shadow-lg p-6 max-w-sm w-full">
-                <h2 class="text-lg font-semibold mb-4">Delete Car</h2>
-                <p class="mb-6">Are you sure you want to delete this car?</p>
-                <div class="flex justify-end space-x-4">
-                    <button id="cancel-delete" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
-                    <button id="confirm-delete"
-                        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500">Delete</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Delete Confirmation Message  -->
-        <div id="alert-box"
-            class="fixed bottom-5 left-1/2 transform -translate-x-1/2 max-w-sm w-full z-50 hidden transition-opacity duration-300 ease-in-out">
-        </div>
+            <!-- Floating Add Car Button with Icon -->
+            <button onclick="openAddCarModal()"
+                class="fixed bottom-8 right-6 w-12 h-12 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-500 transition z-50 flex items-center justify-center group"
+                aria-label="Add Car">
+                <i class="fas fa-plus text-xl"></i>
+            </button>
+
+            <!-- Add Car Modal -->
+            <div id="addCarModal"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                <div class="bg-white mx-6 max-w-2xl rounded-lg shadow-lg p-6 relative">
+
+                    <!-- Close Button -->
+                    <button onclick="closeAddCarModal()"
+                        class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-3xl">&times;</button>
+
+                    <h2 class="text-2xl font-semibold mb-4 text-center text-gray-800">Add New Car</h2>
+
+                    <form id="car-form" class="space-y-4">
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="car-name" placeholder="Car Name" required
+                                class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                            <input type="text" id="car-color" placeholder="Color" required
+                                class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="car-image1" placeholder="Primary Image URL" required
+                                class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                            <input type="text" id="car-image2" placeholder="Secondary Image URL"
+                                class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4">
+                            <input type="text" id="car-term" placeholder="Lease Term" required
+                                class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                            <input type="text" id="car-mileage" placeholder="Mileage" required
+                                class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                            <input type="text" id="car-due" placeholder="Due" required
+                                class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="car-price" placeholder="Price" required
+                                class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                            <input type="text" id="car-label" placeholder="Label"
+                                class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        </div>
+
+                        <input type="text" id="car-features" placeholder="Features (comma-separated)" required
+                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                        <input type="text" id="car-additional" placeholder="Additional Features"
+                            class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                        <button type="button" onclick="submitCar()"
+                            class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-500 transition">
+                            Submit Car
+                        </button>
+
+                        <div id="Submit-message" class="text-center text-sm text-green-600 mt-2"></div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Delete Confirmation Modal -->
+            <div id="delete-modal"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                <div class="bg-white mx-4 rounded-lg shadow-lg p-6 max-w-sm w-full">
+                    <h2 class="text-lg font-semibold mb-4">Delete Car</h2>
+                    <p class="mb-6">Are you sure you want to delete this car?</p>
+                    <div class="flex justify-end space-x-4">
+                        <button id="cancel-delete"
+                            class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
+                        <button id="confirm-delete"
+                            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500">Delete</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Confirmation Message  -->
+            <div id="alert-box"
+                class="fixed bottom-5 left-1/2 transform -translate-x-1/2 max-w-sm w-full z-50 hidden transition-opacity duration-300 ease-in-out">
+            </div>
 
 
-        <!-- Footer -->
-        <footer class="bg-white  border-t">
-            <div class="container p-6 mx-auto">
-                <div class="lg:flex">
-                    <div class="w-full py-6 lg:w-2/5">
-                        <a href="/">
-                            <img class="w-auto h-5" src="/images/logo-blue.png" alt="logo">
-                        </a>
-                        <p class="max-w-sm mt-2 text-gray-500 ">A simple auto leasing platform.</p>
-                        <div class="flex space-x-4 mt-4">
-                            <a href="https://wa.me/9175837073" target="_blank"
-                                class="text-gray-700 text-gray-700 text-2xl" aria-label="Chat on WhatsApp">
-                                <i class="fab fa-whatsapp"></i>
+            <!-- Footer -->
+            <footer class="bg-white  border-t">
+                <div class="container p-6 mx-auto">
+                    <div class="lg:flex">
+                        <div class="w-full py-6 lg:w-2/5">
+                            <a href="/">
+                                <img class="w-auto h-5" src="/images/logo-blue.png" alt="logo">
                             </a>
-                            <a href="https://instagram.com/wheelsautoleasing" target="_blank"
-                                class="text-gray-700 text-gray-700 text-2xl" aria-label="Visit Instagram">
-                                <i class="fab fa-instagram"></i>
-                            </a>
+                            <p class="max-w-sm mt-2 text-gray-500 ">A simple auto leasing platform.</p>
+                            <div class="flex space-x-4 mt-4">
+                                <a href="https://wa.me/9175837073" target="_blank"
+                                    class="text-gray-700 text-gray-700 text-2xl" aria-label="Chat on WhatsApp">
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                                <a href="https://instagram.com/wheelsautoleasing" target="_blank"
+                                    class="text-gray-700 text-gray-700 text-2xl" aria-label="Visit Instagram">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="mt-0 lg:mt-0 lg:flex-1">
+                            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+                                <div>
+                                    <h3 class="text-gray-700 font-semibold ">Company</h3>
+                                    <a href="/leasing-deals/"
+                                        class="block mt-2 text-sm text-gray-500  hover:underline">Leasing Deals</a>
+                                    <a href="/about-us/" class="block mt-2 text-sm text-gray-500  hover:underline">About
+                                        Us</a>
+                                    <a href="/blog/" class="block mt-2 text-sm text-gray-500  hover:underline">Blog</a>
+                                    <a href="/contact/"
+                                        class="block mt-2 text-sm text-gray-500  hover:underline">Partner
+                                        with Us</a>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-gray-700 font-semibold ">Support</h3>
+                                    <a href="/#faq" class="block mt-2 text-sm text-gray-500  hover:underline">FAQ</a>
+                                    <a href="/contact/"
+                                        class="block mt-2 text-sm text-gray-500  hover:underline">Contact
+                                        Us</a>
+                                    <a href="/docs-&-forms/"
+                                        class="block mt-2 text-sm text-gray-500  hover:underline">Docs
+                                        &
+                                        Forms</a>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-gray-700 font-semibold ">Get in touch</h3>
+                                    <span class="block mt-2 text-sm text-gray-500  hover:underline">+1 917 583
+                                        7073</span>
+                                    <span
+                                        class="block mt-2 text-sm text-gray-500  hover:underline">hello@wheelsautoleasing.com</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="mt-0 lg:mt-0 lg:flex-1">
-                        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-                            <div>
-                                <h3 class="text-gray-700 font-semibold ">Company</h3>
-                                <a href="/leasing-deals/"
-                                    class="block mt-2 text-sm text-gray-500  hover:underline">Leasing Deals</a>
-                                <a href="/about-us/" class="block mt-2 text-sm text-gray-500  hover:underline">About
-                                    Us</a>
-                                <a href="/blog/" class="block mt-2 text-sm text-gray-500  hover:underline">Blog</a>
-                                <a href="/contact/" class="block mt-2 text-sm text-gray-500  hover:underline">Partner
-                                    with Us</a>
-                            </div>
+                    <hr class="h-px my-6 bg-gray-200 border-none ">
 
-                            <div>
-                                <h3 class="text-gray-700 font-semibold ">Support</h3>
-                                <a href="/#faq" class="block mt-2 text-sm text-gray-500  hover:underline">FAQ</a>
-                                <a href="/contact/" class="block mt-2 text-sm text-gray-500  hover:underline">Contact
-                                    Us</a>
-                                <a href="/docs-&-forms/" class="block mt-2 text-sm text-gray-500  hover:underline">Docs
-                                    &
-                                    Forms</a>
-                            </div>
-
-                            <div>
-                                <h3 class="text-gray-700 font-semibold ">Get in touch</h3>
-                                <span class="block mt-2 text-sm text-gray-500  hover:underline">+1 917 583
-                                    7073</span>
-                                <span
-                                    class="block mt-2 text-sm text-gray-500  hover:underline">hello@wheelsautoleasing.com</span>
-                            </div>
-                        </div>
+                    <div>
+                        <p class="text-center text-gray-500 ">&copy;
+                            <script>
+                                document.write(new Date().getFullYear())
+                            </script> Wheels. All rights reserved.
+                        </p>
                     </div>
                 </div>
+            </footer>
 
-                <hr class="h-px my-6 bg-gray-200 border-none ">
+            <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+            <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+            <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+            <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
-                <div>
-                    <p class="text-center text-gray-500 ">&copy;
-                        <script>
-                            document.write(new Date().getFullYear())
-                        </script> Wheels. All rights reserved.
-                    </p>
-                </div>
-            </div>
-        </footer>
+            <script>
+                // Firebase config
+                const firebaseConfig = {
+                    apiKey: "AIzaSyC25Tdl5GtnRXcHeBBGeIOuIcVX_WdiHP4",
+                    authDomain: "cars-8bdd6.firebaseapp.com",
+                    projectId: "cars-8bdd6",
+                    storageBucket: "cars-8bdd6.appspot.com",
+                    messagingSenderId: "597823500976",
+                    appId: "1:597823500976:web:71f23d89e38a5cdb010175"
+                };
+                firebase.initializeApp(firebaseConfig);
+                const db = firebase.firestore();
 
-        <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-
-        <script>
-            // Firebase config
-            const firebaseConfig = {
-                apiKey: "AIzaSyC25Tdl5GtnRXcHeBBGeIOuIcVX_WdiHP4",
-                authDomain: "cars-8bdd6.firebaseapp.com",
-                projectId: "cars-8bdd6",
-                storageBucket: "cars-8bdd6.appspot.com",
-                messagingSenderId: "597823500976",
-                appId: "1:597823500976:web:71f23d89e38a5cdb010175"
-            };
-            firebase.initializeApp(firebaseConfig);
-            const db = firebase.firestore();
-
-            // Redirect to login if not signed in
-            firebase.auth().onAuthStateChanged(user => {
-                if (user) {
-                    document.body.classList.remove('hidden');
-                    loadCars(); // Or whatever function you use to load content
-                } else {
-                    window.location.href = "/login/";
-                }
-            });
-
-            // Logout button
-            document.addEventListener("DOMContentLoaded", () => {
-                const logoutBtn = document.getElementById("logout-btn");
-                logoutBtn.addEventListener("click", e => {
-                    e.preventDefault();
-                    const user = firebase.auth().currentUser;
+                // Redirect to login if not signed in
+                firebase.auth().onAuthStateChanged(user => {
                     if (user) {
-                        firebase.auth().signOut().then(() => {
-                            window.location.href = "/login/";
-                        }).catch(error => {
-                            alert("Error logging out. Please try again.");
-                            console.error(error);
-                        });
+                        document.body.classList.remove('hidden');
+                        loadCars(); // Or whatever function you use to load content
                     } else {
                         window.location.href = "/login/";
                     }
                 });
-            });
 
-            // UI Elements
-            const carsContainer = document.getElementById("cars-container");
-            const searchBar = document.getElementById("search-bar");
-            const suggestionsList = document.getElementById("car-suggestions");
-            const modal = document.getElementById("car-modal");
-            const loadingSpinner = document.getElementById("loading-spinner");
-            const alertBox = document.getElementById("alert-box");
-
-            // Data
-            const allCarModels = ["Ford", "Chevrolet", "GMC", "Cadillac", "Dodge", "Chrysler", "Jeep", "Ram", "Lincoln", "Tesla", "Buick", "BMW", "Mercedes-Benz",
-                "Audi", "Volkswagen", "Jaguar", "Land Rover", "Bentley", "Maserati", "Alfa Romeo", "Fiat", "Peugeot", "Volvo", "Toyota", "Honda",
-                "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"
-            ];
-            let cars = [];
-
-            // Suggestion Logic
-            function getCarCounts() {
-                const counts = {};
-                cars.forEach(car => {
-                    const firstWord = car.name.split(" ")[0].toLowerCase();
-                    counts[firstWord] = (counts[firstWord] || 0) + 1;
-                });
-                return counts;
-            }
-
-            function updateSuggestions(query) {
-                const counts = getCarCounts();
-                if (!query.trim()) {
-                    suggestionsList.style.display = "none";
-                    return;
-                }
-                let matchingSuggestions = allCarModels.map(model => {
-                    const firstWord = model.split(" ")[0].toLowerCase();
-                    const count = counts[firstWord] || 0;
-                    return `<li class="px-4 py-2 border-b hover:bg-gray-100 cursor-pointer text-gray-700 text-sm" onclick="selectSuggestion('${model}')">${model} (${count})</li>`;
-                }).filter(item => item.toLowerCase().includes(query.toLowerCase()));
-                suggestionsList.innerHTML = matchingSuggestions.join("");
-                suggestionsList.style.display = matchingSuggestions.length ? "block" : "none";
-            }
-            window.selectSuggestion = function (model) {
-                searchBar.value = model;
-                suggestionsList.style.display = "none";
-                filterCars();
-            }
-
-            function filterCars() {
-                const query = searchBar.value.trim().toLowerCase();
-                const filtered = query ? cars.filter(car => car.name.toLowerCase().includes(query)) : cars;
-                generateCars(filtered);
-            }
-            searchBar.addEventListener("input", () => {
-                updateSuggestions(searchBar.value);
-                filterCars();
-            });
-            document.addEventListener("click", (event) => {
-                if (!searchBar.contains(event.target) && !suggestionsList.contains(event.target)) {
-                    suggestionsList.style.display = "none";
-                }
-            });
-
-            function loadCars() {
-                document.getElementById("loading-spinner").style.display = "flex"; // show spinner
-
-                db.collection("cars").onSnapshot((snapshot) => {
-                    cars = [];
-                    snapshot.forEach((doc) => {
-                        cars.push({ id: doc.id, ...doc.data() });
+                // Logout button
+                document.addEventListener("DOMContentLoaded", () => {
+                    const logoutBtn = document.getElementById("logout-btn");
+                    logoutBtn.addEventListener("click", e => {
+                        e.preventDefault();
+                        const user = firebase.auth().currentUser;
+                        if (user) {
+                            firebase.auth().signOut().then(() => {
+                                window.location.href = "/login/";
+                            }).catch(error => {
+                                alert("Error logging out. Please try again.");
+                                console.error(error);
+                            });
+                        } else {
+                            window.location.href = "/login/";
+                        }
                     });
-                    generateCars(cars);
-                    document.getElementById("loading-spinner").style.display = "none"; // hide spinner
-                    updateSuggestions(""); // update search suggestions if you have this
-                }, (error) => {
-                    console.error("Error loading cars:", error);
-                    document.getElementById("loading-spinner").style.display = "none"; // hide spinner even on error
                 });
-            }
 
-            // Generate Car Cards
-            function generateCars(filteredCars) {
-                carsContainer.innerHTML = filteredCars.length > 0 ?
-                    filteredCars.map((car, index) => `
+                // UI Elements
+                const carsContainer = document.getElementById("cars-container");
+                const searchBar = document.getElementById("search-bar");
+                const suggestionsList = document.getElementById("car-suggestions");
+                const modal = document.getElementById("car-modal");
+                const loadingSpinner = document.getElementById("loading-spinner");
+                const alertBox = document.getElementById("alert-box");
+
+                // Data
+                const allCarModels = ["Ford", "Chevrolet", "GMC", "Cadillac", "Dodge", "Chrysler", "Jeep", "Ram", "Lincoln", "Tesla", "Buick", "BMW", "Mercedes-Benz",
+                    "Audi", "Volkswagen", "Jaguar", "Land Rover", "Bentley", "Maserati", "Alfa Romeo", "Fiat", "Peugeot", "Volvo", "Toyota", "Honda",
+                    "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"
+                ];
+                let cars = [];
+
+                // Suggestion Logic
+                function getCarCounts() {
+                    const counts = {};
+                    cars.forEach(car => {
+                        const firstWord = car.name.split(" ")[0].toLowerCase();
+                        counts[firstWord] = (counts[firstWord] || 0) + 1;
+                    });
+                    return counts;
+                }
+
+                function updateSuggestions(query) {
+                    const counts = getCarCounts();
+                    if (!query.trim()) {
+                        suggestionsList.style.display = "none";
+                        return;
+                    }
+
+                    const filteredModels = allCarModels.filter(model =>
+                        model.toLowerCase().includes(query.toLowerCase())
+                    );
+
+                    const matchingSuggestions = filteredModels.map(model => {
+                        const firstWord = model.split(" ")[0].toLowerCase();
+                        const count = counts[firstWord] || 0;
+                        return `<li class="px-4 py-2 border-b hover:bg-gray-100 cursor-pointer text-gray-700 text-sm" onclick="selectSuggestion('${model}')">${model} (${count})</li>`;
+                    });
+
+                    suggestionsList.innerHTML = matchingSuggestions.join("");
+                    suggestionsList.style.display = matchingSuggestions.length ? "block" : "none";
+                }
+
+                window.selectSuggestion = function (model) {
+                    searchBar.value = model;
+                    suggestionsList.style.display = "none";
+                    filterCars();
+                }
+
+                function filterCars() {
+                    const query = searchBar.value.trim().toLowerCase();
+                    const filtered = query ? cars.filter(car => car.name.toLowerCase().includes(query)) : cars;
+                    generateCars(filtered);
+                }
+                searchBar.addEventListener("input", () => {
+                    updateSuggestions(searchBar.value);
+                    filterCars();
+                });
+                document.addEventListener("click", (event) => {
+                    if (!searchBar.contains(event.target) && !suggestionsList.contains(event.target)) {
+                        suggestionsList.style.display = "none";
+                    }
+                });
+
+                function loadCars() {
+                    document.getElementById("loading-spinner").style.display = "flex"; // show spinner
+
+                    db.collection("cars").onSnapshot((snapshot) => {
+                        cars = [];
+                        snapshot.forEach((doc) => {
+                            cars.push({ id: doc.id, ...doc.data() });
+                        });
+                        generateCars(cars);
+                        document.getElementById("loading-spinner").style.display = "none"; // hide spinner
+                        updateSuggestions(""); // update search suggestions if you have this
+                    }, (error) => {
+                        console.error("Error loading cars:", error);
+                        document.getElementById("loading-spinner").style.display = "none"; // hide spinner even on error
+                    });
+                }
+
+                // Generate Car Cards
+                function generateCars(filteredCars) {
+                    const noMatchMessage = document.getElementById("no-match-message");
+                    if (filteredCars.length > 0) {
+                        noMatchMessage.classList.add("hidden");
+                        carsContainer.innerHTML = filteredCars.map((car, index) => `
       <div class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 relative">
   <!-- Image container -->
   <div class="relative w-full rounded-lg overflow-hidden">
@@ -493,151 +514,163 @@
   Delete
 </button>
         </div>
-      </div>`).join("") :
-                    `<p class="text-center text-gray-500 pb-48">Sorry, no match found...</p>`;
-            }
-
-            // Modal Functions
-            window.openModal = function (car) {
-                document.getElementById("modal-title").innerText = car.name;
-                document.getElementById("modal-image2").src = car.image2;
-                document.getElementById("modal-features").innerHTML = car.features.map(f => `<li>${f}</li>`).join("");
-                document.getElementById("modal-additional").innerText = car.additional || "";
-                document.getElementById("modal-color").innerText = car.color;
-                modal.style.display = "flex";
-                document.body.style.overflow = "hidden";
-            }
-            window.closeModal = function () {
-                modal.style.display = "none";
-                document.body.style.overflow = "auto";
-            }
-
-            // add Car Button
-            function openAddCarModal() {
-                const modal = document.getElementById("addCarModal");
-                modal.classList.remove("hidden");
-                modal.classList.add("flex"); // For Tailwind's flex modal centering
-            }
-
-            function closeAddCarModal() {
-                const modal = document.getElementById("addCarModal");
-                modal.classList.add("hidden");
-                modal.classList.remove("flex");
-            }
-
-            // Submit Car Function
-            function submitCar() {
-                const name = document.getElementById('car-name').value;
-                const image1 = document.getElementById('car-image1').value;
-                const image2 = document.getElementById('car-image2').value;
-                const term = document.getElementById('car-term').value;
-                const mileage = document.getElementById('car-mileage').value;
-                const due = document.getElementById('car-due').value;
-                const price = document.getElementById('car-price').value;
-                const featuresInput = document.getElementById('car-features').value;
-                const features = featuresInput.split(',').map(f => f.trim()).filter(f => f);
-                const additional = document.getElementById('car-additional').value;
-                const color = document.getElementById('car-color').value;
-                const label = document.getElementById('car-label').value;
-                const msg = document.getElementById('Submit-message');
-                msg.style.color = ''; // Reset color
-                msg.classList.remove('show'); // Hide any old message immediately
-                // Validation
-                if (!name || !image1 || !image2 || !term || !mileage || !due || !price || features.length === 0 || !color) {
-                    msg.innerHTML = '❗Please fill in all required fields.';
-                    msg.style.color = 'red';
-                    msg.classList.add('show');
-                    setTimeout(() => {
-                        msg.classList.remove('show');
-                    }, 3000);
-                    return;
+      </div>`).join("");
+                    } else {
+                        carsContainer.innerHTML = "";
+                        noMatchMessage.classList.remove("hidden");
+                    }
                 }
-                // Add to Firestore
-                db.collection("cars").add({
-                    name,
-                    image1,
-                    image2,
-                    term,
-                    mileage,
-                    due,
-                    price,
-                    features,
-                    additional,
-                    color,
-                    label
-                })
-                    .then(() => {
-                        msg.innerHTML = '✅ Car added successfully!';
-                        msg.style.color = 'green';
-                        msg.classList.add('show');
-                        setTimeout(() => {
-                            msg.classList.remove('show');
-                        }, 3000);
-                        document.getElementById('car-form').reset();
-                    })
-                    .catch((error) => {
-                        msg.innerHTML = '❌ Error adding car: ' + error.message;
+
+                // Modal Functions
+                let scrollTop = 0;
+
+                window.openModal = function (car) {
+                    document.getElementById("modal-title").innerText = car.name;
+                    document.getElementById("modal-image2").src = car.image2;
+                    document.getElementById("modal-features").innerHTML = car.features.map(f => `<li>${f}</li>`).join("");
+                    document.getElementById("modal-additional").innerText = car.additional || "";
+                    document.getElementById("modal-color").innerText = car.color;
+                    modal.style.display = "flex";
+
+                    scrollTop = window.scrollY;
+                    document.body.classList.add("modal-open");
+                    document.body.style.top = `-${scrollTop}px`;
+                };
+
+                window.closeModal = function () {
+                    modal.style.display = "none";
+                    document.body.classList.remove("modal-open");
+
+                    document.body.style.top = "";
+                    window.scrollTo(0, scrollTop);
+                };
+
+                // add Car Button
+                function openAddCarModal() {
+                    const modal = document.getElementById("addCarModal");
+                    modal.classList.remove("hidden");
+                    modal.classList.add("flex"); // For Tailwind's flex modal centering
+                }
+
+                function closeAddCarModal() {
+                    const modal = document.getElementById("addCarModal");
+                    modal.classList.add("hidden");
+                    modal.classList.remove("flex");
+                }
+
+                // Submit Car Function
+                function submitCar() {
+                    const name = document.getElementById('car-name').value;
+                    const image1 = document.getElementById('car-image1').value;
+                    const image2 = document.getElementById('car-image2').value;
+                    const term = document.getElementById('car-term').value;
+                    const mileage = document.getElementById('car-mileage').value;
+                    const due = document.getElementById('car-due').value;
+                    const price = document.getElementById('car-price').value;
+                    const featuresInput = document.getElementById('car-features').value;
+                    const features = featuresInput.split(',').map(f => f.trim()).filter(f => f);
+                    const additional = document.getElementById('car-additional').value;
+                    const color = document.getElementById('car-color').value;
+                    const label = document.getElementById('car-label').value;
+                    const msg = document.getElementById('Submit-message');
+                    msg.style.color = ''; // Reset color
+                    msg.classList.remove('show'); // Hide any old message immediately
+                    // Validation
+                    if (!name || !image1 || !image2 || !term || !mileage || !due || !price || features.length === 0 || !color) {
+                        msg.innerHTML = '❗Please fill in all required fields.';
                         msg.style.color = 'red';
                         msg.classList.add('show');
                         setTimeout(() => {
                             msg.classList.remove('show');
-                        }, 4000);
-                        console.error("Error: ", error);
-                    });
-            }
-
-            // Delete Function
-            let carIdToDelete = null;
-
-            function deleteCar(carId) {
-                carIdToDelete = carId;
-                document.getElementById("delete-modal").classList.remove("hidden");
-            }
-            // Modal button actions
-            document.getElementById("cancel-delete").addEventListener("click", () => {
-                carIdToDelete = null;
-                document.getElementById("delete-modal").classList.add("hidden");
-            });
-            document.getElementById("confirm-delete").addEventListener("click", async () => {
-                if (!carIdToDelete) return;
-                try {
-                    await db.collection("cars").doc(carIdToDelete).delete();
-                    showAlert("Car deleted successfully.", "success");
-                    loadCars(); // Refresh the list
-                } catch (error) {
-                    console.error("Error deleting car:", error);
-                    showAlert("Error deleting car. Please try again.", "error");
-                }
-                document.getElementById("delete-modal").classList.add("hidden");
-                carIdToDelete = null;
-            });
-
-            //Alert msg
-            function showAlert(message, type = "success") {
-                const alertBox = document.getElementById("alert-box");
-
-                const colors = {
-                    success: {
-                        bg: "bg-white dark:bg-gray-800",
-                        iconBg: "bg-emerald-500",
-                        iconPath: "M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z",
-                        titleClass: "font-semibold text-emerald-500 dark:text-emerald-400",
-                        messageClass: "text-sm text-gray-600 dark:text-gray-200",
-                        title: "Success",
-                    },
-                    error: {
-                        bg: "bg-white dark:bg-gray-800",
-                        iconBg: "bg-red-500",
-                        iconPath: "M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM26.6667 13.3333L23.3334 16.6666L20 20L16.6667 23.3333L13.3334 26.6666L10 23.3333L13.3334 20L16.6667 16.6666L20 13.3333L23.3334 10L26.6667 13.3333Z",
-                        titleClass: "font-semibold text-red-500 dark:text-red-400",
-                        messageClass: "text-sm text-red-700 dark:text-red-300",
-                        title: "Error",
+                        }, 3000);
+                        return;
                     }
-                };
+                    // Add to Firestore
+                    db.collection("cars").add({
+                        name,
+                        image1,
+                        image2,
+                        term,
+                        mileage,
+                        due,
+                        price,
+                        features,
+                        additional,
+                        color,
+                        label
+                    })
+                        .then(() => {
+                            msg.innerHTML = '✅ Car added successfully!';
+                            msg.style.color = 'green';
+                            msg.classList.add('show');
+                            setTimeout(() => {
+                                msg.classList.remove('show');
+                            }, 3000);
+                            document.getElementById('car-form').reset();
+                        })
+                        .catch((error) => {
+                            msg.innerHTML = '❌ Error adding car: ' + error.message;
+                            msg.style.color = 'red';
+                            msg.classList.add('show');
+                            setTimeout(() => {
+                                msg.classList.remove('show');
+                            }, 4000);
+                            console.error("Error: ", error);
+                        });
+                }
 
-                const c = type === "success" ? colors.success : colors.error;
+                // Delete Function
+                let carIdToDelete = null;
 
-                alertBox.innerHTML = `
+                function deleteCar(carId) {
+                    carIdToDelete = carId;
+                    document.getElementById("delete-modal").classList.remove("hidden");
+                }
+                // Modal button actions
+                document.getElementById("cancel-delete").addEventListener("click", () => {
+                    carIdToDelete = null;
+                    document.getElementById("delete-modal").classList.add("hidden");
+                });
+                document.getElementById("confirm-delete").addEventListener("click", async () => {
+                    if (!carIdToDelete) return;
+                    try {
+                        await db.collection("cars").doc(carIdToDelete).delete();
+                        showAlert("Car deleted successfully.", "success");
+                        loadCars(); // Refresh the list
+                    } catch (error) {
+                        console.error("Error deleting car:", error);
+                        showAlert("Error deleting car. Please try again.", "error");
+                    }
+                    document.getElementById("delete-modal").classList.add("hidden");
+                    carIdToDelete = null;
+                });
+
+                //Alert msg
+                function showAlert(message, type = "success") {
+                    const alertBox = document.getElementById("alert-box");
+
+                    const colors = {
+                        success: {
+                            bg: "bg-white dark:bg-gray-800",
+                            iconBg: "bg-emerald-500",
+                            iconPath: "M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z",
+                            titleClass: "font-semibold text-emerald-500 dark:text-emerald-400",
+                            messageClass: "text-sm text-gray-600 dark:text-gray-200",
+                            title: "Success",
+                        },
+                        error: {
+                            bg: "bg-white dark:bg-gray-800",
+                            iconBg: "bg-red-500",
+                            iconPath: "M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM26.6667 13.3333L23.3334 16.6666L20 20L16.6667 23.3333L13.3334 26.6666L10 23.3333L13.3334 20L16.6667 16.6666L20 13.3333L23.3334 10L26.6667 13.3333Z",
+                            titleClass: "font-semibold text-red-500 dark:text-red-400",
+                            messageClass: "text-sm text-red-700 dark:text-red-300",
+                            title: "Error",
+                        }
+                    };
+
+                    const c = type === "success" ? colors.success : colors.error;
+
+                    alertBox.innerHTML = `
     <div class="flex w-full max-w-sm overflow-hidden rounded-lg shadow-md ${c.bg}">
       <div class="flex items-center justify-center w-12 ${c.iconBg}">
         <svg class="w-6 h-6 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
@@ -653,25 +686,25 @@
     </div>
   `;
 
-                alertBox.classList.remove("hidden");
-                alertBox.style.opacity = "1";
+                    alertBox.classList.remove("hidden");
+                    alertBox.style.opacity = "1";
 
-                // Auto-hide after 2 seconds
-                setTimeout(() => {
-                    hideAlert();
-                }, 2000);
-            }
+                    // Auto-hide after 2 seconds
+                    setTimeout(() => {
+                        hideAlert();
+                    }, 2000);
+                }
 
-            function hideAlert() {
-                const alertBox = document.getElementById("alert-box");
-                alertBox.style.opacity = "0";
-                setTimeout(() => {
-                    alertBox.classList.add("hidden");
-                    alertBox.innerHTML = "";
-                }, 300);
-            }
+                function hideAlert() {
+                    const alertBox = document.getElementById("alert-box");
+                    alertBox.style.opacity = "0";
+                    setTimeout(() => {
+                        alertBox.classList.add("hidden");
+                        alertBox.innerHTML = "";
+                    }, 300);
+                }
 
-        </script>
+            </script>
 </body>
 
 </html>
