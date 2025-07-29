@@ -129,39 +129,40 @@
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-0 pb-6" id="cars-container">
       </div>
+      <p id="no-match-message" class="text-center text-gray-500 pb-48 hidden">
+        Sorry, no match found...
+      </p>
 
       <!-- Modal -->
       <div id="car-modal"
         class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center z-50 hidden transition-opacity duration-300">
         <div
-          class="bg-white rounded-xl shadow-lg w-full mx-6 max-w-md relative animate-fadeInUp duration-300 text-left">
+          class="bg-white rounded-xl shadow-lg w-full mx-6 max-w-md p-3 relative animate-fadeInUp duration-300 text-left">
           <img id="modal-image2" loading="lazy" src="" alt="Car Image"
-            class="w-full h-44 object-cover rounded-t-lg mb-3" />
-          <div class="px-6 pb-3">
-            <h2 id="modal-title" class="text-xl text-center font-bold mb-4"></h2>
-            <div class="px-1">
-              <h3 class="text-lg font-semibold pb-2">
-                <i class="fas fa-list-alt text-gray-900 mr-2"></i>Features
-              </h3>
-              <ul id="modal-features"
-                class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-5 list-disc list-inside"></ul>
+            class="w-full h-44 object-cover rounded-lg mb-3" />
+          <div class="px-1">
+            <h2 id="modal-title" class="text-xl font-bold mb-3"></h2>
+            <h3 class="text-lg font-semibold pb-2">
+              <i class="fas fa-list-alt text-gray-900 mr-2"></i>Features
+            </h3>
+            <ul id="modal-features"
+              class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-5 list-disc list-inside"></ul>
 
-              <h3 class="text-lg font-semibold pt-4 pb-2">
-                <i class="fas fa-plus text-gray-900 mr-2"></i>Additional Features
-              </h3>
-              <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
+            <h3 class="text-lg font-semibold pt-4 pb-2">
+              <i class="fas fa-plus text-gray-900 mr-2"></i>Additional Features
+            </h3>
+            <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
 
-              <h3 class="text-lg font-semibold pt-4 pb-2">
-                Color
-              </h3>
-              <p id="modal-color" class="text-sm text-gray-700 pb-3"></p>
-            </div>
-            <button onclick="closeModal()"
-              class="absolute top-4 right-5 text-white hover:text-gray-700 text-xl leading-none focus:outline-none"
-              aria-label="Close modal">
-              <i class="fas fa-times"></i>
-            </button>
+            <h3 class="text-lg font-semibold pt-4 pb-2">
+              Color
+            </h3>
+            <p id="modal-color" class="text-sm text-gray-700 pb-3"></p>
           </div>
+          <button onclick="closeModal()"
+            class="absolute top-4 right-5 text-white hover:text-gray-700 text-xl leading-none focus:outline-none"
+            aria-label="Close modal">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
       </div>
 
@@ -290,14 +291,21 @@
         suggestionsList.style.display = "none";
         return;
       }
-      let matchingSuggestions = allCarModels.map(model => {
+
+      const filteredModels = allCarModels.filter(model =>
+        model.toLowerCase().includes(query.toLowerCase())
+      );
+
+      const matchingSuggestions = filteredModels.map(model => {
         const firstWord = model.split(" ")[0].toLowerCase();
         const count = counts[firstWord] || 0;
         return `<li class="px-4 py-2 border-b hover:bg-gray-100 cursor-pointer text-gray-700 text-sm" onclick="selectSuggestion('${model}')">${model} (${count})</li>`;
-      }).filter(item => item.toLowerCase().includes(query.toLowerCase()));
+      });
+
       suggestionsList.innerHTML = matchingSuggestions.join("");
       suggestionsList.style.display = matchingSuggestions.length ? "block" : "none";
     }
+
     window.selectSuggestion = function (model) {
       searchBar.value = model;
       suggestionsList.style.display = "none";
@@ -341,12 +349,14 @@
     document.addEventListener("DOMContentLoaded", loadCars);
     // Generate Car Cards
     function generateCars(filteredCars) {
-      carsContainer.innerHTML = filteredCars.length > 0 ?
-        filteredCars.map((car, index) => `
+      const noMatchMessage = document.getElementById("no-match-message");
+      if (filteredCars.length > 0) {
+        noMatchMessage.classList.add("hidden");
+        carsContainer.innerHTML = filteredCars.map((car, index) => `
       <div class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 relative">
   <!-- Image container -->
-  <div class="relative w-full rounded-lg overflow-hidden pt-8">
-    <img loading="lazy" src="${car.image1}" alt="Car Image" class="w-full h-[200px] object-cover rounded-lg">
+  <div class="relative w-full rounded-lg overflow-hidden pt-5">
+    <img loading="lazy" src="${car.image1}" alt="Car Image" class="w-full h-[200px] object-contain rounded-lg">
     ${car.label && car.label.trim() !== "" ? `
       <div class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-br-lg whitespace-nowrap">
         ${car.label}
@@ -358,9 +368,10 @@
   <span class="inline-block w-1 h-5 bg-blue-600 rounded-sm mr-1.5"></span>
   ${car.name}
   <button 
-    onclick='openModal(${JSON.stringify(car)}, "specs")' https://vehicle-images.dealerinspire.com/baca-110007272/1HGCY2F76SA007829/f948ade8a40a75b75446659a44490774.png
+    onclick='openModal(${JSON.stringify(car)})'
     class="ml-2  text-[0.6rem] font-medium text-gray-500 underline hover:text-blue-800 focus:outline-none">
     see specs
+    <i class="fas fa-circle-info ml-0.5"></i>
   </button>
 </p>
 
@@ -368,34 +379,37 @@
   <!-- Details -->
   <div class="flex justify-between items-center text-sm text-gray-800 my-4">
     <div class="flex-1 text-center relative px-2">
-      <p class="text-[0.6rem] font-medium text-gray-500">Term</p>
-      <p class="font-semibold">${car.term} Months</p>
+      <p class="text-[clamp(0.35rem,2vw,0.65rem)] font-medium text-gray-500">Term</p>
+      <p class="font-semibold text-[clamp(0.35rem,3vw,0.95rem)]">${car.term} Months</p>
       <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
     </div>
     <div class="flex-1 text-center relative px-2">
-      <p class="text-[0.6rem] font-medium text-gray-500">Annual Mileage</p>
-      <p class="font-semibold">${car.mileage} MPY</p>
+      <p class="text-[clamp(0.35rem,2vw,0.65rem)] font-medium text-gray-500">Annual Mileage</p>
+      <p class="font-semibold text-[clamp(0.35rem,3vw,0.95rem)]">${car.mileage} MPY</p>
       <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
     </div>
     <div class="flex-1 text-center px-2">
-      <p class="text-[0.6rem] font-medium text-gray-500">Due At Signing</p>
-      <p class="font-semibold">$${car.due || "0"}</p>
+      <p class="text-[clamp(0.35rem,2vw,0.65rem)] font-medium text-gray-500">Due At Signing</p>
+      <p class="font-semibold text-[clamp(0.35rem,3vw,0.95rem)]">$${car.due || "0"}</p>
     </div>
   </div>
 
   <!-- Price + Button -->
  <div class="mx-2 py-2 flex items-center justify-between">
-  <p class="text-[clamp(0.65rem,6vw,1.7rem)] font-bold text-gray-800">$${car.price}
-    <span class="text-sm text-gray-600 font-semibold">/ Month</span>
+  <p class="text-[clamp(0.35rem,8vw,2.0rem)] font-bold text-gray-800">$${car.price}
+    <span class="text-[clamp(0.65rem,3vw,0.95rem)] text-gray-600 font-semibold">/ Month</span>
   </p>
   <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${car.name}" 
      target="_blank" 
-     class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium ml-3 py-1.5 px-4 rounded-lg">
+     class="bg-blue-600 hover:bg-blue-700 text-white  text-[clamp(0.35rem,3vw,0.95rem)] font-medium ml-3 py-1.5 px-4 rounded-lg">
     Get Quote
   </a>
         </div>
-      </div>`).join("") :
-        `<p class="text-center text-gray-500 pb-48">Sorry, no match found...</p>`;
+      </div>`).join("");
+      } else {
+        carsContainer.innerHTML = "";
+        noMatchMessage.classList.remove("hidden");
+      }
     }
 
     // Modal Functions
@@ -456,7 +470,7 @@
         bubble.classList.add('opacity-0', 'translate-y-2');
         bubble.classList.remove('opacity-100', 'translate-y-0');
         closeBtn.classList.add('hidden');
-        chatClosed = true; hhih
+        chatClosed = true;
       });
     });
   </script>
