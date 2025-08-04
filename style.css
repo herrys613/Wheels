@@ -1,0 +1,12 @@
+/* Hide Alpine elements before Alpine loads */
+[x-cloak] {
+  display: none !important;
+}
+
+/* Body font */
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Add more globle CSS*/
+ 

@@ -22,13 +22,37 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <style>
-    [x-cloak] {
-        display: none !important;
+   [x-cloak] {
+    display: none !important;
+  }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .modal-open {
+    overflow-y: scroll;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
     }
 
-    body {
-        font-family: 'Montserrat', sans-serif;
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
+  }
+
+  .animate-fadeInUp {
+    animation: fadeInUp 0.3s ease-in-out forwards;
+  }
 </style>
 
 <body>
