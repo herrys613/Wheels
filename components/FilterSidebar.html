@@ -1,0 +1,66 @@
+<aside class="hidden md:block w-[300px] bg-white border-r px-6 py-6 space-y-4" id="filterSidebar">
+    <div class="flex justify-between items-center mb-2">
+        <h2 class="text-xl font-semibold">Filters</h2>
+        <button onclick="resetFilters()" class="text-sm text-blue-600 hover:underline font-medium">
+            Reset All
+        </button>
+    </div>
+
+    <!-- Price Range -->
+    <div>
+        <button onclick="toggleSection('price')"
+            class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+            Price
+            <span id="icon-price">+</span>
+        </button>
+        <div id="section-price" class="mt-5 hidden">
+            <input type="range" id="priceRange" min="100" max="3000" step="5" class="w-full" value="500"
+                oninput="updatePriceLabel()">
+            <p class="text-sm text-gray-600 mt-1">Up to $<span id="priceLabel">500</span></p>
+        </div>
+    </div>
+
+    <!-- Makes -->
+    <div>
+        <button onclick="toggleSection('makes')"
+            class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+            Makes
+            <span id="icon-makes">+</span>
+        </button>
+        <div id="section-makes" class="mt-5 space-y-1 hidden">
+            <!-- Populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Color -->
+    <div>
+        <button onclick="toggleSection('color')"
+            class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+            Color
+            <span id="icon-color">+</span>
+        </button>
+        <div id="section-color" class="mt-5 space-y-1 hidden">
+            <!-- Populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div>
+        <button onclick="toggleSection('features')"
+            class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+            Features
+            <span id="icon-features">+</span>
+        </button>
+        <div id="section-features" class="mt-5 space-y-1 hidden">
+            <!-- Populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Apply Filters Button -->
+    <div class="mt-6">
+        <button onclick="applyFilters()"
+            class="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
+            Apply Filters
+        </button>
+    </div>
+</aside>

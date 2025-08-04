@@ -26,7 +26,7 @@
 </head>
 
 <style>
-   body.modal-open {
+  body.modal-open {
     overflow-y: scroll;
     position: fixed;
     top: 0;
@@ -57,11 +57,13 @@
 
   <div class="flex flex-col md:flex-row min-h-screen">
     <!-- FilterSidebar -->
-  <div id="FilterSidebar"></div>
-    
+    <div id="FilterSidebar"></div>
+
     <section id="main-section" class="bg-[#f9f9f9]/80 flex-1">
-      <div class="container px-8 py-5 mx-auto">
-        <div class="relative w-full text-center">
+
+      <div class="px-8 py-5 mx-auto flex items-center justify-end md:space-x-4">
+        <span class="hidden md:block text-gray-700 font-medium">Search Cars</span>
+        <div class="w-full md:w-[400px] relative text-center">
           <!-- Search Input -->
           <span class="absolute inset-y-0 left-0 flex items-center pl-3">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24"
@@ -81,7 +83,7 @@
         </div>
       </div>
 
-      <div class="container px-8 mx-auto">
+      <div class="px-8 mx-auto">
         <div class="w-full flex justify-center items-center my-0">
           <div id="loading-spinner"
             class="w-10 h-10 mt-12 mb-[100vh] border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"
@@ -89,7 +91,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-0 pb-6" id="cars-container">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-0 pb-5" id="cars-container">
         </div>
         <p id="no-match-message" class="text-center text-gray-500 pb-48 hidden">
           Sorry, no match found...
@@ -371,6 +373,8 @@
         chatClosed = true;
       });
     });
+
+    // FilterSidebar
     const makes = ['Acura', 'Alfa Romeo', 'Audi', 'Bentley', 'BMW', 'Buick', 'Cadillac', 'Chevrolet',
       'Chrysler', 'Dodge', 'Fiat', 'Ford', 'Genesis', 'GMC', 'Honda', 'Hyundai', 'Infiniti',
       'Jaguar', 'Jeep', 'Kia', 'Land Rover', 'Lexus', 'Lincoln', 'Maserati', 'Mazda',
@@ -483,8 +487,6 @@
       // Immediately apply filters to update the UI
       applyFilters();
     }
-
-
   </script>
 </body>
 
