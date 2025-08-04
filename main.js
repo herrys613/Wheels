@@ -9,7 +9,7 @@ fetch("/components/Footer.html")
   .then(data => document.getElementById("Footer").innerHTML = data);
 
 // FilterSidebar
-fetch("/components/FilterSidebar.html")
+fetch("../components/FilterSidebar.html")
   .then(res => res.text())
   .then(data => {
     document.getElementById("FilterSidebar").innerHTML = data;
