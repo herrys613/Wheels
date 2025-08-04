@@ -65,16 +65,12 @@
 
         <!-- Mobile menu button -->
         <div class="flex lg:hidden">
-          <button x-cloak @click="isOpen = !isOpen" type="button"
-            class="text-gray-500  hover:text-gray-600  focus:outline-none focus:text-gray-600 "
-            aria-label="toggle menu">
-            <svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
+          <button x-cloak @click="isOpen = !isOpen" type="button" class="text-gray-500  hover:text-gray-600  focus:outline-none focus:text-gray-600 " aria-label="toggle menu">
+            <svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
             </svg>
 
-            <svg x-show="isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
+            <svg x-show="isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -82,119 +78,154 @@
       </div>
 
       <!-- Mobile Menu open: "block", Menu closed: "hidden"-->
-      <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
-        class="absolute inset-x-0 z-20 w-full px-6 py-6 transition-all duration-300 ease-in-out bg-white shadow-md lg:bg-transparent lg: lg:shadow-none  lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center">
+      <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']" class="absolute inset-x-0 z-20 w-full px-6 py-6 transition-all duration-300 ease-in-out bg-white shadow-md lg:bg-transparent lg: lg:shadow-none  lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center">
         <div class="flex flex-col space-y-4 lg:mt-0 lg:flex-row lg:-px-8 lg:space-y-0">
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-            href="/">Home</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-            href="/leasing-deals/">Leasing Deals</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-            href="/about-us/">About us</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-            href="/blog/">Blog</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-            href="/contact/">Contact</a>
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500" href="/">Home</a>
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500" href="/leasing-deals/">Leasing Deals</a>
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500" href="/about-us/">About us</a>
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500" href="/blog/">Blog</a>
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500" href="/contact/">Contact</a>
         </div>
 
-        <a class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-blue-600 rounded-lg lg:mt-0 hover:bg-blue-500 lg:w-auto"
-          href="/login/">
+        <a class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-blue-600 rounded-lg lg:mt-0 hover:bg-blue-500 lg:w-auto" href="/login/">
           Log in
         </a>
       </div>
     </nav>
   </section>
 
-  <section id="main-section" class="bg-[#f9f9f9]/80">
-    <div class="container px-8 py-5 mx-auto">
-      <div class="relative w-full text-center">
-        <!-- Search Input -->
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
-          </svg>
-        </span>
-        <input id="search-bar" type="text" placeholder="Search cars..." onkeyup="filterCars()"
-          oninput="updateSuggestions()" autocomplete="off"
-          class="w-full text-sm pl-10 pr-4 py-2 text-gray-700 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent" />
+  <div class="flex flex-col md:flex-row min-h-screen">
+    <aside class="hidden md:block w-[300px] bg-white border-r px-6 py-6 space-y-4" id="filterSidebar">
+  <div class="flex justify-between items-center mb-2">
+    <h2 class="text-xl font-semibold">Filters</h2>
+    <button onclick="resetFilters()" class="text-sm text-blue-600 hover:underline font-medium">
+      Reset All
+    </button>
+  </div>
 
-        <!-- Suggestions Dropdown -->
-        <ul id="car-suggestions"
-          class="absolute z-10 w-full mt-0.5 bg-white border border-gray-200 rounded-lg shadow-lg max-h-52 overflow-y-auto no-scrollbar hidden text-sm">
-        </ul>
-      </div>
+  <!-- Price Range -->
+  <div>
+    <button onclick="toggleSection('price')" class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+      Price
+      <span id="icon-price">+</span>
+    </button>
+    <div id="section-price" class="mt-5 hidden">
+      <input type="range" id="priceRange" min="100" max="3000" step="5" class="w-full" value="500" oninput="updatePriceLabel()">
+      <p class="text-sm text-gray-600 mt-1">Up to $<span id="priceLabel">500</span></p>
     </div>
+  </div>
 
-    <div class="container px-8 mx-auto">
-      <div class="w-full flex justify-center items-center my-0">
-        <div id="loading-spinner"
-          class="w-10 h-10 mt-12 mb-[100vh] border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"
-          style="display: none;">
+  <!-- Makes -->
+  <div>
+    <button onclick="toggleSection('makes')" class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+      Makes
+      <span id="icon-makes">+</span>
+    </button>
+    <div id="section-makes" class="mt-5 space-y-1 hidden">
+      <!-- Populated by JavaScript -->
+    </div>
+  </div>
+
+  <!-- Color -->
+  <div>
+    <button onclick="toggleSection('color')" class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+      Color
+      <span id="icon-color">+</span>
+    </button>
+    <div id="section-color" class="mt-5 space-y-1 hidden">
+      <!-- Populated by JavaScript -->
+    </div>
+  </div>
+
+  <!-- Features -->
+  <div>
+    <button onclick="toggleSection('features')" class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+      Features
+      <span id="icon-features">+</span>
+    </button>
+    <div id="section-features" class="mt-5 space-y-1 hidden">
+      <!-- Populated by JavaScript -->
+    </div>
+  </div>
+
+  <!-- Apply Filters Button -->
+  <div class="mt-6">
+    <button onclick="applyFilters()" class="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
+      Apply Filters
+    </button>
+  </div>
+</aside>
+    <section id="main-section" class="bg-[#f9f9f9]/80 flex-1">
+      <div class="container px-8 py-5 mx-auto">
+        <div class="relative w-full text-center">
+          <!-- Search Input -->
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+            </svg>
+          </span>
+          <input id="search-bar" type="text" placeholder="Search cars..." onkeyup="filterCars()" oninput="updateSuggestions()" autocomplete="off" class="w-full text-sm pl-10 pr-4 py-2 text-gray-700 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent" />
+
+          <!-- Suggestions Dropdown -->
+          <ul id="car-suggestions" class="absolute z-10 w-full mt-0.5 bg-white border border-gray-200 rounded-lg shadow-lg max-h-52 overflow-y-auto no-scrollbar hidden text-sm">
+          </ul>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-0 pb-6" id="cars-container">
-      </div>
-      <p id="no-match-message" class="text-center text-gray-500 pb-48 hidden">
-        Sorry, no match found...
-      </p>
-
-      <!-- Modal -->
-      <div id="car-modal"
-        class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center z-50 hidden transition-opacity duration-300">
-        <div
-          class="bg-white rounded-xl shadow-lg w-full mx-6 max-w-md p-3 relative animate-fadeInUp duration-300 text-left">
-          <img id="modal-image2" loading="lazy" src="" alt="Car Image"
-            class="w-full h-44 object-cover rounded-lg mb-3" />
-          <div class="px-1">
-            <h2 id="modal-title" class="text-xl font-bold mb-3"></h2>
-            <h3 class="text-lg font-semibold pb-2">
-              <i class="fas fa-list-alt text-gray-900 mr-2"></i>Features
-            </h3>
-            <ul id="modal-features"
-              class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-5 list-disc list-inside"></ul>
-
-            <h3 class="text-lg font-semibold pt-4 pb-2">
-              <i class="fas fa-plus text-gray-900 mr-2"></i>Additional
-            </h3>
-            <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
-
-            <h3 class="text-lg font-semibold pt-4 pb-2">
-              Color
-            </h3>
-            <p id="modal-color" class="text-sm text-gray-700 pb-3"></p>
+      <div class="container px-8 mx-auto">
+        <div class="w-full flex justify-center items-center my-0">
+          <div id="loading-spinner" class="w-10 h-10 mt-12 mb-[100vh] border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin" style="display: none;">
           </div>
-          <button onclick="closeModal()"
-            class="absolute top-4 right-5 text-white hover:text-gray-700 text-xl leading-none focus:outline-none"
-            aria-label="Close modal">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-0 pb-6" id="cars-container">
+        </div>
+        <p id="no-match-message" class="text-center text-gray-500 pb-48 hidden">
+          Sorry, no match found...
+        </p>
+
+        <!-- Modal -->
+        <div id="car-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center z-50 hidden transition-opacity duration-300">
+          <div class="bg-white rounded-xl shadow-lg w-full mx-6 max-w-md p-3 relative animate-fadeInUp duration-300 text-left">
+            <img id="modal-image2" loading="lazy" src="" alt="Car Image" class="w-full h-44 object-cover rounded-lg mb-3" />
+            <div class="px-1">
+              <h2 id="modal-title" class="text-xl font-bold mb-3"></h2>
+              <h3 class="text-lg font-semibold pb-2">
+                <i class="fas fa-list-alt text-gray-900 mr-2"></i>Features
+              </h3>
+              <ul id="modal-features" class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-5 list-disc list-inside"></ul>
+
+              <h3 class="text-lg font-semibold pt-4 pb-2">
+                <i class="fas fa-plus text-gray-900 mr-2"></i>Additional
+              </h3>
+              <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
+
+              <h3 class="text-lg font-semibold pt-4 pb-2">
+                Color
+              </h3>
+              <p id="modal-color" class="text-sm text-gray-700 pb-3"></p>
+            </div>
+            <button onclick="closeModal()" class="absolute top-4 right-5 text-white hover:text-gray-700 text-xl leading-none focus:outline-none" aria-label="Close modal">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- WhatsApp Chat Bubble -->
+        <div id="whatsapp-chat" class="fixed bottom-5 right-5 bg-green-500 w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 scale-90 transition-opacity transition-transform duration-400 z-40">
+          <div id="whatsapp-bubble" class="absolute bottom-16 right-0 bg-white text-gray-800 px-3 py-1.5 rounded-lg text-xs shadow-md opacity-0 translate-y-2 transition-opacity transition-transform duration-300 whitespace-nowrap">
+            Want a specific car?
+          </div>
+          <a href="https://wa.me/9175837073?text=I%20would%20like%20to%20lease%20a%20" target="_blank" rel="noopener noreferrer" class="block w-10 h-10 flex justify-center items-center text-3xl text-white bg-green-500 rounded-full">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+          <button id="close-chat" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center cursor-pointer hidden hover:bg-red-700 focus:outline-none" aria-label="Close chat">
             <i class="fas fa-times"></i>
           </button>
         </div>
       </div>
-
-
-      <!-- WhatsApp Chat Bubble -->
-      <div id="whatsapp-chat"
-        class="fixed bottom-5 right-5 bg-green-500 w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 scale-90 transition-opacity transition-transform duration-400 z-40">
-        <div id="whatsapp-bubble"
-          class="absolute bottom-16 right-0 bg-white text-gray-800 px-3 py-1.5 rounded-lg text-xs shadow-md opacity-0 translate-y-2 transition-opacity transition-transform duration-300 whitespace-nowrap">
-          Want a specific car?
-        </div>
-        <a href="https://wa.me/9175837073?text=I%20would%20like%20to%20lease%20a%20" target="_blank"
-          rel="noopener noreferrer"
-          class="block w-10 h-10 flex justify-center items-center text-3xl text-white bg-green-500 rounded-full">
-          <i class="fab fa-whatsapp"></i>
-        </a>
-        <button id="close-chat"
-          class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center cursor-pointer hidden hover:bg-red-700 focus:outline-none"
-          aria-label="Close chat">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-    </div>
-  </section>
+    </section>
+  </div>
 
   <!-- Footer -->
   <footer id="footer" class="bg-white  border-t hidden">
@@ -206,12 +237,10 @@
           </a>
           <p class="max-w-sm mt-2 text-gray-500 ">A simple auto leasing platform.</p>
           <div class="flex space-x-4 mt-4">
-            <a href="https://wa.me/9175837073" target="_blank" class="text-gray-700 text-gray-700 text-2xl"
-              aria-label="Chat on WhatsApp">
+            <a href="https://wa.me/9175837073" target="_blank" class="text-gray-700 text-gray-700 text-2xl" aria-label="Chat on WhatsApp">
               <i class="fab fa-whatsapp"></i>
             </a>
-            <a href="https://instagram.com/wheelsautoleasing" target="_blank"
-              class="text-gray-700 text-gray-700 text-2xl" aria-label="Visit Instagram">
+            <a href="https://instagram.com/wheelsautoleasing" target="_blank" class="text-gray-700 text-gray-700 text-2xl" aria-label="Visit Instagram">
               <i class="fab fa-instagram"></i>
             </a>
           </div>
@@ -299,22 +328,18 @@
         suggestionsList.style.display = "none";
         return;
       }
-
       const filteredModels = allCarModels.filter(model =>
         model.toLowerCase().includes(query.toLowerCase())
       );
-
       const matchingSuggestions = filteredModels.map(model => {
         const firstWord = model.split(" ")[0].toLowerCase();
         const count = counts[firstWord] || 0;
         return `<li class="px-4 py-2 border-b hover:bg-gray-100 cursor-pointer text-gray-700 text-sm" onclick="selectSuggestion('${model}')">${model} (${count})</li>`;
       });
-
       suggestionsList.innerHTML = matchingSuggestions.join("");
       suggestionsList.style.display = matchingSuggestions.length ? "block" : "none";
     }
-
-    window.selectSuggestion = function (model) {
+    window.selectSuggestion = function(model) {
       searchBar.value = model;
       suggestionsList.style.display = "none";
       filterCars();
@@ -414,33 +439,26 @@
         noMatchMessage.classList.remove("hidden");
       }
     }
-
     // Modal Functions
     let scrollTop = 0;
-
-    window.openModal = function (car) {
+    window.openModal = function(car) {
       document.getElementById("modal-title").innerText = car.name;
       document.getElementById("modal-image2").src = car.image2;
       document.getElementById("modal-features").innerHTML = car.features.map(f => `<li>${f}</li>`).join("");
       document.getElementById("modal-additional").innerText = car.additional || "";
       document.getElementById("modal-color").innerText = car.color;
       modal.style.display = "flex";
-
       scrollTop = window.scrollY;
       document.body.classList.add("modal-open");
       document.body.style.top = `-${scrollTop}px`;
     };
-
-    window.closeModal = function () {
+    window.closeModal = function() {
       modal.style.display = "none";
       document.body.classList.remove("modal-open");
-
       document.body.style.top = "";
       window.scrollTo(0, scrollTop);
     };
-
     document.addEventListener('DOMContentLoaded', () => {
-
       // WhatsApp Chat Auto-popup
       const chat = document.getElementById('whatsapp-chat');
       const bubble = document.getElementById('whatsapp-bubble');
@@ -486,6 +504,120 @@
         chatClosed = true;
       });
     });
+const makes = ['Acura', 'Alfa Romeo', 'Audi', 'Bentley', 'BMW', 'Buick', 'Cadillac', 'Chevrolet',
+    'Chrysler', 'Dodge', 'Fiat', 'Ford', 'Genesis', 'GMC', 'Honda', 'Hyundai', 'Infiniti',
+    'Jaguar', 'Jeep', 'Kia', 'Land Rover', 'Lexus', 'Lincoln', 'Maserati', 'Mazda',
+    'Mercedes-Benz', 'Mitsubishi', 'Nissan', 'Peugeot', 'Ram', 'Subaru', 'Suzuki',
+    'Tesla', 'Toyota', 'Volkswagen', 'Volvo'];
+  const colors = ['Black', 'White', 'Gray', 'Red', 'Blue'];
+  const features = ['Sunroof', 'Leather Seats', 'Navigation', 'Bluetooth'];
+
+  const filters = {
+    price: 500,
+    makes: [],
+    color: [],
+    features: []
+  };
+
+  function toggleSection(id) {
+    const section = document.getElementById(`section-${id}`);
+    const icon = document.getElementById(`icon-${id}`);
+    section.classList.toggle('hidden');
+    icon.textContent = section.classList.contains('hidden') ? '+' : '−';
+  }
+
+  function updatePriceLabel() {
+    const value = document.getElementById('priceRange').value;
+    filters.price = parseInt(value);
+    document.getElementById('priceLabel').textContent = value;
+  }
+
+  function resetFilters() {
+    filters.price = 500;
+    filters.makes = [];
+    filters.color = [];
+    filters.features = [];
+    document.getElementById('priceRange').value = 500;
+    updatePriceLabel();
+    document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+    console.log("Filters Reset:", filters);
+  }
+
+  function applyFilters() {
+    // Update checkbox selections
+    filters.makes = getCheckedValues('makes');
+    filters.color = getCheckedValues('color');
+    filters.features = getCheckedValues('features');
+    console.log("Applied Filters:", filters);
+    // You can call your filtering logic here
+  }
+
+  function getCheckedValues(type) {
+    return Array.from(document.querySelectorAll(`#section-${type} input:checked`)).map(cb => cb.value);
+  }
+
+  function populateCheckboxes(list, containerId) {
+    const container = document.getElementById(containerId);
+    list.forEach(item => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'flex items-center space-x-2';
+      wrapper.innerHTML = `
+        <input type="checkbox" value="${item}" />
+        <label class="text-sm">${item}</label>
+      `;
+      container.appendChild(wrapper);
+    });
+  }
+
+  // Initial population
+  populateCheckboxes(makes, 'section-makes');
+  populateCheckboxes(colors, 'section-color');
+  populateCheckboxes(features, 'section-features');
+  updatePriceLabel();
+    
+    function applyFilters() {
+  // Update filter selections
+  filters.makes = getCheckedValues('makes');
+  filters.color = getCheckedValues('color');
+  filters.features = getCheckedValues('features');
+  filters.price = parseInt(document.getElementById('priceRange').value);
+
+  // Apply filtering logic
+  const filtered = cars.filter(car => {
+    const matchesPrice = !car.price || car.price <= filters.price;
+
+    const matchesMake = filters.makes.length === 0 || filters.makes.includes(car.make);
+
+    const matchesColor = filters.color.length === 0 || filters.color.includes(car.color);
+
+    const matchesFeatures =
+      filters.features.length === 0 ||
+      filters.features.every(f => car.features && car.features.includes(f));
+
+    return matchesPrice && matchesMake && matchesColor && matchesFeatures;
+  });
+
+  generateCars(filtered); // Show filtered cars
+}
+function resetFilters() {
+  filters.price = 500;
+  filters.makes = [];
+  filters.color = [];
+  filters.features = [];
+
+  document.getElementById('priceRange').value = 500;
+  updatePriceLabel();
+
+  // Uncheck all checkboxes
+  document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+
+  console.log("Filters Reset:", filters);
+
+  // Immediately apply filters to update the UI
+  applyFilters();
+}
+
+    
   </script>
 </body>
 
