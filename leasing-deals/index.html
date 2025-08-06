@@ -26,6 +26,15 @@
 </head>
 
 <style>
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
   body.modal-open {
     overflow-y: scroll;
     position: fixed;
@@ -104,7 +113,10 @@
 
   <div class="max-w-[2000px] mx-auto flex flex-col md:flex-row min-h-screen">
     <!-- FilterSidebar -->
-    <aside class="hidden md:block w-[300px] bg-white border-r px-6 py-6 space-y-4" id="filterSidebar">
+    <aside
+      class="fixed top-0 left-0 z-50 h-full w-2/3 bg-white shadow-lg px-6 py-6 overflow-y-auto no-scrollbar transform transition-transform duration-300
+         -translate-x-full md:translate-x-0 md:static md:w-[300px] md:h-auto md:shadow-none md:border-r md:space-y-4"
+      id="filterSidebar">
       <div class="flex justify-between items-center mb-2">
         <h2 class="text-xl font-semibold">Filters</h2>
         <button onclick="resetFilters()" class="text-sm text-blue-600 hover:underline font-medium">
@@ -193,6 +205,9 @@
             class="absolute z-10 w-full mt-0.5 bg-white border border-gray-200 rounded-lg shadow-lg max-h-52 overflow-y-auto no-scrollbar hidden text-sm">
           </ul>
         </div>
+        <button id="toggleFilterBtn" class="md:hidden bg-blue-600 text-white ml-2 px-3 py-2 rounded-full z-60 flex items-center justify-center">
+  <i class="fas fa-filter text-sm"></i>
+</button>
       </div>
 
       <div class="px-8 mx-auto">
@@ -720,11 +735,27 @@
       console.log("Filters Reset:", filters);
 
       // Reset filteredCarsGlobal to all cars
-  filteredCarsGlobal = cars;
+      filteredCarsGlobal = cars;
 
-  // Generate first page of all cars to refresh UI and pagination
-  generateCars(filteredCarsGlobal, 1);
+      // Generate first page of all cars to refresh UI and pagination
+      generateCars(filteredCarsGlobal, 1);
     }
+
+    // toggle sidebar sliding up/down on small screens:
+   const filterSidebar = document.getElementById('filterSidebar');
+const toggleBtn = document.getElementById('toggleFilterBtn');
+
+toggleBtn.addEventListener('click', () => {
+  const isHidden = filterSidebar.classList.contains('-translate-x-full');
+
+  if (isHidden) {
+    filterSidebar.classList.remove('-translate-x-full');
+    filterSidebar.classList.add('translate-x-0');
+  } else {
+    filterSidebar.classList.add('-translate-x-full');
+    filterSidebar.classList.remove('translate-x-0');
+  }
+});
   </script>
 </body>
 
