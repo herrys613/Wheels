@@ -12,7 +12,7 @@
   <meta property="og:title" content="Leasing Deals | Wheels">
   <meta property="og:description" content="Explore current car lease deals from trusted dealerships.">
   <meta property="og:url" content="https://wheelsautoleasing.com/leasing-deals/">
-  <meta property="og:image" content="https://wheelsautoleasing.com/images/leasing-deals.png">
+  <meta property="og:image" content="https://wheelsautoleasing.com/images/leasing-deals-social-preview.png">
 
   <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
   <link rel="canonical" href="https://wheelsautoleasing.com/leasing-deals/">
@@ -53,16 +53,128 @@
 
 <body>
   <!-- Navbar -->
-  <div id="Navbar"></div>
+  <section class="bg-white  border-b">
+    <nav x-data="{ isOpen: false }" class="max-w-[2000px] p-5 mx-auto lg:flex lg:justify-between lg:items-center">
+      <div class="flex items-center justify-between">
+        <a href="/">
+          <img class="w-auto h-5 sm:h-7" src="/images/logo-blue.png" alt="logo">
+        </a>
+
+        <!-- Mobile menu button -->
+        <div class="flex lg:hidden">
+          <button x-cloak @click="isOpen = !isOpen" type="button"
+            class="text-gray-500  hover:text-gray-600  focus:outline-none focus:text-gray-600 "
+            aria-label="toggle menu">
+            <svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
+            </svg>
+
+            <svg x-show="isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu open: "block", Menu closed: "hidden"-->
+      <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
+        class="absolute inset-x-0 z-20 w-full px-6 py-6 transition-all duration-300 ease-in-out bg-white shadow-md lg:bg-transparent lg: lg:shadow-none  lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center">
+        <div class="flex flex-col space-y-4 lg:mt-0 lg:flex-row lg:-px-8 lg:space-y-0">
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500" href="/"
+            data-link>Home</a>
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
+            href="/leasing-deals" data-link>Leasing Deals</a>
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
+            href="/about-us" data-link>About us</a>
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500" href="/blog"
+            data-link>Blog</a>
+          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
+            href="/contact" data-link>Contact</a>
+        </div>
+
+        <a class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-blue-600 rounded-lg lg:mt-0 hover:bg-blue-500 lg:w-auto"
+          href="/login/">
+          Log in
+        </a>
+      </div>
+    </nav>
+  </section>
 
   <div class="max-w-[2000px] mx-auto flex flex-col md:flex-row min-h-screen">
     <!-- FilterSidebar -->
-    <div id="FilterSidebar"></div>
+    <aside class="hidden md:block w-[300px] bg-white border-r px-6 py-6 space-y-4" id="filterSidebar">
+      <div class="flex justify-between items-center mb-2">
+        <h2 class="text-xl font-semibold">Filters</h2>
+        <button onclick="resetFilters()" class="text-sm text-blue-600 hover:underline font-medium">
+          Reset All
+        </button>
+      </div>
+
+      <!-- Price Range -->
+      <div>
+        <button onclick="toggleSection('price')"
+          class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+          Price
+          <span id="icon-price">+</span>
+        </button>
+        <div id="section-price" class="mt-5 hidden">
+          <input type="range" id="priceRange" min="100" max="3000" step="5" class="w-full" value="500"
+            oninput="updatePriceLabel()">
+          <p class="text-sm text-gray-600 mt-1">Up to $<span id="priceLabel">500</span></p>
+        </div>
+      </div>
+
+      <!-- Makes -->
+      <div>
+        <button onclick="toggleSection('makes')"
+          class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+          Makes
+          <span id="icon-makes">+</span>
+        </button>
+        <div id="section-makes" class="mt-5 space-y-1 hidden">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Color -->
+      <div>
+        <button onclick="toggleSection('color')"
+          class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+          Color
+          <span id="icon-color">+</span>
+        </button>
+        <div id="section-color" class="mt-5 space-y-1 hidden">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div>
+        <button onclick="toggleSection('features')"
+          class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+          Features
+          <span id="icon-features">+</span>
+        </button>
+        <div id="section-features" class="mt-5 space-y-1 hidden">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Apply Filters Button -->
+      <div class="mt-6">
+        <button onclick="applyFilters()"
+          class="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
+          Apply Filters
+        </button>
+      </div>
+    </aside>
 
     <section id="main-section" class="bg-[#f9f9f9]/80 flex-1">
 
       <div class="px-8 py-5 mx-auto flex items-center justify-end md:space-x-4">
-        <span class="hidden md:block text-gray-700 font-medium">Search Cars</span>
+        <span class="hidden md:block text-sm text-gray-700 font-medium">Search Cars</span>
         <div class="w-full md:w-[400px] relative text-center">
           <!-- Search Input -->
           <span class="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -74,7 +186,7 @@
           </span>
           <input id="search-bar" type="text" placeholder="Search cars..." onkeyup="filterCars()"
             oninput="updateSuggestions()" autocomplete="off"
-            class="w-full text-sm pl-10 pr-4 py-2 text-gray-700 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent" />
+            class="w-full text-sm pl-10 pr-4 py-1.5 text-gray-700 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent" />
 
           <!-- Suggestions Dropdown -->
           <ul id="car-suggestions"
@@ -84,15 +196,25 @@
       </div>
 
       <div class="px-8 mx-auto">
-        <div class="w-full flex justify-center items-center my-0">
-          <div id="loading-spinner"
-            class="w-10 h-10 mt-12 mb-[100vh] border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"
-            style="display: none;">
+        <!-- Loading Dots -->
+        <div id="loading-wrapper" class="flex justify-center items-center h-[70vh] w-full">
+          <div class="flex space-x-2">
+            <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+            <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+            <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce"></div>
+            <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce [animation-delay:0.15s]"></div>
           </div>
         </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-0 pb-5" id="cars-container">
+        <!-- Deals Container -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="cars-container">
         </div>
+
+        <div id="pagination-wrapper" class="my-6 flex justify-center">
+          <div id="pagination" class="pagination-buttons flex flex-wrap gap-2"></div>
+        </div>
+
+
+
         <p id="no-match-message" class="text-center text-gray-500 pb-48 hidden">
           Sorry, no match found...
         </p>
@@ -148,14 +270,73 @@
             <i class="fas fa-times"></i>
           </button>
         </div>
+
+
       </div>
     </section>
   </div>
 
   <!-- Footer -->
-  <div id="Footer"></div>
+  <footer class="bg-white  border-t">
+    <div class="max-w-[2000px] p-6 mx-auto">
+      <div class="lg:flex">
+        <div class="w-full py-6 lg:w-2/5">
+          <a href="/">
+            <img class="w-auto h-5" src="/images/logo-blue.png" alt="logo">
+          </a>
+          <p class="max-w-sm mt-2 text-gray-500 ">A simple auto leasing platform.</p>
+          <div class="flex space-x-4 mt-4">
+            <a href="https://wa.me/9175837073" target="_blank" class="text-gray-700 text-gray-700 text-2xl"
+              aria-label="Chat on WhatsApp">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="https://instagram.com/wheelsautoleasing" target="_blank"
+              class="text-gray-700 text-gray-700 text-2xl" aria-label="Visit Instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+          </div>
+        </div>
 
-  <script src="/main.js"></script>
+        <div class="mt-0 lg:mt-0 lg:flex-1">
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+            <div>
+              <h3 class="text-gray-700 font-semibold ">Company</h3>
+              <a href="/leasing-deals/" class="block mt-2 text-sm text-gray-500  hover:underline">Leasing Deals</a>
+              <a href="/about-us/" class="block mt-2 text-sm text-gray-500  hover:underline">About Us</a>
+              <a href="/blog/" class="block mt-2 text-sm text-gray-500  hover:underline">Blog</a>
+              <a href="/contact/" class="block mt-2 text-sm text-gray-500  hover:underline">Partner with Us</a>
+            </div>
+
+            <div>
+              <h3 class="text-gray-700 font-semibold ">Support</h3>
+              <a href="/#faq" class="block mt-2 text-sm text-gray-500  hover:underline">FAQ</a>
+              <a href="/contact/" class="block mt-2 text-sm text-gray-500  hover:underline">Contact
+                Us</a>
+              <a href="/docs-&-forms/" class="block mt-2 text-sm text-gray-500  hover:underline">Docs &
+                Forms</a>
+            </div>
+
+            <div>
+              <h3 class="text-gray-700 font-semibold ">Get in touch</h3>
+              <span class="block mt-2 text-sm text-gray-500  hover:underline">+1 917 583 7073</span>
+              <span class="block mt-2 text-sm text-gray-500  hover:underline">hello@wheelsautoleasing.com</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="h-px my-6 bg-gray-200 border-none ">
+
+      <div>
+        <p class="text-center text-gray-500 ">&copy;
+          <script>
+            document.write(new Date().getFullYear())
+          </script> Wheels. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </footer>
+
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script>
@@ -181,6 +362,7 @@
       "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"
     ];
     let cars = [];
+    let filteredCarsGlobal = [];
     // Suggestion Logic
     function getCarCounts() {
       const counts = {};
@@ -217,6 +399,7 @@
     function filterCars() {
       const query = searchBar.value.trim().toLowerCase();
       const filtered = query ? cars.filter(car => car.name.toLowerCase().includes(query)) : cars;
+      filteredCarsGlobal = filtered;
       generateCars(filtered);
     }
     searchBar.addEventListener("input", () => {
@@ -230,31 +413,51 @@
     });
     // Load cars from Firestore (cleaned up with spinner and async/await)
     async function loadCars() {
-      document.getElementById("loading-spinner").style.display = "flex"; // show spinner
+      const loadingWrapper = document.getElementById("loading-wrapper");
+      loadingWrapper.classList.remove("hidden");  // Show loader
+
       try {
         const querySnapshot = await db.collection("cars").get();
         cars = [];
         querySnapshot.forEach((doc) => {
           cars.push(doc.data());
         });
-        generateCars(cars);
+        filteredCarsGlobal = cars;
+        generateCars(filteredCarsGlobal, 1);
         updateSuggestions("");
         const footer = document.getElementById("footer");
         footer.classList.remove("hidden");
       } catch (error) {
         console.error("Error loading cars:", error);
       } finally {
-        document.getElementById("loading-spinner").style.display = "none"; // hide spinner
+        loadingWrapper.classList.add("hidden");  // Hide loader
       }
     }
+
     // Add the DOMContentLoaded event listener
     document.addEventListener("DOMContentLoaded", loadCars);
     // Generate Car Cards
-    function generateCars(filteredCars) {
+    const carsPerPage = 9;
+    let currentPage = 1;
+
+    function generateCars(filteredCars, page = 1) {
       const noMatchMessage = document.getElementById("no-match-message");
-      if (filteredCars.length > 0) {
-        noMatchMessage.classList.add("hidden");
-        carsContainer.innerHTML = filteredCars.map((car, index) => `
+      const pagination = document.getElementById("pagination");
+
+      if (filteredCars.length === 0) {
+        carsContainer.innerHTML = "";
+        noMatchMessage.classList.remove("hidden");
+        pagination.innerHTML = "";
+        return;
+      }
+
+      noMatchMessage.classList.add("hidden");
+
+      const start = (page - 1) * carsPerPage;
+      const end = page * carsPerPage;
+      const carsToShow = filteredCars.slice(start, end);
+
+      carsContainer.innerHTML = carsToShow.map((car, index) => `
       <div class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 relative">
   <!-- Image container -->
   <div class="relative w-full rounded-lg overflow-hidden pt-3">
@@ -266,7 +469,7 @@
   </div>
 
   <!-- Car Name -->
-  <p onclick='openModal(${JSON.stringify(car)})' class="flex items-center text-left font-bold text-xl text-gray-800 mt-3 cursor-pointer mx-2">
+  <p onclick='openModal(${JSON.stringify(car)})' class="flex items-center text-left font-bold text-lg text-gray-800 mt-3 cursor-pointer mx-2">
   <span class="inline-block w-1 h-5 bg-blue-600 rounded-sm mr-1.5"></span>
   ${car.name}
   <i class="fas fa-circle-info text-sm ml-2 text-gray-800"></i>
@@ -303,11 +506,41 @@
   </a>
         </div>
       </div>`).join("");
+
+      renderPagination(filteredCars.length, page);
+    }
+
+    function renderPagination(totalCars, currentPage) {
+      const totalPages = Math.ceil(totalCars / carsPerPage);
+      const pagination = document.getElementById("pagination");
+      const paginationWrapper = document.getElementById("pagination-wrapper");
+
+      if (totalPages <= 1) {
+        paginationWrapper.style.display = "none"; // Hide if only 1 page or less
+        return;
       } else {
-        carsContainer.innerHTML = "";
-        noMatchMessage.classList.remove("hidden");
+        paginationWrapper.style.display = "flex"; // Show if multiple pages
+      }
+
+      pagination.innerHTML = "";
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = `px-3 py-1 rounded-md border border-gray-300 text-sm font-medium ${i === currentPage ? "bg-blue-600 text-white" : "bg-white text-gray-800 hover:bg-gray-100"
+          }`;
+
+        btn.addEventListener("click", () => {
+          generateCars(filteredCarsGlobal, i);
+          window.scrollTo({
+            top: 0,
+          }); // use global filtered list
+        });
+
+        pagination.appendChild(btn);
       }
     }
+
     // Modal Functions
     let scrollTop = 0;
     window.openModal = function (car) {
@@ -328,50 +561,51 @@
       window.scrollTo(0, scrollTop);
     };
     document.addEventListener('DOMContentLoaded', () => {
-      // WhatsApp Chat Auto-popup
-      const chat = document.getElementById('whatsapp-chat');
-      const bubble = document.getElementById('whatsapp-bubble');
-      const closeBtn = document.getElementById('close-chat');
-      const section = document.getElementById('main-section');
-      let chatVisible = false;
-      let chatClosed = false;
-      // Show chat after 5 seconds
-      setTimeout(() => {
-        if (!chatClosed) {
-          chat.classList.remove('opacity-0', 'scale-90');
-          chat.classList.add('opacity-100', 'scale-100');
-          bubble.classList.remove('opacity-0', 'translate-y-2');
-          bubble.classList.add('opacity-100', 'translate-y-0');
-          closeBtn.classList.remove('hidden');
-          chatVisible = true;
-        }
-      }, 5000);
-      // Hide chat if scrolling past section
-      window.addEventListener('scroll', () => {
-        if (!chatVisible || chatClosed) return;
-        const sectionBottom = section.offsetTop + section.offsetHeight;
-        const scrollY = window.scrollY + window.innerHeight;
-        if (scrollY > sectionBottom + 50) {
-          chat.classList.add('opacity-0', 'scale-90');
-          chat.classList.remove('opacity-100', 'scale-100');
-          bubble.classList.add('opacity-0', 'translate-y-2');
-          bubble.classList.remove('opacity-100', 'translate-y-0');
-        } else {
-          chat.classList.remove('opacity-0', 'scale-90');
-          chat.classList.add('opacity-100', 'scale-100');
-          bubble.classList.remove('opacity-0', 'translate-y-2');
-          bubble.classList.add('opacity-100', 'translate-y-0');
-        }
-      });
-      // Close button: permanently hide chat
-      closeBtn.addEventListener('click', () => {
+    });
+
+    // WhatsApp Chat Auto-popup
+    const chat = document.getElementById('whatsapp-chat');
+    const bubble = document.getElementById('whatsapp-bubble');
+    const closeBtn = document.getElementById('close-chat');
+    const section = document.getElementById('main-section');
+    let chatVisible = false;
+    let chatClosed = false;
+    // Show chat after 5 seconds
+    setTimeout(() => {
+      if (!chatClosed) {
+        chat.classList.remove('opacity-0', 'scale-90');
+        chat.classList.add('opacity-100', 'scale-100');
+        bubble.classList.remove('opacity-0', 'translate-y-2');
+        bubble.classList.add('opacity-100', 'translate-y-0');
+        closeBtn.classList.remove('hidden');
+        chatVisible = true;
+      }
+    }, 5000);
+    // Hide chat if scrolling past section
+    window.addEventListener('scroll', () => {
+      if (!chatVisible || chatClosed) return;
+      const sectionBottom = section.offsetTop + section.offsetHeight;
+      const scrollY = window.scrollY + window.innerHeight;
+      if (scrollY > sectionBottom + 50) {
         chat.classList.add('opacity-0', 'scale-90');
         chat.classList.remove('opacity-100', 'scale-100');
         bubble.classList.add('opacity-0', 'translate-y-2');
         bubble.classList.remove('opacity-100', 'translate-y-0');
-        closeBtn.classList.add('hidden');
-        chatClosed = true;
-      });
+      } else {
+        chat.classList.remove('opacity-0', 'scale-90');
+        chat.classList.add('opacity-100', 'scale-100');
+        bubble.classList.remove('opacity-0', 'translate-y-2');
+        bubble.classList.add('opacity-100', 'translate-y-0');
+      }
+    });
+    // Close button: permanently hide chat
+    closeBtn.addEventListener('click', () => {
+      chat.classList.add('opacity-0', 'scale-90');
+      chat.classList.remove('opacity-100', 'scale-100');
+      bubble.classList.add('opacity-0', 'translate-y-2');
+      bubble.classList.remove('opacity-100', 'translate-y-0');
+      closeBtn.classList.add('hidden');
+      chatClosed = true;
     });
 
     // FilterSidebar
@@ -380,7 +614,7 @@
       'Jaguar', 'Jeep', 'Kia', 'Land Rover', 'Lexus', 'Lincoln', 'Maserati', 'Mazda',
       'Mercedes-Benz', 'Mitsubishi', 'Nissan', 'Peugeot', 'Ram', 'Subaru', 'Suzuki',
       'Tesla', 'Toyota', 'Volkswagen', 'Volvo'];
-    const colors = ['Black', 'White', 'Gray', 'Red', 'Blue'];
+    const colors = ['Black', 'White', 'Gray', 'Silver', 'Gold', 'Red', 'Blue', 'Green', 'Brown'];
     const features = ['Sunroof', 'Leather Seats', 'Navigation', 'Bluetooth'];
 
     const filters = {
@@ -468,7 +702,8 @@
         return matchesPrice && matchesMake && matchesColor && matchesFeatures;
       });
 
-      generateCars(filtered); // Show filtered cars
+      filteredCarsGlobal = filtered;
+      generateCars(filteredCarsGlobal, 1); // Show filtered cars
     }
     function resetFilters() {
       filters.price = 500;
@@ -484,8 +719,11 @@
 
       console.log("Filters Reset:", filters);
 
-      // Immediately apply filters to update the UI
-      applyFilters();
+      // Reset filteredCarsGlobal to all cars
+  filteredCarsGlobal = cars;
+
+  // Generate first page of all cars to refresh UI and pagination
+  generateCars(filteredCarsGlobal, 1);
     }
   </script>
 </body>

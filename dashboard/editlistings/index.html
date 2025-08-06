@@ -22,37 +22,37 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <style>
-   [x-cloak] {
-    display: none !important;
-  }
-
-  body {
-    font-family: 'Montserrat', sans-serif;
-  }
-
-  .modal-open {
-    overflow-y: scroll;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
+    [x-cloak] {
+        display: none !important;
     }
 
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    body {
+        font-family: 'Montserrat', sans-serif;
     }
-  }
 
-  .animate-fadeInUp {
-    animation: fadeInUp 0.3s ease-in-out forwards;
-  }
+    .modal-open {
+        overflow-y: scroll;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fadeInUp {
+        animation: fadeInUp 0.3s ease-in-out forwards;
+    }
 </style>
 
 <body>
@@ -121,8 +121,8 @@
     </section>
 
     <div class="flex">
-        <!-- Sidebar -->
-        <aside class="hidden md:block w-64 h-screen px-4 py-8 overflow-y-auto bg-white shadow-md z-50">
+        <!-- Dashboard Sidebar -->
+        <aside class="hidden md:block w-[300px] h-screen px-4 py-8 overflow-y-auto bg-white shadow-md z-50">
             <div class="flex flex-col justify-between flex-1">
                 <nav>
                     <a class="flex items-center px-4 py-2 text-gray-600 transition-colors duration-300 transform rounded-md hover:bg-gray-100 hover:text-gray-700"
@@ -162,9 +162,10 @@
         </aside>
 
         <!-- Main Section -->
-        <section id="main-section" class="bg-[#f9f9f9]/80 flex-1 justify-center lg:p-6">
-            <div class="container px-8 py-5 mx-auto">
-                <div class="relative w-full text-center">
+        <section id="main-section" class="bg-[#f9f9f9]/80 flex-1">
+            <div class="px-8 py-5 mx-auto flex items-center justify-end md:space-x-4">
+                <span class="hidden md:block text-sm text-gray-700 font-medium">Search Cars</span>
+                <div class="w-full md:w-[400px] relative text-center">
                     <!-- Search Input -->
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none"
@@ -175,7 +176,7 @@
                     </span>
                     <input id="search-bar" type="text" placeholder="Search cars..." onkeyup="filterCars()"
                         oninput="updateSuggestions()" autocomplete="off"
-                        class="w-full text-sm pl-10 pr-4 py-2 text-gray-700 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent" />
+                        class="w-full text-sm pl-10 pr-4 py-1.5 text-gray-700 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent" />
 
                     <!-- Suggestions Dropdown -->
                     <ul id="car-suggestions"
@@ -184,14 +185,17 @@
                 </div>
             </div>
 
-            <div class="container px-8 mx-auto">
-                <div class="w-full flex justify-center items-center my-0">
-                    <div id="loading-spinner"
-                        class="w-10 h-10 mt-12 mb-[100vh] border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"
-                        style="display: none;">
+            <div class="px-8 mx-auto">
+                <!-- Loading Dots -->
+                <div id="loading-wrapper" class="flex justify-center items-center h-[70vh] w-full">
+                    <div class="flex space-x-2">
+                        <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                        <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                        <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce"></div>
+                        <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce [animation-delay:0.15s]"></div>
                     </div>
                 </div>
-
+                <!-- Deals Container -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-0 pb-6" id="cars-container">
                 </div>
                 <p id="no-match-message" class="text-center text-gray-500 pb-48 hidden">
@@ -255,7 +259,7 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <input type="text" id="car-name" placeholder="Car Name" required
                                     class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                <input type="text" id="car-color" placeholder="Color" required
+                                <input type="text" id="car-make" placeholder="Make" required
                                     class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
                             </div>
 
@@ -278,14 +282,22 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <input type="text" id="car-price" placeholder="Price" required
                                     class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                <input type="text" id="car-label" placeholder="Label"
+                                <input type="text" id="car-label" placeholder="Label (optional)"
                                     class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
                             </div>
 
                             <input type="text" id="car-features" placeholder="Features (comma-separated)" required
                                 class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            <input type="text" id="car-additional" placeholder="Additional"
+                            <input type="text" id="car-additional" placeholder="Additional (optional)"
                                 class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <input type="text" id="car-exterior-color" placeholder="Exterior Color" required
+                                    class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                                <input type="text" id="car-interior-color" placeholder="Interior Color (optional)"
+                                    required
+                                    class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                            </div>
 
                             <button type="button" onclick="submitCar()"
                                 class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-500 transition">
@@ -370,7 +382,6 @@
                 const searchBar = document.getElementById("search-bar");
                 const suggestionsList = document.getElementById("car-suggestions");
                 const modal = document.getElementById("car-modal");
-                const loadingSpinner = document.getElementById("loading-spinner");
                 const alertBox = document.getElementById("alert-box");
 
                 // Data
@@ -433,7 +444,7 @@
                 });
 
                 function loadCars() {
-                    document.getElementById("loading-spinner").style.display = "flex"; // show spinner
+                    document.getElementById("loading-wrapper").style.display = "flex"; // show spinner
 
                     db.collection("cars").onSnapshot((snapshot) => {
                         cars = [];
@@ -441,11 +452,11 @@
                             cars.push({ id: doc.id, ...doc.data() });
                         });
                         generateCars(cars);
-                        document.getElementById("loading-spinner").style.display = "none"; // hide spinner
+                        document.getElementById("loading-wrapper").style.display = "none"; // hide spinner
                         updateSuggestions(""); // update search suggestions if you have this
                     }, (error) => {
                         console.error("Error loading cars:", error);
-                        document.getElementById("loading-spinner").style.display = "none"; // hide spinner even on error
+                        document.getElementById("loading-wrapper").style.display = "none"; // hide spinner even on error
                     });
                 }
 
@@ -547,22 +558,24 @@
                 // Submit Car Function
                 function submitCar() {
                     const name = document.getElementById('car-name').value;
+                    const make = document.getElementById('car-make').value;
                     const image1 = document.getElementById('car-image1').value;
                     const image2 = document.getElementById('car-image2').value;
                     const term = document.getElementById('car-term').value;
                     const mileage = document.getElementById('car-mileage').value;
                     const due = document.getElementById('car-due').value;
                     const price = document.getElementById('car-price').value;
+                    const label = document.getElementById('car-label').value;
                     const featuresInput = document.getElementById('car-features').value;
                     const features = featuresInput.split(',').map(f => f.trim()).filter(f => f);
                     const additional = document.getElementById('car-additional').value;
-                    const color = document.getElementById('car-color').value;
-                    const label = document.getElementById('car-label').value;
+                    const exteriorColor = document.getElementById('car-exterior-color').value;
+                    const interiorColor = document.getElementById('car-interior-color').value;
                     const msg = document.getElementById('Submit-message');
                     msg.style.color = ''; // Reset color
                     msg.classList.remove('show'); // Hide any old message immediately
                     // Validation
-                    if (!name || !image1 || !image2 || !term || !mileage || !due || !price || features.length === 0 || !color) {
+                    if (!name || !make || !image1 || !image2 || !term || !mileage || !due || !price || features.length === 0 || !exteriorColor) {
                         msg.innerHTML = '❗Please fill in all required fields.';
                         msg.style.color = 'red';
                         msg.classList.add('show');
@@ -574,17 +587,20 @@
                     // Add to Firestore
                     db.collection("cars").add({
                         name,
+                        make,
                         image1,
                         image2,
                         term,
                         mileage,
                         due,
                         price,
+                        label,
                         features,
                         additional,
-                        color,
-                        label
+                        exteriorColor,
+                        interiorColor
                     })
+
                         .then(() => {
                             msg.innerHTML = '✅ Car added successfully!';
                             msg.style.color = 'green';
