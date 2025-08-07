@@ -31,8 +31,10 @@
   }
 
   .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 
   body.modal-open {
@@ -111,12 +113,16 @@
     </nav>
   </section>
 
-  <div class="max-w-[2000px] mx-auto flex flex-col md:flex-row min-h-screen">
+  <div class="max-w-[2000px] mx-auto flex flex-col md:flex-row md:min-h-screen relative">
     <!-- FilterSidebar -->
-    <aside
-      class="fixed top-0 left-0 z-50 h-full w-2/3 bg-white shadow-lg px-6 py-6 overflow-y-auto no-scrollbar transform transition-transform duration-300
+    <aside class="absolute top-0 left-0 z-50 h-full w-2/3 bg-white shadow-lg px-6 py-2 overflow-y-auto no-scrollbar transform transition-transform duration-500
          -translate-x-full md:translate-x-0 md:static md:w-[300px] md:h-auto md:shadow-none md:border-r md:space-y-4"
       id="filterSidebar">
+      <div class="flex justify-end py-2">
+        <button id="closeFilterBtn" class="text-xl text-gray-600 hover:text-black">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
       <div class="flex justify-between items-center mb-2">
         <h2 class="text-xl font-semibold">Filters</h2>
         <button onclick="resetFilters()" class="text-sm text-blue-600 hover:underline font-medium">
@@ -152,12 +158,12 @@
 
       <!-- Color -->
       <div>
-        <button onclick="toggleSection('color')"
+        <button onclick="toggleSection('exteriorColor')"
           class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
           Color
-          <span id="icon-color">+</span>
+          <span id="icon-exteriorColor">+</span>
         </button>
-        <div id="section-color" class="mt-5 space-y-1 hidden">
+        <div id="section-exteriorColor" class="mt-5 space-y-1 hidden">
           <!-- Populated by JavaScript -->
         </div>
       </div>
@@ -183,7 +189,8 @@
       </div>
     </aside>
 
-    <section id="main-section" class="bg-[#f9f9f9]/80 flex-1">
+
+    <section id="deals-container" class="bg-[#f9f9f9]/80 flex-1 overflow-auto">
 
       <div class="px-8 py-5 mx-auto flex items-center justify-end md:space-x-4">
         <span class="hidden md:block text-sm text-gray-700 font-medium">Search Cars</span>
@@ -205,12 +212,13 @@
             class="absolute z-10 w-full mt-0.5 bg-white border border-gray-200 rounded-lg shadow-lg max-h-52 overflow-y-auto no-scrollbar hidden text-sm">
           </ul>
         </div>
-        <button id="toggleFilterBtn" class="md:hidden bg-blue-600 text-white ml-2 px-3 py-2 rounded-full z-60 flex items-center justify-center">
-  <i class="fas fa-filter text-sm"></i>
-</button>
+        <button id="openFilterBtn"
+          class="md:hidden bg-blue-600 text-white ml-2 px-3 py-2 rounded-full z-60 flex items-center justify-center">
+          <i class="fas fa-filter text-sm"></i>
+        </button>
       </div>
 
-      <div class="px-8 mx-auto">
+      <div class="px-8 mx-auto mb-5">
         <!-- Loading Dots -->
         <div id="loading-wrapper" class="flex justify-center items-center h-[70vh] w-full">
           <div class="flex space-x-2">
@@ -224,15 +232,14 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="cars-container">
         </div>
 
-        <div id="pagination-wrapper" class="my-6 flex justify-center">
+        <p id="no-match-message" class="text-center text-gray-500 pb-72 hidden">
+          Sorry, no match found...
+        </p>
+
+        <div id="pagination-wrapper" class="my-5 flex justify-center">
           <div id="pagination" class="pagination-buttons flex flex-wrap gap-2"></div>
         </div>
 
-
-
-        <p id="no-match-message" class="text-center text-gray-500 pb-48 hidden">
-          Sorry, no match found...
-        </p>
 
         <!-- Modal -->
         <div id="car-modal"
@@ -257,7 +264,7 @@
               <h3 class="text-lg font-semibold pt-4 pb-2">
                 Color
               </h3>
-              <p id="modal-color" class="text-sm text-gray-700 pb-3"></p>
+              <p id="modal-exteriorColor" class="text-sm text-gray-700 pb-3"></p>
             </div>
             <button onclick="closeModal()"
               class="absolute top-4 right-5 text-white hover:text-gray-700 text-xl leading-none focus:outline-none"
@@ -267,27 +274,27 @@
           </div>
         </div>
 
-        <!-- WhatsApp Chat Bubble -->
-        <div id="whatsapp-chat"
-          class="fixed bottom-5 right-5 bg-green-500 w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 scale-90 transition-opacity transition-transform duration-400 z-40">
-          <div id="whatsapp-bubble"
-            class="absolute bottom-16 right-0 bg-white text-gray-800 px-3 py-1.5 rounded-lg text-xs shadow-md opacity-0 translate-y-2 transition-opacity transition-transform duration-300 whitespace-nowrap">
-            Want a specific car?
-          </div>
-          <a href="https://wa.me/9175837073?text=I%20would%20like%20to%20lease%20a%20" target="_blank"
-            rel="noopener noreferrer"
-            class="block w-10 h-10 flex justify-center items-center text-3xl text-white bg-green-500 rounded-full">
-            <i class="fab fa-whatsapp"></i>
-          </a>
-          <button id="close-chat"
-            class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center cursor-pointer hidden hover:bg-red-700 focus:outline-none"
-            aria-label="Close chat">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-
-
       </div>
+
+      <!-- WhatsApp Chat Bubble -->
+      <div id="whatsapp-chat"
+        class="fixed bottom-5 right-5 bg-green-500 w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 scale-90 transition-opacity transition-transform duration-400 z-40">
+        <div id="whatsapp-bubble"
+          class="absolute bottom-16 right-0 bg-white text-gray-800 px-3 py-1.5 rounded-lg text-xs shadow-md opacity-0 translate-y-2 transition-opacity transition-transform duration-300 whitespace-nowrap">
+          Want a specific car?
+        </div>
+        <a href="https://wa.me/9175837073?text=I%20would%20like%20to%20lease%20a%20" target="_blank"
+          rel="noopener noreferrer"
+          class="block w-10 h-10 flex justify-center items-center text-3xl text-white bg-green-500 rounded-full">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+        <button id="close-chat"
+          class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center cursor-pointer hidden hover:bg-red-700 focus:outline-none"
+          aria-label="Close chat">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
     </section>
   </div>
 
@@ -563,7 +570,7 @@
       document.getElementById("modal-image2").src = car.image2;
       document.getElementById("modal-features").innerHTML = car.features.map(f => `<li>${f}</li>`).join("");
       document.getElementById("modal-additional").innerText = car.additional || "";
-      document.getElementById("modal-color").innerText = car.color;
+      document.getElementById("modal-exteriorColor").innerText = car.exteriorColor;
       modal.style.display = "flex";
       scrollTop = window.scrollY;
       document.body.classList.add("modal-open");
@@ -582,7 +589,7 @@
     const chat = document.getElementById('whatsapp-chat');
     const bubble = document.getElementById('whatsapp-bubble');
     const closeBtn = document.getElementById('close-chat');
-    const section = document.getElementById('main-section');
+    const dealscontainer = document.getElementById('deals-container');
     let chatVisible = false;
     let chatClosed = false;
     // Show chat after 5 seconds
@@ -596,12 +603,12 @@
         chatVisible = true;
       }
     }, 5000);
-    // Hide chat if scrolling past section
+    // Hide chat if scrolling past dealscontainer
     window.addEventListener('scroll', () => {
       if (!chatVisible || chatClosed) return;
-      const sectionBottom = section.offsetTop + section.offsetHeight;
+      const dealscontainerBottom = dealscontainer.offsetTop + dealscontainer.offsetHeight;
       const scrollY = window.scrollY + window.innerHeight;
-      if (scrollY > sectionBottom + 50) {
+      if (scrollY > dealscontainerBottom + 50) {
         chat.classList.add('opacity-0', 'scale-90');
         chat.classList.remove('opacity-100', 'scale-100');
         bubble.classList.add('opacity-0', 'translate-y-2');
@@ -635,7 +642,7 @@
     const filters = {
       price: 500,
       makes: [],
-      color: [],
+      exteriorColor: [],
       features: []
     };
 
@@ -652,53 +659,59 @@
       document.getElementById('priceLabel').textContent = value;
     }
 
-    function resetFilters() {
-      filters.price = 500;
-      filters.makes = [];
-      filters.color = [];
-      filters.features = [];
-      document.getElementById('priceRange').value = 500;
-      updatePriceLabel();
-      document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
-      console.log("Filters Reset:", filters);
-    }
-
-    function applyFilters() {
-      // Update checkbox selections
-      filters.makes = getCheckedValues('makes');
-      filters.color = getCheckedValues('color');
-      filters.features = getCheckedValues('features');
-      console.log("Applied Filters:", filters);
-      // You can call your filtering logic here
-    }
-
     function getCheckedValues(type) {
       return Array.from(document.querySelectorAll(`#section-${type} input:checked`)).map(cb => cb.value);
     }
 
     function populateCheckboxes(list, containerId) {
       const container = document.getElementById(containerId);
+
+      // Create the "Uncheck All" checkbox
+      const uncheckWrapper = document.createElement('div');
+      uncheckWrapper.className = 'flex items-center space-x-2 mb-1';
+      uncheckWrapper.innerHTML = `
+    <input type="checkbox" class="uncheck-all" data-group="${containerId}" id="uncheck-${containerId}" />
+    <label class="text-sm">Uncheck All</label>
+  `;
+      container.appendChild(uncheckWrapper);
+
+      // Listen to "Uncheck All" toggle
+      uncheckWrapper.querySelector('input').addEventListener('change', function () {
+        const checkboxes = container.querySelectorAll('input[type=checkbox]:not(.uncheck-all)');
+        checkboxes.forEach(cb => cb.checked = false);
+      });
+
+      // Create normal checkboxes
       list.forEach(item => {
         const wrapper = document.createElement('div');
         wrapper.className = 'flex items-center space-x-2';
         wrapper.innerHTML = `
-        <input type="checkbox" value="${item}" />
-        <label class="text-sm">${item}</label>
-      `;
+      <input type="checkbox" value="${item}" class="option" data-group="${containerId}" />
+      <label class="text-sm">${item}</label>
+    `;
         container.appendChild(wrapper);
+      });
+
+      // Listen for any other checkbox being checked, to uncheck "Uncheck All"
+      container.addEventListener('change', function (e) {
+        if (e.target.classList.contains('option') && e.target.checked) {
+          const uncheckAll = container.querySelector('.uncheck-all');
+          if (uncheckAll) uncheckAll.checked = false;
+        }
       });
     }
 
+
     // Initial population
     populateCheckboxes(makes, 'section-makes');
-    populateCheckboxes(colors, 'section-color');
+    populateCheckboxes(colors, 'section-exteriorColor');
     populateCheckboxes(features, 'section-features');
     updatePriceLabel();
 
     function applyFilters() {
       // Update filter selections
       filters.makes = getCheckedValues('makes');
-      filters.color = getCheckedValues('color');
+      filters.exteriorColor = getCheckedValues('exteriorColor');
       filters.features = getCheckedValues('features');
       filters.price = parseInt(document.getElementById('priceRange').value);
 
@@ -708,7 +721,7 @@
 
         const matchesMake = filters.makes.length === 0 || filters.makes.includes(car.make);
 
-        const matchesColor = filters.color.length === 0 || filters.color.includes(car.color);
+        const matchesColor = filters.exteriorColor.length === 0 || filters.exteriorColor.includes(car.exteriorColor);
 
         const matchesFeatures =
           filters.features.length === 0 ||
@@ -719,11 +732,14 @@
 
       filteredCarsGlobal = filtered;
       generateCars(filteredCarsGlobal, 1); // Show filtered cars
+
+      filterSidebar.classList.add('-translate-x-full');
+      filterSidebar.classList.remove('translate-x-0');
     }
     function resetFilters() {
       filters.price = 500;
       filters.makes = [];
-      filters.color = [];
+      filters.exteriorColor = [];
       filters.features = [];
 
       document.getElementById('priceRange').value = 500;
@@ -742,20 +758,21 @@
     }
 
     // toggle sidebar sliding up/down on small screens:
-   const filterSidebar = document.getElementById('filterSidebar');
-const toggleBtn = document.getElementById('toggleFilterBtn');
+    const filterSidebar = document.getElementById('filterSidebar');
+    const openFilterBtn = document.getElementById('openFilterBtn');
+    const closeFilterBtn = document.getElementById('closeFilterBtn');
 
-toggleBtn.addEventListener('click', () => {
-  const isHidden = filterSidebar.classList.contains('-translate-x-full');
+    openFilterBtn.addEventListener('click', () => {
+      filterSidebar.classList.remove('-translate-x-full');
+      filterSidebar.classList.add('translate-x-0');
+      dealscontainer.classList.add('overflow-hidden');  // Disable main content scroll
+    });
 
-  if (isHidden) {
-    filterSidebar.classList.remove('-translate-x-full');
-    filterSidebar.classList.add('translate-x-0');
-  } else {
-    filterSidebar.classList.add('-translate-x-full');
-    filterSidebar.classList.remove('translate-x-0');
-  }
-});
+    closeFilterBtn.addEventListener('click', () => {
+      filterSidebar.classList.add('-translate-x-full');
+      filterSidebar.classList.remove('translate-x-0');
+      dealscontainer.classList.remove('overflow-hidden'); // Enable main content scroll
+    });
   </script>
 </body>
 
