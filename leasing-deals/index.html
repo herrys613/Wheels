@@ -115,7 +115,7 @@
 
   <div class="max-w-[2000px] mx-auto flex flex-col md:flex-row md:min-h-screen relative">
     <!-- FilterSidebar -->
-    <aside class="absolute top-0 left-0 z-50 h-full w-2/3 bg-white shadow-[4px_0_10px_rgba(0,0,0,0.05)] px-6 py-2 overflow-y-auto no-scrollbar transform transition-transform duration-500
+    <aside class="absolute top-0 left-0 z-50 h-full w-2/3 bg-white shadow-lg px-6 py-2 overflow-y-auto no-scrollbar transform transition-transform duration-500
          -translate-x-full md:translate-x-0 md:static md:w-[300px] md:h-auto md:shadow-none md:border-r md:space-y-4"
       id="filterSidebar">
       <div class="flex justify-end py-2 md:hidden">
@@ -188,6 +188,7 @@
         </button>
       </div>
     </aside>
+
 
     <section id="deals-container" class="bg-[#f9f9f9]/80 flex-1 overflow-auto">
 
@@ -294,10 +295,6 @@
       </div>
 
     </section>
-
-    <div id="containerOverlay"
-      class="absolute inset-0 bg-black bg-opacity-5 z-40 hidden md:hidden transition-opacity duration-1000 ease-in pointer-events-none"></div>
-
   </div>
 
   <!-- Footer -->
@@ -770,20 +767,17 @@
     const filterSidebar = document.getElementById('filterSidebar');
     const openFilterBtn = document.getElementById('openFilterBtn');
     const closeFilterBtn = document.getElementById('closeFilterBtn');
-    const containerOverlay = document.getElementById('containerOverlay');
 
     openFilterBtn.addEventListener('click', () => {
       filterSidebar.classList.remove('-translate-x-full');
       filterSidebar.classList.add('translate-x-0');
-      containerOverlay.classList.remove('hidden'); // show dark overlay
-      dealscontainer.classList.add('overflow-hidden');
+      dealscontainer.classList.add('overflow-hidden');  // Disable main content scroll
     });
 
     closeFilterBtn.addEventListener('click', () => {
       filterSidebar.classList.add('-translate-x-full');
       filterSidebar.classList.remove('translate-x-0');
-      containerOverlay.classList.add('hidden'); // hide dark overlay
-      dealscontainer.classList.remove('overflow-hidden');
+      dealscontainer.classList.remove('overflow-hidden'); // Enable main content scroll
     });
   </script>
 </body>
