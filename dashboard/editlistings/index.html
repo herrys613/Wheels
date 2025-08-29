@@ -50,18 +50,119 @@
         }
     }
 
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
     .animate-fadeInUp {
-        animation: fadeInUp 0.3s ease-in-out forwards;
+        animation: fadeInUp 0.4s ease-out forwards;
+    }
+
+    .animate-slideIn {
+        animation: slideIn 0.3s ease-out forwards;
+    }
+
+    /* Custom scrollbar for select */
+    .custom-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb {
+        background: #9ca3af;
+        border-radius: 10px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+        background: #6b7280;
+    }
+
+    /* Loading animation */
+    .loading-dots {
+        display: inline-flex;
+        gap: 4px;
+    }
+
+    .loading-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #3b82f6;
+        animation: pulse 1.4s ease-in-out infinite both;
+    }
+
+    .loading-dot:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .loading-dot:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    .loading-dot:nth-child(4) {
+        animation-delay: 0.6s;
+    }
+
+    @keyframes pulse {
+
+        0%,
+        80%,
+        100% {
+            transform: scale(0.8);
+            opacity: 0.5;
+        }
+
+        40% {
+            transform: scale(1);
+            opacity: 1;
+        }
     }
 </style>
 
-<body>
-    <section class="bg-white  border-b">
-        <nav x-data="{ isOpen: false }" class="p-5 mx-auto lg:flex lg:justify-between lg:items-center">
-            <div class="flex items-center justify-between">
+<body class="bg-[#f9f9f9]/80">
+    <!-- Navbar -->
+    <header class="bg-white border-b border-gray-200">
+        <nav x-data="{ isOpen: false }" class="max-w-[2000px] p-5 mx-auto lg:px-8 lg:py-5">
+            <div class="flex justify-between items-center relative">
+                <!-- Logo -->
                 <a href="/">
                     <img class="w-auto h-5 sm:h-7" src="/images/logo-blue.png" alt="logo">
                 </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-12">
+                    <a href="/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Home</a>
+                    <a href="/leasing-deals/"
+                        class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Leasing
+                        Deals</a>
+                    <a href="/about-us/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">About
+                        us</a>
+                    <a href="/blog/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Blog</a>
+                    <a href="/contact/"
+                        class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Contact</a>
+                </div>
+
+
+                <!-- Login -->
+                <div class="hidden lg:flex items-center">
+                    <a id="logout-btn"
+                        class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-red-600 rounded-lg lg:mt-0 hover:bg-red-500 lg:w-auto"
+                        href="#">
+                        Log out
+                    </a>
+                </div>
 
                 <!-- Mobile menu button -->
                 <div class="flex lg:hidden">
@@ -83,630 +184,904 @@
 
             <!-- Mobile Menu open: "block", Menu closed: "hidden"-->
             <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
-                class="absolute inset-x-0 z-20 w-full px-6 py-6 transition-all duration-300 ease-in-out bg-white shadow-md lg:bg-transparent lg: lg:shadow-none  lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center">
-                <div class="flex flex-col space-y-4 lg:mt-0 lg:flex-row lg:-px-8 lg:space-y-0">
-                    <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-                        href="/">Home</a>
-                    <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-                        href="/leasing-deals/">Leasing Deals</a>
-                    <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-                        href="/about-us/">About us</a>
-                    <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-                        href="/blog/">Blog</a>
-                    <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-                        href="/contact/">Contact</a>
-                </div>
-                <div class="flex flex-col mt-6 space-y-4 md:hidden border-t pt-4">
+                class="lg:hidden absolute inset-x-0 transition-all duration-300 ease-in-out bg-white border-b border-gray-200 shadow-lg z-40">
+                <div class="px-4 py-6 space-y-4">
+                    <a href="/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Home</a>
+                    <a href="/leasing-deals/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Leasing
+                        Deals</a>
+                    <a href="/about-us/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">About
+                        us</a>
+                    <a href="/blog/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Blog</a>
+                    <a href="/contact/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Contact</a>
+                    <hr class="my-4">
                     <a class="flex items-center text-gray-600 hover:text-blue-600" href="/dashboard/">
-                        <i class="fas fa-grip mr-2 w-5"></i> Dashboard
+                        <i class="fas fa-chart-pie mr-2 w-5"></i>Overview
                     </a>
-                    <a class="flex items-center text-gray-600 hover:text-blue-600" href="/dashboard/editlistings">
-                        <i class="fas fa-pen-to-square mr-2 w-5"></i> Edit Listings
+                    <a class="flex items-center text-gray-600 hover:text-blue-600" href="/dashboard/listings/">
+                        <i class="fas fa-list mr-2 w-5"></i>Listings
                     </a>
                     <a class="flex items-center text-gray-600 hover:text-blue-600" href="/dashboard/leasecalculator/">
-                        <i class="fas fa-calculator mr-2 w-5"></i> Lease Calculator
+                        <i class="fas fa-calculator mr-2 w-5"></i>Lease Calculator
                     </a>
                     <a class="flex items-center text-gray-600 hover:text-blue-600" href="#">
-                        <i class="fa-solid fa-gear mr-2 w-5"></i> Settings
+                        <i class="fa-solid fa-gear mr-2 w-5"></i>Settings
+                    </a>
+                    <a id="logout-btn"
+                        class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-red-600 rounded-lg lg:mt-0 hover:bg-red-500 lg:w-auto"
+                        href="#">
+                        Log out
                     </a>
                 </div>
-
-                <a id="logout-btn"
-                    class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-red-600 rounded-lg lg:mt-0 hover:bg-red-500 lg:w-auto"
-                    href="#">
-                    Log out
-                </a>
             </div>
         </nav>
-    </section>
+    </header>
 
-    <div class="flex">
-        <!-- Dashboard Sidebar -->
-        <aside class="hidden md:block w-[300px] h-screen px-4 py-8 overflow-y-auto bg-white shadow-md z-50">
-            <div class="flex flex-col justify-between flex-1">
-                <nav>
-                    <a class="flex items-center px-4 py-2 text-gray-600 transition-colors duration-300 transform rounded-md hover:bg-gray-100 hover:text-gray-700"
-                        href="/dashboard/">
-                        <i class="fas fa-grip"></i>
-                        <span class="mx-4 font-medium">Dashboard</span>
+    <div class="max-w-[2000px] mx-auto flex">
+        <!-- Sidebar -->
+        <aside class="hidden lg:block w-72 bg-white border-r border-gray-200 min-h-screen">
+            <div class="p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-6">Dashboard</h2>
+                <nav class="space-y-2">
+                    <a href="/dashboard/"
+                        class="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                        <i class="fas fa-chart-pie w-5 mr-3"></i>
+                        <span class="font-medium">Overview</span>
                     </a>
-
-                    <a class="flex items-center px-4 py-2 mt-5 text-gray-600 bg-gray-100 transition-colors duration-300 transform rounded-md hover:bg-gray-100 hover:text-gray-700"
-                        href="/dashboard/editlistings">
-                        <i class="fas fa-pen-to-square"></i>
-                        <span class="mx-4 font-medium">Edit Listings</span>
+                    <a href="/dashboard/listings/"
+                        class="flex items-center px-4 py-3 bg-blue-50 text-blue-700 rounded-lg font-medium">
+                        <i class="fas fa-list w-5 mr-3"></i>
+                        <span>Listings</span>
                     </a>
-
-                    <a class="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-md hover:bg-gray-100 hover:text-gray-700"
-                        href="/dashboard/leasecalculator/">
-                        <i class="fas fa-calculator"></i>
-                        <span class="mx-4 font-medium">Lease Calculator</span>
+                    <a href="/dashboard/leasecalculator/"
+                        class="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                        <i class="fas fa-calculator w-5 mr-3"></i>
+                        <span class="font-medium">Leasing Calculator</span>
                     </a>
-
-                    <a class="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-md hover:bg-gray-100 hover:text-gray-700"
-                        href="#">
-                        <i class="fa-solid fa-gear"></i>
-                        <span class="mx-4 font-medium">Settings</span>
+                    <a href="#"
+                        class="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                        <i class="fas fa-cog w-5 mr-3"></i>
+                        <span class="font-medium">Settings</span>
                     </a>
-
-                    <hr class="my-6 border-gray-200" />
                 </nav>
-
-                <a href="#" class="flex items-center px-4 -mx-2">
-                    <img class="object-cover mx-2 rounded-full h-9 w-9"
-                        src="https://tse1.mm.bing.net/th/id/OIP.nZ0mlqfGSlnx4w5Nr6Aw_QHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
-                        alt="avatar" />
-                    <span class="mx-2 font-medium text-gray-800">Hershy S</span>
-                </a>
             </div>
         </aside>
 
         <!-- Main Section -->
-        <section id="main-section" class="bg-[#f9f9f9]/80 flex-1">
-            <div class="px-8 py-5 mx-auto flex items-center justify-end md:space-x-4">
-                <span class="hidden md:block text-sm text-gray-700 font-medium">Search Cars</span>
-                <div class="w-full md:w-[400px] relative text-center">
-                    <!-- Search Input -->
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
-                        </svg>
-                    </span>
-                    <input id="search-bar" type="text" placeholder="Search cars..." onkeyup="filterCars()"
-                        oninput="updateSuggestions()" autocomplete="off"
-                        class="w-full text-sm pl-10 pr-4 py-1.5 text-gray-700 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent" />
+        <main class="flex-1 px-8 p-5 min-h-screen">
+            <!-- Header with Search -->
+            <div class="mb-8">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900">Car Listings</h1>
+                        <p class="text-sm text-gray-600 mt-1">Manage and edit car listings</p>
+                    </div>
 
-                    <!-- Suggestions Dropdown -->
-                    <ul id="car-suggestions"
-                        class="absolute z-10 w-full mt-0.5 bg-white border border-gray-200 rounded-lg shadow-lg max-h-52 overflow-y-auto no-scrollbar hidden text-sm">
-                    </ul>
+                    <!-- Search Bar -->
+                    <div class="relative w-full sm:w-96">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                        <input id="search-bar" type="text" placeholder="Search your listings..." onkeyup="filterCars()"
+                            oninput="updateSuggestions()" autocomplete="off"
+                            class="w-full text-sm pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+
+                        <!-- Suggestions Dropdown -->
+                        <ul id="cars-suggestions"
+                            class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto custom-scroll hidden">
+                        </ul>
+                    </div>
                 </div>
             </div>
 
-            <div class="px-8 mx-auto">
-                <!-- Loading Dots -->
-                <div id="loading-wrapper" class="flex justify-center items-center h-[70vh] w-full">
-                    <div class="flex space-x-2">
-                        <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                        <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                        <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce"></div>
-                        <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce [animation-delay:0.15s]"></div>
+            <!-- Loading State -->
+            <div id="loading-wrapper" class="flex justify-center items-center h-64">
+                <div class="text-center">
+                    <div class="loading-dots mb-4">
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                        <div class="loading-dot"></div>
+                    </div>
+                    <p class="text-gray-600">Loading your listings...</p>
+                </div>
+            </div>
+
+            <!-- Listings Grid -->
+            <div id="cars-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards will be populated by JavaScript -->
+            </div>
+
+            <!-- No Results Message -->
+            <div id="no-match-message" class="text-center py-12 hidden">
+                <i class="fas fa-search text-gray-300 text-4xl mb-4"></i>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No listings found</h3>
+                <p class="text-gray-600">Try adjusting your search criteria or add a new listing</p>
+            </div>
+
+            <!-- Floating Add Button -->
+            <button onclick="openAddCarModal()"
+                class="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all duration-200 flex items-center justify-center group z-50">
+                <i class="fas fa-plus text-xl group-hover:rotate-90 transition-transform duration-200"></i>
+            </button>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div id="car-modal"
+        class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <div
+            class="bg-white rounded-xl shadow-lg w-full mx-6 max-w-md p-3 relative animate-fadeInUp duration-300 text-left">
+            <img id="modal-image2" loading="lazy" src="" alt="Car Image"
+                class="w-full h-44 object-cover rounded-lg mb-3" />
+            <div class="px-1">
+                <h2 id="modal-title" class="text-xl font-bold mb-3"></h2>
+                <h3 class="text-lg font-semibold pb-2">
+                    <i class="fas fa-list-alt text-gray-900 mr-2"></i>Features
+                </h3>
+                <ul id="modal-features"
+                    class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-5 list-disc list-inside">
+                </ul>
+
+                <h3 class="text-lg font-semibold pt-4 pb-2">
+                    <i class="fas fa-plus text-gray-900 mr-2"></i>Additional
+                </h3>
+                <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
+
+                <h3 class="text-lg font-semibold pt-4 pb-2">
+                    Color
+                </h3>
+                <p id="modal-color" class="text-sm text-gray-700 pb-3"></p>
+            </div>
+            <button onclick="closeModal()"
+                class="absolute top-4 right-5 text-white hover:text-gray-700 text-xl leading-none focus:outline-none"
+                aria-label="Close modal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Add Car Modal -->
+    <div id="addCarModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full animate-slideIn">
+            <!-- Modal Header -->
+            <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-xl">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-semibold text-gray-900">New Car Listing</h2>
+                    <button onclick="closeAddCarModal()"
+                        class="p-2 px-4 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Content -->
+            <form id="car-form" class="p-6 space-y-6 max-h-[70vh] overflow-y-auto custom-scroll">
+                <!-- Car Information -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                        <i class="fas fa-car text-blue-600 mr-2"></i>
+                        Car Information
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Car Name
+                                *</label>
+                            <input type="text" id="car-name" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Car Make
+                                *</label>
+                            <input type="text" id="car-make" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+                        </div>
                     </div>
                 </div>
-                <!-- Deals Container -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-0 pb-6" id="cars-container">
-                </div>
-                <p id="no-match-message" class="text-center text-gray-500 pb-48 hidden">
-                    Sorry, no match found...
-                </p>
 
-                <!-- Modal -->
-                <div id="car-modal"
-                    class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center z-50 hidden transition-opacity duration-300">
+                <!-- Images Upload -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                        <i class="fas fa-images text-blue-600 mr-2"></i>
+                        Photos
+                    </h3>
                     <div
-                        class="bg-white rounded-xl shadow-lg w-full mx-6 max-w-md p-3 relative animate-fadeInUp duration-300 text-left">
-                        <img id="modal-image2" loading="lazy" src="" alt="Car Image"
-                            class="w-full h-44 object-cover rounded-lg mb-3" />
-                        <div class="px-1">
-                            <h2 id="modal-title" class="text-xl font-bold mb-3"></h2>
-                            <h3 class="text-lg font-semibold pb-2">
-                                <i class="fas fa-list-alt text-gray-900 mr-2"></i>Features
-                            </h3>
-                            <ul id="modal-features"
-                                class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-5 list-disc list-inside">
-                            </ul>
+                        class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                        <label for="dropzone-file" class="cursor-pointer">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-3"></i>
+                            <p class="text-lg font-medium text-gray-700 mb-1">Upload Car Photos
+                            </p>
+                            <p class="text-sm text-gray-500">Drag and drop files here, or click to
+                                select
+                            </p>
+                            <p class="text-xs text-gray-400 mt-2">PNG, JPG up to 5MB each</p>
+                            <input id="dropzone-file" type="file" class="hidden" multiple accept="image/*" />
+                        </label>
+                    </div>
+                    <div id="image-preview" class="grid grid-cols-3 sm:grid-cols-4 gap-3"></div>
+                </div>
 
-                            <h3 class="text-lg font-semibold pt-4 pb-2">
-                                <i class="fas fa-plus text-gray-900 mr-2"></i>Additional
-                            </h3>
-                            <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
-
-                            <h3 class="text-lg font-semibold pt-4 pb-2">
-                                Color
-                            </h3>
-                            <p id="modal-color" class="text-sm text-gray-700 pb-3"></p>
+                <!-- Details -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                        <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                        Details
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Lease Term
+                                *</label>
+                            <select id="term" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                                <option value="" disabled selected>Select Term</option>
+                                <option value="24">24</option>
+                                <option value="36">36</option>
+                                <option value="48">48</option>
+                                <option value="Other">Other</option>
+                            </select>
                         </div>
-                        <button onclick="closeModal()"
-                            class="absolute top-4 right-5 text-white hover:text-gray-700 text-xl leading-none focus:outline-none"
-                            aria-label="Close modal">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Floating Add Car Button with Icon -->
-                <button onclick="openAddCarModal()"
-                    class="fixed bottom-8 right-6 w-12 h-12 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-500 transition z-50 flex items-center justify-center group"
-                    aria-label="Add Car">
-                    <i class="fas fa-plus text-xl"></i>
-                </button>
-
-                <!-- Add Car Modal -->
-                <div id="addCarModal"
-                    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-                    <div class="bg-white mx-6 max-w-2xl rounded-lg shadow-lg p-6 relative">
-
-                        <!-- Close Button -->
-                        <button onclick="closeAddCarModal()"
-                            class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-3xl">&times;</button>
-
-                        <h2 class="text-2xl font-semibold mb-4 text-center text-gray-800">Add New Car</h2>
-
-                        <form id="car-form" class="space-y-4">
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <input type="text" id="car-name" placeholder="Car Name" required
-                                    class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                <input type="text" id="car-make" placeholder="Make" required
-                                    class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <input type="text" id="car-image1" placeholder="Primary Image URL" required
-                                    class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                <input type="text" id="car-image2" placeholder="Secondary Image URL"
-                                    class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            </div>
-
-                            <div class="grid grid-cols-3 gap-4">
-                                <input type="text" id="car-term" placeholder="Lease Term" required
-                                    class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                <input type="text" id="car-mileage" placeholder="Mileage" required
-                                    class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                <input type="text" id="car-due" placeholder="Due" required
-                                    class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <input type="text" id="car-price" placeholder="Price" required
-                                    class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                <input type="text" id="car-label" placeholder="Label (optional)"
-                                    class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            </div>
-
-                            <input type="text" id="car-features" placeholder="Features (comma-separated)" required
-                                class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            <input type="text" id="car-additional" placeholder="Additional (optional)"
-                                class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-
-                            <div class="grid grid-cols-2 gap-4">
-                                <input type="text" id="car-exterior-color" placeholder="Exterior Color" required
-                                    class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                <input type="text" id="car-interior-color" placeholder="Interior Color (optional)"
-                                    required
-                                    class="w-full text-xs px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            </div>
-
-                            <button type="button" onclick="submitCar()"
-                                class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-500 transition">
-                                Submit Car
-                            </button>
-
-                            <div id="Submit-message" class="text-center text-sm text-green-600 mt-2"></div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Delete Confirmation Modal -->
-                <div id="delete-modal"
-                    class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
-                    <div class="bg-white mx-4 rounded-lg shadow-lg p-6 max-w-sm w-full">
-                        <h2 class="text-lg font-semibold mb-4">Delete Car</h2>
-                        <p class="mb-6">Are you sure you want to delete this car?</p>
-                        <div class="flex justify-end space-x-4">
-                            <button id="cancel-delete"
-                                class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
-                            <button id="confirm-delete"
-                                class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-500">Delete</button>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Mileage
+                                *</label>
+                            <select id="mileage" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                                <option value="" disabled selected>Select Mileage</option>
+                                <option value="7,500">7,500</option>
+                                <option value="10,000">10,000</option>
+                                <option value="12,000">12,000</option>
+                                <option value="15,000">15,000</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Features
+                                *</label>
+                            <input type="text" id="features" required placeholder="Ex, Sunroof, Anddriod Auto, AWD"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Label
+                                (Optional)</label>
+                            <input type="text" id="label"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
                         </div>
                     </div>
                 </div>
 
-                <!-- Delete Confirmation Message  -->
-                <div id="alert-box"
-                    class="fixed bottom-5 left-1/2 transform -translate-x-1/2 max-w-sm w-full z-50 hidden transition-opacity duration-300 ease-in-out">
+                <!-- Pricing -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                        <i class="fas fa-dollar-sign text-blue-600 mr-2"></i>
+                        Pricing
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Price
+                                *</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                                <input type="number" id="price" placeholder="0.00" required
+                                    class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Due at Signing
+                                *</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                                <input type="number" id="due" placeholder="0.00" required
+                                    class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Color -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                        <i class="fas fa-palette text-blue-600 mr-2"></i>
+                        Color
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Exterior Color
+                                *</label>
+                            <select id="exterior-color" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                                <option value="" disabled selected>Select Color</option>
+                                <option value="Black">Black</option>
+                                <option value="Blue">Blue</option>
+                                <option value="Brown">Brown</option>
+                                <option value="Gold">Gold</option>
+                                <option value="Green">Green</option>
+                                <option value="Grey">Grey</option>
+                                <option value="Silver">Silver</option>
+                                <option value="White">White</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Interior Color
+                                *</label>
+                            <select id="interior-color" required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                                <option value="" disabled selected>Select Color</option>
+                                <option value="Black">Black</option>
+                                <option value="Blue">Red</option>
+                                <option value="Brown">Brown</option>
+                                <option value="Grey">Grey</option>
+                                <option value="Red">Red</option>
+                                <option value="White">White</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                        <i class="fas fa-comment text-blue-600 mr-2"></i>
+                        Additional Information
+                    </h3>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Description
+                            (Optional)</label>
+                        <textarea id="additional" rows="4"
+                            placeholder="Add any additional details about the dress, special features, or selling conditions..."
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all custom-scroll resize-none"></textarea>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
+                    <button type="button" onclick="closeAddCarModal()"
+                        class="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors">
+                        Cancel
+                    </button>
+                    <button type="button" onclick="submitCar()"
+                        class="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors">
+                        <span id="submit-btn-text">Create Listing</span>
+                        <i id="submit-spinner" class="fas fa-spinner fa-spin ml-2 hidden"></i>
+                    </button>
+                </div>
+
+                <!-- Submit Message -->
+                <div id="submit-message" class="text-center text-sm font-medium"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 animate-slideIn">
+            <div class="p-6">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-trash-alt text-red-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Delete Listing</h3>
+                        <p class="text-sm text-gray-600">This action cannot be undone</p>
+                    </div>
+                </div>
+                <p class="text-gray-700 mb-6">Are you sure you want to delete this dress listing? All associated
+                    data
+                    and images will be permanently removed.</p>
+                <div class="flex gap-3">
+                    <button id="cancel-delete"
+                        class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors">
+                        Cancel
+                    </button>
+                    <button id="confirm-delete"
+                        class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium transition-colors">
+                        Delete
+                    </button>
                 </div>
             </div>
-
-            <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-            <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-            <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-            <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-
-            <script>
-                // Firebase config
-                const firebaseConfig = {
-                    apiKey: "AIzaSyC25Tdl5GtnRXcHeBBGeIOuIcVX_WdiHP4",
-                    authDomain: "cars-8bdd6.firebaseapp.com",
-                    projectId: "cars-8bdd6",
-                    storageBucket: "cars-8bdd6.appspot.com",
-                    messagingSenderId: "597823500976",
-                    appId: "1:597823500976:web:71f23d89e38a5cdb010175"
-                };
-                firebase.initializeApp(firebaseConfig);
-                const db = firebase.firestore();
-
-                // Redirect to login if not signed in
-                firebase.auth().onAuthStateChanged(user => {
-                    if (user) {
-                        document.body.classList.remove('hidden');
-                        loadCars(); // Or whatever function you use to load content
-                    } else {
-                        window.location.href = "/login/";
-                    }
-                });
-
-                // Logout button
-                document.addEventListener("DOMContentLoaded", () => {
-                    const logoutBtn = document.getElementById("logout-btn");
-                    logoutBtn.addEventListener("click", e => {
-                        e.preventDefault();
-                        const user = firebase.auth().currentUser;
-                        if (user) {
-                            firebase.auth().signOut().then(() => {
-                                window.location.href = "/login/";
-                            }).catch(error => {
-                                alert("Error logging out. Please try again.");
-                                console.error(error);
-                            });
-                        } else {
-                            window.location.href = "/login/";
-                        }
-                    });
-                });
-
-                // UI Elements
-                const carsContainer = document.getElementById("cars-container");
-                const searchBar = document.getElementById("search-bar");
-                const suggestionsList = document.getElementById("car-suggestions");
-                const modal = document.getElementById("car-modal");
-                const alertBox = document.getElementById("alert-box");
-
-                // Data
-                const allCarModels = ["Ford", "Chevrolet", "GMC", "Cadillac", "Dodge", "Chrysler", "Jeep", "Ram", "Lincoln", "Tesla", "Buick", "BMW", "Mercedes-Benz",
-                    "Audi", "Volkswagen", "Jaguar", "Land Rover", "Bentley", "Maserati", "Alfa Romeo", "Fiat", "Peugeot", "Volvo", "Toyota", "Honda",
-                    "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"
-                ];
-                let cars = [];
-
-                // Suggestion Logic
-                function getCarCounts() {
-                    const counts = {};
-                    cars.forEach(car => {
-                        const firstWord = car.name.split(" ")[0].toLowerCase();
-                        counts[firstWord] = (counts[firstWord] || 0) + 1;
-                    });
-                    return counts;
-                }
-
-                function updateSuggestions(query) {
-                    const counts = getCarCounts();
-                    if (!query.trim()) {
-                        suggestionsList.style.display = "none";
-                        return;
-                    }
-
-                    const filteredModels = allCarModels.filter(model =>
-                        model.toLowerCase().includes(query.toLowerCase())
-                    );
-
-                    const matchingSuggestions = filteredModels.map(model => {
-                        const firstWord = model.split(" ")[0].toLowerCase();
-                        const count = counts[firstWord] || 0;
-                        return `<li class="px-4 py-2 border-b hover:bg-gray-100 cursor-pointer text-gray-700 text-sm" onclick="selectSuggestion('${model}')">${model} (${count})</li>`;
-                    });
-
-                    suggestionsList.innerHTML = matchingSuggestions.join("");
-                    suggestionsList.style.display = matchingSuggestions.length ? "block" : "none";
-                }
-
-                window.selectSuggestion = function (model) {
-                    searchBar.value = model;
-                    suggestionsList.style.display = "none";
-                    filterCars();
-                }
-
-                function filterCars() {
-                    const query = searchBar.value.trim().toLowerCase();
-                    const filtered = query ? cars.filter(car => car.name.toLowerCase().includes(query)) : cars;
-                    generateCars(filtered);
-                }
-                searchBar.addEventListener("input", () => {
-                    updateSuggestions(searchBar.value);
-                    filterCars();
-                });
-                document.addEventListener("click", (event) => {
-                    if (!searchBar.contains(event.target) && !suggestionsList.contains(event.target)) {
-                        suggestionsList.style.display = "none";
-                    }
-                });
-
-                function loadCars() {
-                    document.getElementById("loading-wrapper").style.display = "flex"; // show spinner
-
-                    db.collection("cars").onSnapshot((snapshot) => {
-                        cars = [];
-                        snapshot.forEach((doc) => {
-                            cars.push({ id: doc.id, ...doc.data() });
-                        });
-                        generateCars(cars);
-                        document.getElementById("loading-wrapper").style.display = "none"; // hide spinner
-                        updateSuggestions(""); // update search suggestions if you have this
-                    }, (error) => {
-                        console.error("Error loading cars:", error);
-                        document.getElementById("loading-wrapper").style.display = "none"; // hide spinner even on error
-                    });
-                }
-
-                // Generate Car Cards
-                function generateCars(filteredCars) {
-                    const noMatchMessage = document.getElementById("no-match-message");
-                    if (filteredCars.length > 0) {
-                        noMatchMessage.classList.add("hidden");
-                        carsContainer.innerHTML = filteredCars.map((car, index) => `
-      <div class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 relative">
-  <!-- Image container -->
-  <div class="relative w-full rounded-lg overflow-hidden pt-3">
-    <img loading="lazy" src="${car.image1}" alt="Car Image" class="w-full h-[200px] object-contain rounded-lg">
-    ${car.label && car.label.trim() !== "" ? `
-      <div class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-br-lg whitespace-nowrap">
-        ${car.label}
-      </div>` : ""}
-  </div>
-
-  <!-- Car Name -->
-  <p onclick='openModal(${JSON.stringify(car)})' class="flex items-center text-left font-bold text-xl text-gray-800 mt-3 cursor-pointer mx-2">
-  <span class="inline-block w-1 h-5 bg-blue-600 rounded-sm mr-1.5"></span>
-  ${car.name}
-  <i class="fas fa-circle-info text-sm ml-2 text-gray-800"></i>
-</p>
-
- <!-- Details -->
-  <div class="flex justify-between items-center text-sm text-gray-800 my-4">
-    <div class="flex-1 text-center relative px-2">
-      <p class="text-[0.6rem] font-medium text-gray-500">Term</p>
-      <p class="font-semibold">${car.term} Months</p>
-      <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
-    </div>
-    <div class="flex-1 text-center relative px-2">
-      <p class="text-[0.6rem] font-medium text-gray-500">Annual Mileage</p>
-      <p class="font-semibold">${car.mileage} Miles</p>
-      <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
-    </div>
-    <div class="flex-1 text-center px-2">
-      <p class="text-[0.6rem] font-medium text-gray-500">Due At Signing</p>
-      <p class="font-semibold">$${car.due || "0"}</p>
-    </div>
-  </div>
-
-  <!-- Price + Button -->
- <div class="mx-2 py-2 flex items-center justify-between">
-  <p class="text-3xl font-bold text-gray-800">$${car.price}
-    <span class="text-sm text-gray-600 font-semibold">/ Month</span>
-  </p>
-  <button onclick='deleteCar("${car.id}")' 
-  class="bg-red-600 hover:bg-red-700 text-white text-sm font-medium ml-3 py-1.5 px-4 rounded-lg">
-  Delete
-</button>
         </div>
-      </div>`).join("");
-                    } else {
-                        carsContainer.innerHTML = "";
-                        noMatchMessage.classList.remove("hidden");
-                    }
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+    <script>
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyC25Tdl5GtnRXcHeBBGeIOuIcVX_WdiHP4",
+            authDomain: "cars-8bdd6.firebaseapp.com",
+            projectId: "cars-8bdd6",
+            storageBucket: "cars-8bdd6.firebasestorage.app",
+            messagingSenderId: "597823500976",
+            appId: "1:597823500976:web:71f23d89e38a5cdb010175"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // Authentication State Management
+        firebase.auth().onAuthStateChanged(user => {
+            if (user) {
+                document.body.classList.remove('hidden');
+                loadCars();
+            } else {
+                window.location.href = "/login/";
+            }
+        });
+
+        // Logout Functionality
+        function setupLogoutHandlers() {
+            const logoutBtns = ['logout-btn', 'mobile-logout-btn'];
+            logoutBtns.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.addEventListener("click", handleLogout);
+                }
+            });
+        }
+
+        function handleLogout(e) {
+            e.preventDefault();
+            firebase.auth().signOut().then(() => {
+                window.location.href = "/login/";
+            }).catch(error => {
+                showToast("Error logging out. Please try again.", "error");
+                console.error(error);
+            });
+        }
+
+        // Toast Notification System
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            const bgColor = {
+                'success': 'bg-green-500',
+                'error': 'bg-red-500',
+                'warning': 'bg-yellow-500',
+                'info': 'bg-blue-500'
+            }[type] || 'bg-blue-500';
+
+            const icon = {
+                'success': 'fas fa-check-circle',
+                'error': 'fas fa-exclamation-circle',
+                'warning': 'fas fa-exclamation-triangle',
+                'info': 'fas fa-info-circle'
+            }[type] || 'fas fa-info-circle';
+
+            toast.className = `${bgColor} text-white px-4 py-3 rounded-lg shadow-lg flex items-center transform translate-x-full transition-transform duration-300`;
+            toast.innerHTML = `
+                <i class="${icon} mr-2"></i>
+                <span class="flex-1">${message}</span>
+                <button onclick="this.parentElement.remove()" class="ml-2 text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            container.appendChild(toast);
+
+            // Slide in
+            setTimeout(() => {
+                toast.classList.remove('translate-x-full');
+            }, 10);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.classList.add('translate-x-full');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 5000);
+        }
+
+        // Modal Management
+        function openAddCarModal() {
+            const modal = document.getElementById("addCarModal");
+            modal.classList.remove("hidden");
+            document.body.classList.add("modal-open");
+        }
+
+        function closeAddCarModal() {
+            const modal = document.getElementById("addCarModal");
+            modal.classList.add("hidden");
+            document.body.classList.remove("modal-open");
+            resetForm();
+        }
+
+        function resetForm() {
+            document.getElementById("car-form").reset();
+            document.getElementById("image-preview").innerHTML = "";
+            document.getElementById("submit-message").textContent = "";
+            document.getElementById("submit-btn-text").textContent = "Create Listing";
+            document.getElementById("submit-spinner").classList.add("hidden");
+        }
+
+        // Image Upload Handling
+        function setupImageUpload() {
+            const dropzone = document.getElementById("dropzone-file");
+            const preview = document.getElementById("image-preview");
+
+            dropzone.addEventListener("change", handleImageSelection);
+
+            // Drag and drop functionality
+            const dropArea = dropzone.parentElement;
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            dropArea.addEventListener('drop', handleDrop, false);
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function highlight(e) {
+                dropArea.classList.add('border-blue-400', 'bg-blue-50');
+            }
+
+            function unhighlight(e) {
+                dropArea.classList.remove('border-blue-400', 'bg-blue-50');
+            }
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                dropzone.files = files;
+                handleImageSelection();
+            }
+        }
+
+        function handleImageSelection() {
+            const preview = document.getElementById("image-preview");
+            const files = document.getElementById("dropzone-file").files;
+
+            preview.innerHTML = "";
+
+            if (!files.length) return;
+
+            Array.from(files).forEach((file, index) => {
+                if (!file.type.startsWith('image/')) {
+                    showToast(`${file.name} is not a valid image file`, 'error');
+                    return;
                 }
 
-                // Modal Functions
-                let scrollTop = 0;
-
-                window.openModal = function (car) {
-                    document.getElementById("modal-title").innerText = car.name;
-                    document.getElementById("modal-image2").src = car.image2;
-                    document.getElementById("modal-features").innerHTML = car.features.map(f => `<li>${f}</li>`).join("");
-                    document.getElementById("modal-additional").innerText = car.additional || "";
-                    document.getElementById("modal-color").innerText = car.color;
-                    modal.style.display = "flex";
-
-                    scrollTop = window.scrollY;
-                    document.body.classList.add("modal-open");
-                    document.body.style.top = `-${scrollTop}px`;
-                };
-
-                window.closeModal = function () {
-                    modal.style.display = "none";
-                    document.body.classList.remove("modal-open");
-
-                    document.body.style.top = "";
-                    window.scrollTo(0, scrollTop);
-                };
-
-                // add Car Button
-                function openAddCarModal() {
-                    const modal = document.getElementById("addCarModal");
-                    modal.classList.remove("hidden");
-                    modal.classList.add("flex"); // For Tailwind's flex modal centering
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast(`${file.name} is too large. Maximum size is 5MB`, 'error');
+                    return;
                 }
 
-                function closeAddCarModal() {
-                    const modal = document.getElementById("addCarModal");
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imageContainer = document.createElement("div");
+                    imageContainer.className = "relative group";
+                    imageContainer.innerHTML = `
+                        <img src="${e.target.result}" 
+                             class="w-20 h-20 object-cover rounded-lg border-2 border-gray-200 group-hover:border-primary-400 transition-colors" 
+                             alt="Preview ${index + 1}">
+                        <button type="button" onclick="this.parentElement.remove()" 
+                                class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100 flex items-center justify-center">
+                            <i class="fas fa-times text-xs"></i>
+                        </button>
+                    `;
+                    preview.appendChild(imageContainer);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Form Submission
+        async function submitCar() {
+            const submitBtn = document.getElementById("submit-btn-text");
+            const spinner = document.getElementById("submit-spinner");
+            const message = document.getElementById("submit-message");
+
+            // Show loading state
+            submitBtn.textContent = "Creating...";
+            spinner.classList.remove("hidden");
+
+            try {
+                // Get form data
+                const formData = getFormData();
+
+                // Validate form
+                if (!validateForm(formData)) {
+                    throw new Error("Please fill in all required fields");
+                }
+
+                // Upload images
+                const imageUrls = await uploadImages();
+
+                // Save to database
+                await db.collection("cars").add({
+                    ...formData,
+                    images: imageUrls,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    userId: firebase.auth().currentUser.uid
+                });
+
+                showToast("Car listing created successfully!", "success");
+                closeAddCarModal();
+                loadCars(); // Refresh the listings
+
+            } catch (error) {
+                console.error(error);
+                showToast(error.message || "Error creating listing. Please try again.", "error");
+            } finally {
+                // Reset button state
+                submitBtn.textContent = "Create Listing";
+                spinner.classList.add("hidden");
+            }
+        }
+
+        function getFormData() {
+
+            return {
+                car: {
+                    name: document.getElementById("car-name").value.trim(),
+                    make: document.getElementById("car-make").value.trim()
+                },
+                details: {
+                    term: document.getElementById("term").value,
+                    mileage: document.getElementById("mileage").value,
+                    features: document.getElementById("features").value.trim(),
+                    label: document.getElementById("label").value.trim(),
+                    exteriorColor: document.getElementById("exterior-color").value,
+                    interiorColor: document.getElementById("interior-color").value
+                },
+                pricing: {
+                    price: parseFloat(document.getElementById("price").value) || 0,
+                    due: parseFloat(document.getElementById("due").value) || 0
+                },
+                additional: document.getElementById("additional").value.trim()
+            };
+        }
+
+        function validateForm(formData) {
+            const required = [
+                formData.car.name,
+                formData.car.make,
+                formData.details.term,
+                formData.details.mileage,
+                formData.details.features,
+                formData.details.exteriorColor,
+                formData.details.interiorColor,
+                formData.pricing.price,
+                formData.pricing.due
+            ];
+
+            const images = document.getElementById("dropzone-file").files;
+
+            return required.every(field => field && field !== "") &&
+                images.length > 0;
+        }
+
+        async function uploadImages() {
+            const files = document.getElementById("dropzone-file").files;
+            const uploadPromises = [];
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const fileName = `car_images/${Date.now()}_${Math.random().toString(36).substr(2, 9)}_${file.name}`;
+                const storageRef = storage.ref(fileName);
+                uploadPromises.push(
+                    storageRef.put(file).then(snapshot => snapshot.ref.getDownloadURL())
+                );
+            }
+
+            return Promise.all(uploadPromises);
+        }
+
+        // Load and DisplayCars
+        async function loadCars() {
+            const container = document.getElementById("cars-container");
+            const loading = document.getElementById("loading-wrapper");
+            const noResults = document.getElementById("no-match-message");
+
+            try {
+                loading.classList.remove("hidden");
+                container.innerHTML = "";
+                noResults.classList.add("hidden");
+
+                const querySnapshot = await db.collection("cars")
+                    .orderBy("timestamp", "desc")
+                    .get();
+
+                loading.classList.add("hidden");
+
+                if (querySnapshot.empty) {
+                    noResults.classList.remove("hidden");
+                    return;
+                }
+
+                querySnapshot.forEach(doc => {
+                    const car = doc.data();
+                    const carCard = createCarCard(doc.id, car);
+                    container.appendChild(carCard);
+                });
+
+            } catch (error) {
+                console.error("Error loading cars:", error);
+                loading.classList.add("hidden");
+                showToast("Error loading listings. Please refresh the page.", "error");
+            }
+
+        }
+
+        function createCarCard(id, car) {
+            const card = document.createElement("div");
+            card.className = "bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 card-hover overflow-hidden animate-fadeInUp";
+
+            const mainImage = car.images && car.images.length > 0 ? car.images[0] : '/images/placeholder-car.jpg';
+            const formattedprice = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(car.pricing.price);
+            const formatteddue = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(car.pricing.due);
+
+            card.innerHTML = `
+                <div class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 relative">
+    <!-- Image container -->
+    <div class="relative w-full rounded-lg overflow-hidden pt-3">
+        <img loading="lazy" src="${mainImage}" alt="Car Image" class="w-full h-[200px] object-cover rounded-lg">
+        ${car.details.label && car.details.label.trim() !== "" ? `
+        <div
+            class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-br-lg whitespace-nowrap">
+            ${car.details.label}
+        </div>` : ""}
+    </div>
+
+    <!-- Car Name -->
+    <p onclick='openModal(${JSON.stringify(car)})'
+        class="flex items-center text-left font-bold text-lg text-gray-800 mt-3 cursor-pointer mx-2">
+        <span class="inline-block w-1 h-5 bg-blue-600 rounded-sm mr-1.5"></span>
+        ${car.car.name}
+        <i class="fas fa-circle-info text-sm ml-2 text-gray-800"></i>
+    </p>
+
+
+    <!-- Details -->
+    <div class="flex justify-between items-center text-sm text-gray-800 my-4">
+        <div class="flex-1 text-center relative px-2">
+            <p class="text-[0.6rem] font-medium text-gray-500">Term</p>
+            <p class="font-semibold">${car.details.term} Months</p>
+            <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
+        </div>
+        <div class="flex-1 text-center relative px-2">
+            <p class="text-[0.6rem] font-medium text-gray-500">Annual Mileage</p>
+            <p class="font-semibold">${car.details.mileage} Miles</p>
+            <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
+        </div>
+        <div class="flex-1 text-center px-2">
+            <p class="text-[0.6rem] font-medium text-gray-500">Due At Signing</p>
+            <p class="font-semibold">$${car.pricing.due || "0"}</p>
+        </div>
+    </div>
+
+    <!-- Price + Button -->
+    <div class="mx-2 py-2 flex items-center justify-between">
+        <p class="text-3xl font-bold text-gray-800">$${car.pricing.price}
+            <span class="text-sm text-gray-600 font-semibold">/ Month</span>
+        </p>
+        <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${car.car.name}"
+            target="_blank"
+            class="bg-blue-600 hover:bg-blue-700 text-white  text-sm font-medium ml-3 py-1.5 px-4 rounded-lg">
+            Get Quote
+        </a>
+    </div>
+</div>`;
+
+            return card;
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadCars();
+        });
+
+        // Search and Filter Functionality
+        function filterCars() {
+            const searchTerm = document.getElementById("search-bar").value.toLowerCase();
+            const cards = document.querySelectorAll("#cars-container > div");
+            const noResults = document.getElementById("no-match-message");
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    card.style.display = "block";
+                    visibleCount++;
+                } else {
+                    card.style.display = "none";
+                }
+            });
+
+            noResults.classList.toggle("hidden", visibleCount > 0 || searchTerm === "");
+        }
+
+        function updateSuggestions() {
+            // Implementation for search suggestions can be added here
+            // For now, we'll keep it simple with the filter function
+            filterCars();
+        }
+
+        // Delete Functionality
+        let carToDelete = null;
+
+        function deleteCar(id) {
+            carToDelete = id;
+            const modal = document.getElementById("delete-modal");
+            modal.classList.remove("hidden");
+        }
+
+        function setupDeleteModal() {
+            const cancelBtn = document.getElementById("cancel-delete");
+            const confirmBtn = document.getElementById("confirm-delete");
+            const modal = document.getElementById("delete-modal");
+
+            cancelBtn.addEventListener("click", () => {
+                modal.classList.add("hidden");
+                carToDelete = null;
+            });
+
+            confirmBtn.addEventListener("click", async () => {
+                if (!carToDelete) return;
+
+                try {
+                    await db.collection("cars").doc(carToDelete).delete();
+                    showToast("Listing deleted successfully", "success");
                     modal.classList.add("hidden");
-                    modal.classList.remove("flex");
+                    loadCars();
+                } catch (error) {
+                    console.error("Error deleting car:", error);
+                    showToast("Error deleting listing. Please try again.", "error");
                 }
 
-                // Submit Car Function
-                function submitCar() {
-                    const name = document.getElementById('car-name').value;
-                    const make = document.getElementById('car-make').value;
-                    const image1 = document.getElementById('car-image1').value;
-                    const image2 = document.getElementById('car-image2').value;
-                    const term = document.getElementById('car-term').value;
-                    const mileage = document.getElementById('car-mileage').value;
-                    const due = document.getElementById('car-due').value;
-                    const price = document.getElementById('car-price').value;
-                    const label = document.getElementById('car-label').value;
-                    const featuresInput = document.getElementById('car-features').value;
-                    const features = featuresInput.split(',').map(f => f.trim()).filter(f => f);
-                    const additional = document.getElementById('car-additional').value;
-                    const exteriorColor = document.getElementById('car-exterior-color').value;
-                    const interiorColor = document.getElementById('car-interior-color').value;
-                    const msg = document.getElementById('Submit-message');
-                    msg.style.color = ''; // Reset color
-                    msg.classList.remove('show'); // Hide any old message immediately
-                    // Validation
-                    if (!name || !make || !image1 || !image2 || !term || !mileage || !due || !price || features.length === 0 || !exteriorColor) {
-                        msg.innerHTML = '❗Please fill in all required fields.';
-                        msg.style.color = 'red';
-                        msg.classList.add('show');
-                        setTimeout(() => {
-                            msg.classList.remove('show');
-                        }, 3000);
-                        return;
-                    }
-                    // Add to Firestore
-                    db.collection("cars").add({
-                        name,
-                        make,
-                        image1,
-                        image2,
-                        term,
-                        mileage,
-                        due,
-                        price,
-                        label,
-                        features,
-                        additional,
-                        exteriorColor,
-                        interiorColor
-                    })
+                carToDelete = null;
+            });
+        }
 
-                        .then(() => {
-                            msg.innerHTML = '✅ Car added successfully!';
-                            msg.style.color = 'green';
-                            msg.classList.add('show');
-                            setTimeout(() => {
-                                msg.classList.remove('show');
-                            }, 3000);
-                            document.getElementById('car-form').reset();
-                        })
-                        .catch((error) => {
-                            msg.innerHTML = '❌ Error adding car: ' + error.message;
-                            msg.style.color = 'red';
-                            msg.classList.add('show');
-                            setTimeout(() => {
-                                msg.classList.remove('show');
-                            }, 4000);
-                            console.error("Error: ", error);
-                        });
-                }
+        // Edit Functionality (placeholder for future implementation)
+        function editCar(id) {
+            showToast("Edit functionality coming soon!", "info");
+        }
 
-                // Delete Function
-                let carIdToDelete = null;
+        // Initialize Everything
+        document.addEventListener("DOMContentLoaded", () => {
+            setupLogoutHandlers();
+            setupImageUpload();
+            setupDeleteModal();
+        });
 
-                function deleteCar(carId) {
-                    carIdToDelete = carId;
-                    document.getElementById("delete-modal").classList.remove("hidden");
-                }
-                // Modal button actions
-                document.getElementById("cancel-delete").addEventListener("click", () => {
-                    carIdToDelete = null;
-                    document.getElementById("delete-modal").classList.add("hidden");
-                });
-                document.getElementById("confirm-delete").addEventListener("click", async () => {
-                    if (!carIdToDelete) return;
-                    try {
-                        await db.collection("cars").doc(carIdToDelete).delete();
-                        showAlert("Car deleted successfully.", "success");
-                        loadCars(); // Refresh the list
-                    } catch (error) {
-                        console.error("Error deleting car:", error);
-                        showAlert("Error deleting car. Please try again.", "error");
-                    }
-                    document.getElementById("delete-modal").classList.add("hidden");
-                    carIdToDelete = null;
-                });
-
-                //Alert msg
-                function showAlert(message, type = "success") {
-                    const alertBox = document.getElementById("alert-box");
-
-                    const colors = {
-                        success: {
-                            bg: "bg-white",
-                            iconBg: "bg-emerald-500",
-                            iconPath: "M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z",
-                            titleClass: "font-semibold text-emerald-500",
-                            messageClass: "text-sm text-gray-600",
-                            title: "Success",
-                        },
-                        error: {
-                            bg: "bg-white",
-                            iconBg: "bg-red-500",
-                            iconPath: "M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM26.6667 13.3333L23.3334 16.6666L20 20L16.6667 23.3333L13.3334 26.6666L10 23.3333L13.3334 20L16.6667 16.6666L20 13.3333L23.3334 10L26.6667 13.3333Z",
-                            titleClass: "font-semibold text-red-500",
-                            messageClass: "text-sm text-red-700",
-                            title: "Error",
-                        }
-                    };
-
-                    const c = type === "success" ? colors.success : colors.error;
-
-                    alertBox.innerHTML = `
-    <div class="flex w-full max-w-sm overflow-hidden rounded-lg shadow-md ${c.bg}">
-      <div class="flex items-center justify-center w-12 ${c.iconBg}">
-        <svg class="w-6 h-6 text-white fill-current" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-          <path d="${c.iconPath}" />
-        </svg>
-      </div>
-      <div class="px-4 py-2 -mx-3">
-        <div class="mx-3">
-          <span class="${c.titleClass}">${c.title}</span>
-          <p class="${c.messageClass}">${message}</p>
-        </div>
-      </div>
-    </div>
-  `;
-
-                    alertBox.classList.remove("hidden");
-                    alertBox.style.opacity = "1";
-
-                    // Auto-hide after 2 seconds
-                    setTimeout(() => {
-                        hideAlert();
-                    }, 2000);
-                }
-
-                function hideAlert() {
-                    const alertBox = document.getElementById("alert-box");
-                    alertBox.style.opacity = "0";
-                    setTimeout(() => {
-                        alertBox.classList.add("hidden");
-                        alertBox.innerHTML = "";
-                    }, 300);
-                }
-
-            </script>
+        // Close modals when clicking outside
+        document.addEventListener("click", (e) => {
+            if (e.target.id === "addCarModal") {
+                closeAddCarModal();
+            }
+            if (e.target.id === "delete-modal") {
+                document.getElementById("delete-modal").classList.add("hidden");
+                carToDelete = null;
+            }
+        });
+    </script>
 </body>
 
 </html>
