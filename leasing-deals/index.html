@@ -26,18 +26,7 @@
 </head>
 
 <style>
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    /* IE and Edge */
-    scrollbar-width: none;
-    /* Firefox */
-  }
-
-  body.modal-open {
+  .modal-open {
     overflow-y: scroll;
     position: fixed;
     top: 0;
@@ -57,19 +46,208 @@
     }
   }
 
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
   .animate-fadeInUp {
-    animation: fadeInUp 0.3s ease-in-out forwards;
+    animation: fadeInUp 0.4s ease-out forwards;
+  }
+
+  .animate-slideIn {
+    animation: slideIn 0.3s ease-out forwards;
+  }
+
+  /* Custom scrollbar for select */
+  .custom-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scroll::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  .custom-scroll::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+    border-radius: 10px;
+  }
+
+  .custom-scroll::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+  }
+
+  /* Loading animation */
+  .loading-dots {
+    display: inline-flex;
+    gap: 4px;
+  }
+
+  .loading-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #3b82f6;
+    animation: pulse 1.4s ease-in-out infinite both;
+  }
+
+  .loading-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .loading-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  .loading-dot:nth-child(4) {
+    animation-delay: 0.6s;
+  }
+
+  @keyframes pulse {
+
+    0%,
+    80%,
+    100% {
+      transform: scale(0.8);
+      opacity: 0.5;
+    }
+
+    40% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* Image Slider Dots */
+  * Image slider styles */ .image-slider-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .image-slider {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .slider-image {
+    flex-shrink: 0;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    height: 8px;
+    z-index: 10;
+    margin: 7px auto 0;
+    width: fit-content;
+  }
+
+  .slider-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: rgba(8, 8, 8, 0.5);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .slider-dot.active {
+    background-color: rgba(4, 4, 4, 0.9);
+    transform: scale(1.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .slider-dot:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.1);
+  }
+
+  /* Navigation arrows */
+  .slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    opacity: 0;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .slider-nav:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .slider-nav.prev {
+    left: 8px;
+  }
+
+  .slider-nav.next {
+    right: 8px;
+  }
+
+  .image-slider-container:hover .slider-nav {
+    opacity: 1;
+  }
+
+  /* Hide navigation and dots for single images */
+  .single-image .slider-nav {
+    display: none;
   }
 </style>
 
-<body>
+<body class="bg-[#f9f9f9]/80">
   <!-- Navbar -->
-  <section class="bg-white  border-b">
-    <nav x-data="{ isOpen: false }" class="max-w-[2000px] p-5 mx-auto lg:flex lg:justify-between lg:items-center">
-      <div class="flex items-center justify-between">
+  <header class="bg-white border-b border-gray-200">
+    <nav x-data="{ isOpen: false }" class="max-w-[2000px] p-5 mx-auto lg:px-8 lg:py-5">
+      <div class="flex justify-between items-center relative">
+        <!-- Logo -->
         <a href="/">
           <img class="w-auto h-5 sm:h-7" src="/images/logo-blue.png" alt="logo">
         </a>
+
+        <!-- Desktop Navigation -->
+        <div class="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-12">
+          <a href="/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Home</a>
+          <a href="/leasing-deals/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Leasing
+            Deals</a>
+          <a href="/about-us/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">About us</a>
+          <a href="/blog/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Blog</a>
+          <a href="/contact/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Contact</a>
+        </div>
+
+
+        <!-- Login -->
+        <div class="hidden lg:flex items-center">
+          <a class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-blue-600 rounded-lg lg:mt-0 hover:bg-blue-500 lg:w-auto"
+            href="/login/">
+            Log in
+          </a>
+        </div>
 
         <!-- Mobile menu button -->
         <div class="flex lg:hidden">
@@ -91,210 +269,256 @@
 
       <!-- Mobile Menu open: "block", Menu closed: "hidden"-->
       <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
-        class="absolute inset-x-0 z-20 w-full px-6 py-6 transition-all duration-300 ease-in-out bg-white shadow-md lg:bg-transparent lg: lg:shadow-none  lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center">
-        <div class="flex flex-col space-y-4 lg:mt-0 lg:flex-row lg:-px-8 lg:space-y-0">
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500" href="/"
-            data-link>Home</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-            href="/leasing-deals" data-link>Leasing Deals</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-            href="/about-us" data-link>About us</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500" href="/blog"
-            data-link>Blog</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-            href="/contact" data-link>Contact</a>
+        class="lg:hidden absolute inset-x-0 transition-all duration-300 ease-in-out bg-white border-b border-gray-200 shadow-lg z-40">
+        <div class="px-4 py-6 space-y-4">
+          <a href="/"
+            class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Home</a>
+          <a href="/leasing-deals/"
+            class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Leasing
+            Deals</a>
+          <a href="/about-us/"
+            class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">About us</a>
+          <a href="/blog/"
+            class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Blog</a>
+          <a href="/contact/"
+            class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Contact</a>
+          <a class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-blue-600 rounded-lg lg:mt-0 hover:bg-blue-500 lg:w-auto"
+            href="/login/">
+            Log in
+          </a>
         </div>
-
-        <a class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-blue-600 rounded-lg lg:mt-0 hover:bg-blue-500 lg:w-auto"
-          href="/login/">
-          Log in
-        </a>
       </div>
     </nav>
-  </section>
+  </header>
+
+  <!-- Filter backdrop for mobile -->
+  <div id="filter-backdrop" class="filter-backdrop" onclick="closeFilterSidebar()"></div>
 
   <div class="max-w-[2000px] mx-auto flex flex-col md:flex-row md:min-h-screen relative">
     <!-- FilterSidebar -->
-    <aside class="absolute top-0 left-0 z-50 h-full w-2/3 bg-white shadow-lg px-6 py-2 overflow-y-auto no-scrollbar transform transition-transform duration-500
+    <aside class="absolute top-0 left-0 z-50 h-full w-2/3 bg-white shadow-lg transform transition-transform duration-500
          -translate-x-full md:translate-x-0 md:static md:w-[300px] md:h-auto md:shadow-none md:border-r md:space-y-4"
       id="filterSidebar">
-      <div class="flex justify-end py-2 md:hidden">
-        <button id="closeFilterBtn" class="text-gray-600 hover:text-black">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="flex justify-between items-center mb-2">
-        <h2 class="text-xl font-semibold">Filters</h2>
-        <button onclick="resetFilters()" class="text-sm text-blue-600 hover:underline font-medium">
-          Reset All
-        </button>
-      </div>
-
-      <!-- Price Range -->
-      <div>
-        <button onclick="toggleSection('price')"
-          class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
-          Price
-          <span id="icon-price">+</span>
-        </button>
-        <div id="section-price" class="mt-5 hidden">
-          <input type="range" id="priceRange" min="100" max="2000" step="10" class="w-full" value="1000"
-            oninput="updatePriceLabel()">
-          <p class="text-sm text-gray-600 mt-1">Up to $<span id="priceLabel">500</span></p>
+      <div class="filter-sidebar-scroll px-6 py-2">
+        <div class="flex justify-end py-2 md:hidden">
+          <button id="closeFilterBtn" onclick="closeFilterSidebar()" class="text-gray-600 hover:text-black">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
-      </div>
-
-      <!-- Makes -->
-      <div>
-        <button onclick="toggleSection('makes')"
-          class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
-          Makes
-          <span id="icon-makes">+</span>
-        </button>
-        <div id="section-makes" class="mt-5 space-y-1 hidden">
-          <!-- Populated by JavaScript -->
+        <div class="flex justify-between items-center mb-2">
+          <h2 class="text-xl font-semibold">Filters</h2>
+          <button onclick="resetFilters()" class="text-sm text-blue-600 hover:underline font-medium">
+            Reset All
+          </button>
         </div>
-      </div>
 
-      <!-- Color -->
-      <div>
-        <button onclick="toggleSection('exteriorColor')"
-          class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
-          Color
-          <span id="icon-exteriorColor">+</span>
-        </button>
-        <div id="section-exteriorColor" class="mt-5 space-y-1 hidden">
-          <!-- Populated by JavaScript -->
+        <!-- Price Range -->
+        <div>
+          <button onclick="toggleSection('price')"
+            class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+            Price
+            <span id="icon-price">+</span>
+          </button>
+          <div id="section-price" class="mt-5 hidden">
+            <input type="range" id="priceRange" min="100" max="2000" step="10" class="w-full" value="2000"
+              oninput="updatePriceLabel()">
+            <p class="text-sm text-gray-600 mt-1">Up to $<span id="priceLabel">0</span></p>
+          </div>
         </div>
-      </div>
 
-      <!-- Features -->
-      <div>
-        <button onclick="toggleSection('features')"
-          class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
-          Features
-          <span id="icon-features">+</span>
-        </button>
-        <div id="section-features" class="mt-5 space-y-1 hidden">
-          <!-- Populated by JavaScript -->
+        <!-- Makes -->
+        <div>
+          <button onclick="toggleSection('makes')"
+            class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+            Makes
+            <span id="icon-makes">+</span>
+          </button>
+          <div id="section-makes" class="mt-5 space-y-1 hidden">
+            <!-- Populated by JavaScript -->
+          </div>
         </div>
-      </div>
 
-      <!-- Apply Filters Button -->
-      <div class="mt-6">
-        <button onclick="applyFilters()"
-          class="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
-          Apply Filters
-        </button>
-      </div>
+        <!-- Color -->
+        <div>
+          <button onclick="toggleSection('exteriorColor')"
+            class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+            Color
+            <span id="icon-exteriorColor">+</span>
+          </button>
+          <div id="section-exteriorColor" class="mt-5 space-y-1 hidden">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Features -->
+        <div>
+          <button onclick="toggleSection('features')"
+            class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+            Features
+            <span id="icon-features">+</span>
+          </button>
+          <div id="section-features" class="mt-5 space-y-1 hidden">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Apply Filters Button -->
+        <div class="mt-6">
+          <button onclick="applyFilters()"
+            class="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200">
+            Apply Filters
+          </button>
+        </div>
     </aside>
 
 
-    <section id="deals-container" class="bg-[#f9f9f9]/80 flex-1 overflow-auto">
-
-      <div class="px-8 py-5 mx-auto flex items-center justify-end md:space-x-4">
-        <span class="hidden md:block text-sm text-gray-700 font-medium">Search Cars</span>
-        <div class="w-full md:w-[400px] relative text-center">
-          <!-- Search Input -->
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
-            </svg>
-          </span>
-          <input id="search-bar" type="text" placeholder="Search cars..." onkeyup="filterCars()"
-            oninput="updateSuggestions()" autocomplete="off"
-            class="w-full text-sm pl-10 pr-4 py-1.5 text-gray-700 border border-gray-300 rounded-full focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent" />
-
-          <!-- Suggestions Dropdown -->
-          <ul id="car-suggestions"
-            class="absolute z-10 w-full mt-0.5 bg-white border border-gray-200 rounded-lg shadow-lg max-h-52 overflow-y-auto no-scrollbar hidden text-sm">
-          </ul>
-        </div>
-        <button id="openFilterBtn"
-          class="md:hidden text-white ml-4 mr-2 rounded-full z-60 flex items-center justify-center">
-          <img src="/images/FilterIcon.png" alt="Close" width="30" height="30">
-        </button>
-      </div>
-
-      <div class="px-8 mx-auto mb-5">
-        <!-- Loading Dots -->
-        <div id="loading-wrapper" class="flex justify-center items-center h-[70vh] w-full">
-          <div class="flex space-x-2">
-            <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-            <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-            <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce"></div>
-            <div class="h-3 w-3 bg-gray-600 rounded-full animate-bounce [animation-delay:0.15s]"></div>
-          </div>
-        </div>
-        <!-- Deals Container -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="cars-container">
-        </div>
-
-        <p id="no-match-message" class="text-center text-gray-500 pb-72 hidden">
-          Sorry, no match found...
-        </p>
-
-        <div id="pagination-wrapper" class="my-5 flex justify-center">
-          <div id="pagination" class="pagination-buttons flex flex-wrap gap-2"></div>
-        </div>
-
-
-        <!-- Modal -->
-        <div id="car-modal"
-          class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-[1px] flex items-center justify-center z-50 hidden transition-opacity duration-300">
-          <div
-            class="bg-white rounded-xl shadow-lg w-full mx-6 max-w-md p-3 relative animate-fadeInUp duration-300 text-left">
-            <img id="modal-image2" src="" alt="Car Image" class="w-full h-44 object-cover rounded-lg mb-3" />
-            <div class="px-1">
-              <h2 id="modal-title" class="text-xl font-bold mb-3"></h2>
-              <h3 class="text-lg font-semibold pb-2">
-                <i class="fas fa-list-alt text-gray-900 mr-2"></i>Features
-              </h3>
-              <ul id="modal-features"
-                class="text-sm text-gray-700 columns-2 gap-5 border-b border-gray-200 pb-5 list-disc list-inside"></ul>
-
-              <h3 class="text-lg font-semibold pt-4 pb-2">
-                <i class="fas fa-plus text-gray-900 mr-2"></i>Additional
-              </h3>
-              <p id="modal-additional" class="text-sm text-gray-700 pb-3"></p>
-
-              <h3 class="text-lg font-semibold pt-4 pb-2">
-                Color
-              </h3>
-              <p id="modal-exteriorColor" class="text-sm text-gray-700 pb-3"></p>
+    <main id="deals-container" class="flex-1 p-5 min-h-screen">
+      <!-- Header with Search -->
+      <div class="mb-3">
+        <div class="flex flex-col gap-4">
+          <!-- Title and Search Row -->
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 class="text-xl font-bold text-gray-900">Car Listings</h1>
             </div>
-            <button onclick="closeModal()"
-              class="absolute top-4 right-5 text-white hover:text-gray-700 text-xl leading-none focus:outline-none"
-              aria-label="Close modal">
-              <i class="fas fa-times"></i>
-            </button>
+
+            <!-- Search Bar -->
+            <div class="relative w-full sm:w-96">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i class="fas fa-search text-gray-400"></i>
+              </div>
+              <input id="search-bar" type="text" placeholder="Search your listings..." onkeyup="filterCars()"
+                oninput="updateSuggestions()" autocomplete="off"
+                class="w-full text-sm pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+
+              <!-- Suggestions Dropdown -->
+              <ul id="cars-suggestions"
+                class="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto custom-scroll hidden">
+              </ul>
+            </div>
+          </div>
+
+          <!-- Controls Row - Sort By and Filter Pills -->
+          <div class="flex items-center justify-between gap-4">
+            <!-- Sort By and Filter Pills -->
+            <div class="flex items-center gap-3">
+              <!-- Sort By Dropdown -->
+              <div class="relative" x-data="{ open: false }">
+                <button @click="open = !open" @click.away="open = false"
+                  class="flex items-center gap-2 px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors">
+                  <i class="fas fa-sort text-gray-500"></i>
+                  <span id="sort-label">Sort By</span>
+                  <i class="fas fa-chevron-down text-xs text-gray-500 transition-transform"
+                    :class="{ 'rotate-180': open }"></i>
+                </button>
+
+                <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                  x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                  x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100"
+                  x-transition:leave-end="opacity-0 scale-95"
+                  class="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
+                  <div class="py-1">
+                    <button onclick="sortCars('price-low')"
+                      class="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
+                      Price: Low to High
+                    </button>
+                    <button onclick="sortCars('price-high')"
+                      class="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
+                      Price: High to Low
+                    </button>
+                    <button onclick="sortCars('newest')"
+                      class="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
+                      Newest First
+                    </button>
+                    <button onclick="sortCars('oldest')"
+                      class="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
+                      Oldest First
+                    </button>
+                    <button onclick="sortCars('make')"
+                      class="w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
+                      Make (A-Z)
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Filter Toggle Button -->
+              <button id="filter-toggle" onclick="toggleFilterSidebar()"
+                class="flex items-center gap-2 px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors lg:hidden">
+                <i class="fas fa-filter text-gray-500"></i>
+                <span>Filter</span>
+              </button>
+
+              <!-- Active Filters Pills (Desktop) -->
+              <div id="active-filters" class="hidden lg:flex items-center gap-2">
+                <!-- Active filter pills will be populated here -->
+              </div>
+            </div>
+
+            <!-- Results Count -->
+            <div class="text-xs text-gray-600">
+              <span id="results-count">0</span> listings found
+            </div>
+          </div>
+
+          <!-- Active Filters Pills (Mobile) -->
+          <div id="active-filters-mobile" class="flex lg:hidden flex-wrap items-center gap-2">
+            <!-- Active filter pills for mobile will be populated here -->
           </div>
         </div>
-
       </div>
 
-      <!-- WhatsApp Chat Bubble -->
-      <div id="whatsapp-chat"
-        class="fixed bottom-5 right-5 bg-green-500 w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 scale-90 transition-opacity transition-transform duration-400 z-40">
-        <div id="whatsapp-bubble"
-          class="absolute bottom-16 right-0 bg-white text-gray-800 px-3 py-1.5 rounded-lg text-xs shadow-md opacity-0 translate-y-2 transition-opacity transition-transform duration-300 whitespace-nowrap">
-          Want a specific car?
+
+      <!-- Loading State -->
+      <div id="loading-wrapper" class="flex justify-center items-center h-64">
+        <div class="text-center">
+          <div class="loading-dots mb-4">
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+            <div class="loading-dot"></div>
+          </div>
+          <p class="text-gray-600">Loading your listings...</p>
         </div>
-        <a href="https://wa.me/9175837073?text=I%20would%20like%20to%20lease%20a%20" target="_blank"
-          rel="noopener noreferrer"
-          class="block w-10 h-10 flex justify-center items-center text-3xl text-white bg-green-500 rounded-full">
-          <i class="fab fa-whatsapp"></i>
-        </a>
-        <button id="close-chat"
-          class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center cursor-pointer hidden hover:bg-red-700 focus:outline-none"
-          aria-label="Close chat">
-          <i class="fas fa-times"></i>
-        </button>
       </div>
 
-    </section>
+      <!-- Listings Grid -->
+      <div id="cars-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Cards will be populated by JavaScript -->
+      </div>
+
+      <!-- No Results Message -->
+      <div id="no-match-message" class="text-center py-12 hidden">
+        <i class="fas fa-search text-gray-300 text-4xl mb-4"></i>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">No listings found</h3>
+        <p class="text-gray-600">Try adjusting your search criteria or add a new listing</p>
+      </div>
+
+      <div id="pagination-wrapper" class="my-5 flex justify-center">
+        <div id="pagination" class="pagination-buttons flex flex-wrap gap-2"></div>
+      </div>
+
+  </div>
+
+  <!-- WhatsApp Chat Bubble -->
+  <div id="whatsapp-chat"
+    class="fixed bottom-5 right-5 bg-green-500 w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 scale-90 transition-opacity transition-transform duration-400 z-40">
+    <div id="whatsapp-bubble"
+      class="absolute bottom-16 right-0 bg-white text-gray-800 px-3 py-1.5 rounded-lg text-xs shadow-md opacity-0 translate-y-2 transition-opacity transition-transform duration-300 whitespace-nowrap">
+      Want a specific car?
+    </div>
+    <a href="https://wa.me/9175837073?text=I%20would%20like%20to%20lease%20a%20" target="_blank"
+      rel="noopener noreferrer"
+      class="block w-10 h-10 flex justify-center items-center text-3xl text-white bg-green-500 rounded-full">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+    <button id="close-chat"
+      class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center cursor-pointer hidden hover:bg-red-700 focus:outline-none"
+      aria-label="Close chat">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  </main>
   </div>
 
   <!-- Footer -->
@@ -361,7 +585,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script>
-    // Firebase Setup
+    // ====== FIREBASE CONFIGURATION ======
     const firebaseConfig = {
       apiKey: "AIzaSyC25Tdl5GtnRXcHeBBGeIOuIcVX_WdiHP4",
       authDomain: "cars-8bdd6.firebaseapp.com",
@@ -372,412 +596,783 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    // DOM Elements
-    const carsContainer = document.getElementById("cars-container");
-    const searchBar = document.getElementById("search-bar");
-    const suggestionsList = document.getElementById("car-suggestions");
-    const modal = document.getElementById("car-modal");
-    // Data
-    const allCarModels = ["Ford", "Chevrolet", "GMC", "Cadillac", "Dodge", "Chrysler", "Jeep", "Ram", "Lincoln", "Tesla", "Buick", "BMW", "Mercedes-Benz",
-      "Audi", "Volkswagen", "Jaguar", "Land Rover", "Bentley", "Maserati", "Alfa Romeo", "Fiat", "Peugeot", "Volvo", "Toyota", "Honda",
-      "Nissan", "Mazda", "Subaru", "Mitsubishi", "Suzuki", "Lexus", "Infiniti", "Acura", "Hyundai", "Kia", "Genesis"
-    ];
-    let cars = [];
-    let filteredCarsGlobal = [];
-    // Suggestion Logic
-    function getCarCounts() {
-      const counts = {};
-      cars.forEach(car => {
-        const firstWord = car.name.split(" ")[0].toLowerCase();
-        counts[firstWord] = (counts[firstWord] || 0) + 1;
-      });
-      return counts;
-    }
 
-    function updateSuggestions(query) {
-      const counts = getCarCounts();
-      if (!query.trim()) {
-        suggestionsList.style.display = "none";
-        return;
+    // ====== APPLICATION STATE ======
+    const AppState = {
+      cars: [],
+      filteredCars: [],
+      filters: {
+        price: 2000,
+        makes: [],
+        exteriorColor: [],
+        features: []
+      },
+      ui: {
+        chatVisible: false,
+        chatClosed: false
       }
-      const filteredModels = allCarModels.filter(model =>
-        model.toLowerCase().includes(query.toLowerCase())
-      );
-      const matchingSuggestions = filteredModels.map(model => {
-        const firstWord = model.split(" ")[0].toLowerCase();
-        const count = counts[firstWord] || 0;
-        return `<li class="px-4 py-2 border-b hover:bg-gray-100 cursor-pointer text-gray-700 text-sm" onclick="selectSuggestion('${model}')">${model} (${count})</li>`;
-      });
-      suggestionsList.innerHTML = matchingSuggestions.join("");
-      suggestionsList.style.display = matchingSuggestions.length ? "block" : "none";
-    }
-    window.selectSuggestion = function (model) {
-      searchBar.value = model;
-      suggestionsList.style.display = "none";
-      filterCars();
-    }
+    };
 
-    function filterCars() {
-      const query = searchBar.value.trim().toLowerCase();
-      const filtered = query ? cars.filter(car => car.name.toLowerCase().includes(query)) : cars;
-      filteredCarsGlobal = filtered;
-      generateCars(filtered);
-    }
-    searchBar.addEventListener("input", () => {
-      updateSuggestions(searchBar.value);
-      filterCars();
-    });
-    document.addEventListener("click", (event) => {
-      if (!searchBar.contains(event.target) && !suggestionsList.contains(event.target)) {
-        suggestionsList.style.display = "none";
+    // Filter data
+    const FilterData = {
+      makes: ['Acura', 'Alfa Romeo', 'Audi', 'Bentley', 'BMW', 'Buick', 'Cadillac', 'Chevrolet',
+        'Chrysler', 'Dodge', 'Fiat', 'Ford', 'Genesis', 'GMC', 'Honda', 'Hyundai', 'Infiniti',
+        'Jaguar', 'Jeep', 'Kia', 'Land Rover', 'Lexus', 'Lincoln', 'Maserati', 'Mazda',
+        'Mercedes-Benz', 'Mitsubishi', 'Nissan', 'Peugeot', 'Ram', 'Subaru', 'Suzuki',
+        'Tesla', 'Toyota', 'Volkswagen', 'Volvo'
+      ],
+      colors: ['Black', 'White', 'Gray', 'Silver', 'Gold', 'Red', 'Blue', 'Green', 'Brown'],
+      features: ['Sunroof', 'Leather Seats', 'Navigation', 'Bluetooth']
+    };
+
+    // ====== UTILITY FUNCTIONS ======
+    const Utils = {
+      // Format currency
+      formatCurrency: (amount) => new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      }).format(amount),
+
+      // Get DOM element
+      getElement: (id) => document.getElementById(id),
+
+      // Show/hide element
+      toggleElement: (element, show) => {
+        element.classList.toggle('hidden', !show);
+      },
+
+      // Escape JSON for HTML attributes
+      escapeJSON: (obj) => JSON.stringify(obj).replace(/"/g, '&quot;')
+    };
+
+    // ====== TOAST NOTIFICATION SYSTEM ======
+    const Toast = {
+      show: (message, type = 'info') => {
+        const container = Utils.getElement('toast-container');
+        if (!container) return;
+
+        const toast = document.createElement('div');
+        const config = {
+          success: { bg: 'bg-green-500', icon: 'fas fa-check-circle' },
+          error: { bg: 'bg-red-500', icon: 'fas fa-exclamation-circle' },
+          warning: { bg: 'bg-yellow-500', icon: 'fas fa-exclamation-triangle' },
+          info: { bg: 'bg-blue-500', icon: 'fas fa-info-circle' }
+        };
+
+        const { bg, icon } = config[type] || config.info;
+
+        toast.className = `${bg} text-white px-4 py-3 rounded-lg shadow-lg flex items-center transform translate-x-full transition-transform duration-300`;
+        toast.innerHTML = `
+      <i class="${icon} mr-2"></i>
+      <span class="flex-1">${message}</span>
+      <button onclick="this.parentElement.remove()" class="ml-2 text-white hover:text-gray-200">
+        <i class="fas fa-times"></i>
+      </button>
+    `;
+
+        container.appendChild(toast);
+
+        // Animate in
+        setTimeout(() => toast.classList.remove('translate-x-full'), 10);
+
+        // Auto remove
+        setTimeout(() => {
+          if (toast.parentElement) {
+            toast.classList.add('translate-x-full');
+            setTimeout(() => toast.remove(), 300);
+          }
+        }, 5000);
       }
-    });
-    // Load cars from Firestore (cleaned up with spinner and async/await)
-    async function loadCars() {
-      const loadingWrapper = document.getElementById("loading-wrapper");
-      loadingWrapper.classList.remove("hidden");  // Show loader
+    };
 
-      try {
-        const querySnapshot = await db.collection("cars").get();
-        cars = [];
-        querySnapshot.forEach((doc) => {
-          cars.push(doc.data());
+    // ====== CAR DATA MANAGEMENT ======
+    const CarManager = {
+      async loadCars() {
+        const container = Utils.getElement("cars-container");
+        const loading = Utils.getElement("loading-wrapper");
+        const noResults = Utils.getElement("no-match-message");
+
+        try {
+          Utils.toggleElement(loading, true);
+          container.innerHTML = "";
+          Utils.toggleElement(noResults, false);
+
+          const querySnapshot = await db.collection("cars").orderBy("timestamp", "desc").get();
+          Utils.toggleElement(loading, false);
+
+          if (querySnapshot.empty) {
+            Utils.toggleElement(noResults, true);
+            updateResultsCount(0);
+            return;
+          }
+
+          AppState.cars = [];
+          querySnapshot.forEach(doc => {
+            const car = { id: doc.id, ...doc.data() };
+            AppState.cars.push(car);
+          });
+
+          this.displayCars(AppState.cars);
+          updateResultsCount(AppState.cars.length);
+
+        } catch (error) {
+          console.error("Error loading cars:", error);
+          Utils.toggleElement(loading, false);
+          Toast.show("Error loading listings. Please refresh the page.", "error");
+        }
+      },
+
+      displayCars(cars) {
+        const container = Utils.getElement("cars-container");
+        container.innerHTML = "";
+
+        cars.forEach(car => {
+          const carCard = this.createCarCard(car);
+          container.appendChild(carCard);
         });
-        filteredCarsGlobal = cars;
-        generateCars(filteredCarsGlobal, 1);
-        updateSuggestions("");
-        const footer = document.getElementById("footer");
-        footer.classList.remove("hidden");
-      } catch (error) {
-        console.error("Error loading cars:", error);
-      } finally {
-        loadingWrapper.classList.add("hidden");  // Hide loader
-      }
-    }
 
-    // Add the DOMContentLoaded event listener
-    document.addEventListener("DOMContentLoaded", loadCars);
-    // Generate Car Cards
-    const carsPerPage = 9;
-    let currentPage = 1;
+        // Initialize sliders for all car cards
+        setTimeout(() => this.initializeAllSliders(), 100);
+      },
 
-    function generateCars(filteredCars, page = 1) {
-      const noMatchMessage = document.getElementById("no-match-message");
-      const pagination = document.getElementById("pagination");
+      createCarCard(car) {
+        const card = document.createElement("div");
+        card.className = "bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 card-hover overflow-hidden animate-fadeInUp";
 
-      if (filteredCars.length === 0) {
-        carsContainer.innerHTML = "";
-        noMatchMessage.classList.remove("hidden");
-        pagination.innerHTML = "";
-        return;
-      }
+        const images = car.images?.length > 0 ? car.images : ['/images/placeholder-car.jpg'];
+        const price = Utils.formatCurrency(car.pricing?.price || 0);
+        const due = Utils.formatCurrency(car.pricing?.due || 0);
 
-      noMatchMessage.classList.add("hidden");
+        const imageSliderHTML = images.map(img =>
+          `<img loading="lazy" src="${img}" alt="Car Image" class="slider-image rounded-lg">`
+        ).join('');
 
-      const start = (page - 1) * carsPerPage;
-      const end = page * carsPerPage;
-      const carsToShow = filteredCars.slice(start, end);
+        const dotsHTML = images.length > 1
+          ? images.map((_, index) =>
+            `<div class="slider-dot ${index === 0 ? 'active' : ''}" onclick="ImageSlider.goToSlide(this, ${index})"></div>`
+          ).join('')
+          : '';
 
-      carsContainer.innerHTML = carsToShow.map((car, index) => `
+        card.innerHTML = `
       <div class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 relative">
-  <!-- Image container -->
-  <div class="relative w-full rounded-lg overflow-hidden pt-3">
-    <img loading="lazy" src="${car.image1}" alt="Car Image" class="w-full h-[200px] object-contain rounded-lg">
-    ${car.label && car.label.trim() !== "" ? `
-      <div class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-br-lg whitespace-nowrap">
-        ${car.label}
-      </div>` : ""}
-  </div>
+        <!-- Image container -->
+        <div class="relative w-full rounded-lg overflow-hidden image-slider-container ${images.length === 1 ? 'single-image' : ''}">
+          ${car.details?.label ? `
+            <div class="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-br-lg whitespace-nowrap z-20">
+              ${car.details.label}
+            </div>
+          ` : ""}
 
-  <!-- Car Name -->
-  <p onclick='openModal(${JSON.stringify(car)})' class="flex items-center text-left font-bold text-lg text-gray-800 mt-3 cursor-pointer mx-2">
-  <span class="inline-block w-1 h-5 bg-blue-600 rounded-sm mr-1.5"></span>
-  ${car.name}
-  <i class="fas fa-circle-info text-sm ml-2 text-gray-800"></i>
-</p>
+          <!-- Image slider -->
+          <div class="image-slider" data-current="0">
+            ${imageSliderHTML}
+          </div>
 
-
-  <!-- Details -->
-  <div class="flex justify-between items-center text-sm text-gray-800 my-4">
-    <div class="flex-1 text-center relative px-2">
-      <p class="text-[0.6rem] font-medium text-gray-500">Term</p>
-      <p class="font-semibold">${car.term} Months</p>
-      <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
-    </div>
-    <div class="flex-1 text-center relative px-2">
-      <p class="text-[0.6rem] font-medium text-gray-500">Annual Mileage</p>
-      <p class="font-semibold">${car.mileage} Miles</p>
-      <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
-    </div>
-    <div class="flex-1 text-center px-2">
-      <p class="text-[0.6rem] font-medium text-gray-500">Due At Signing</p>
-      <p class="font-semibold">$${car.due || "0"}</p>
-    </div>
-  </div>
-
-  <!-- Price + Button -->
- <div class="mx-2 py-2 flex items-center justify-between">
-  <p class="text-3xl font-bold text-gray-800">$${car.price}
-    <span class="text-sm text-gray-600 font-semibold">/ Month</span>
-  </p>
-  <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${car.name}" 
-     target="_blank" 
-     class="bg-blue-600 hover:bg-blue-700 text-white  text-sm font-medium ml-3 py-1.5 px-4 rounded-lg">
-    Get Quote
-  </a>
+          <!-- Navigation arrows -->
+          <button class="hidden sm:flex slider-nav prev" onclick="ImageSlider.slide(this, -1)">
+            <i class="fas fa-chevron-left text-gray-700 text-sm"></i>
+          </button>
+          <button class="hidden sm:flex slider-nav next" onclick="ImageSlider.slide(this, 1)">
+            <i class="fas fa-chevron-right text-gray-700 text-sm"></i>
+          </button>
+          
+          <!-- Dot indicators -->
+          <div class="slider-dots">${dotsHTML}</div>
         </div>
-      </div>`).join("");
 
-      renderPagination(filteredCars.length, page);
-    }
+        <!-- Car Name -->
+        <p onclick='openDetailsModal(${Utils.escapeJSON(car)})' 
+           class="flex items-center text-left font-bold text-lg text-gray-800 cursor-pointer mx-2">
+          <span class="inline-block w-1 h-5 bg-blue-600 rounded-sm mr-1.5"></span>
+          ${car.car?.name || 'Unknown Car'}
+          <i class="fas fa-circle-info text-sm ml-2 text-gray-800"></i>
+        </p>
 
-    function renderPagination(totalCars, currentPage) {
-      const totalPages = Math.ceil(totalCars / carsPerPage);
-      const pagination = document.getElementById("pagination");
-      const paginationWrapper = document.getElementById("pagination-wrapper");
+        <!-- Details -->
+        <div class="flex justify-between items-center text-sm text-gray-800 my-4">
+          <div class="flex-1 text-center relative px-2">
+            <p class="text-[0.6rem] font-medium text-gray-500">Term</p>
+            <p class="font-semibold">${car.details?.term || 'N/A'} Months</p>
+            <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
+          </div>
+          <div class="flex-1 text-center relative px-2">
+            <p class="text-[0.6rem] font-medium text-gray-500">Annual Mileage</p>
+            <p class="font-semibold">${car.details?.mileage || 'N/A'} Miles</p>
+            <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
+          </div>
+          <div class="flex-1 text-center px-2">
+            <p class="text-[0.6rem] font-medium text-gray-500">Due At Signing</p>
+            <p class="font-semibold">${due}</p>
+          </div>
+        </div>
 
-      if (totalPages <= 1) {
-        paginationWrapper.style.display = "none"; // Hide if only 1 page or less
-        return;
-      } else {
-        paginationWrapper.style.display = "flex"; // Show if multiple pages
+        <!-- Price + Button -->
+        <div class="mx-2 py-2 flex items-center justify-between">
+          <p class="text-3xl font-bold text-gray-800">${price}
+            <span class="text-sm text-gray-600 font-semibold">/ Month</span>
+          </p>
+          <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${encodeURIComponent(car.car?.name || 'car')}"
+             target="_blank"
+             class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium ml-3 py-1.5 px-4 rounded-lg">
+            Get Quote
+          </a>
+        </div>
+      </div>
+    `;
+
+        return card;
+      },
+
+      initializeAllSliders() {
+        document.querySelectorAll('.image-slider-container').forEach(container => {
+          ImageSlider.initialize(container);
+        });
       }
+    };
 
-      pagination.innerHTML = "";
+    // ====== IMAGE SLIDER FUNCTIONALITY ======
+    const ImageSlider = {
+      slide(button, direction) {
+        const container = button.closest('.image-slider-container');
+        const slider = container.querySelector('.image-slider');
+        const images = slider.querySelectorAll('.slider-image');
+        const dots = container.querySelectorAll('.slider-dot');
 
-      for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button")
-        btn.textContent = i;
-        btn.className = `px-3 py-1 rounded-md border border-gray-300 text-sm ${i === currentPage ? "bg-blue-600 text-white" : "bg-white text-gray-800 hover:bg-gray-100"
-          }`;
+        let currentIndex = parseInt(slider.dataset.current) || 0;
+        const totalImages = images.length;
 
-        btn.addEventListener("click", () => {
-          generateCars(filteredCarsGlobal, i);
-          window.scrollTo({
-            top: 0,
-          }); // use global filtered list
+        // Calculate new index
+        currentIndex = (currentIndex + direction + totalImages) % totalImages;
+
+        // Update slider
+        slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+        slider.dataset.current = currentIndex;
+
+        // Update dots
+        this.updateDots(dots, currentIndex);
+      },
+
+      goToSlide(dot, index) {
+        const container = dot.closest('.image-slider-container');
+        const slider = container.querySelector('.image-slider');
+        const dots = container.querySelectorAll('.slider-dot');
+
+        slider.style.transform = `translateX(-${index * 100}%)`;
+        slider.dataset.current = index;
+
+        this.updateDots(dots, index);
+      },
+
+      updateDots(dots, activeIndex) {
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === activeIndex);
+        });
+      },
+
+      initialize(container) {
+        const slider = container.querySelector('.image-slider');
+        const images = slider.querySelectorAll('.slider-image');
+
+        if (images.length <= 1) {
+          container.classList.add('single-image');
+          return;
+        }
+
+        this.setupTouchEvents(slider, container);
+        this.setupMouseEvents(slider, container);
+      },
+
+      setupTouchEvents(slider, container) {
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+
+        slider.addEventListener('touchstart', (e) => {
+          startX = e.touches[0].clientX;
+          isDragging = true;
+          slider.style.transition = 'none';
         });
 
-        pagination.appendChild(btn);
+        slider.addEventListener('touchmove', (e) => {
+          if (!isDragging) return;
+
+          currentX = e.touches[0].clientX;
+          const diff = currentX - startX;
+          const currentIndex = parseInt(slider.dataset.current) || 0;
+          const translateX = -currentIndex * 100 + (diff / container.offsetWidth * 100);
+
+          slider.style.transform = `translateX(${translateX}%)`;
+        });
+
+        slider.addEventListener('touchend', () => {
+          if (!isDragging) return;
+
+          isDragging = false;
+          slider.style.transition = 'transform 0.3s ease-in-out';
+
+          const diff = currentX - startX;
+          const threshold = container.offsetWidth * 0.2;
+
+          if (Math.abs(diff) > threshold) {
+            const direction = diff > 0 ? -1 : 1;
+            const navButton = container.querySelector('.slider-nav.next');
+            this.slide(navButton, direction);
+          } else {
+            const currentIndex = parseInt(slider.dataset.current) || 0;
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+          }
+        });
+      },
+
+      setupMouseEvents(slider, container) {
+        let startX = 0;
+        let currentX = 0;
+        let isMouseDown = false;
+
+        const handleMouseDown = (e) => {
+          startX = e.clientX;
+          isMouseDown = true;
+          slider.style.transition = 'none';
+          slider.style.cursor = 'grabbing';
+        };
+
+        const handleMouseMove = (e) => {
+          if (!isMouseDown) return;
+
+          currentX = e.clientX;
+          const diff = currentX - startX;
+          const currentIndex = parseInt(slider.dataset.current) || 0;
+          const translateX = -currentIndex * 100 + (diff / container.offsetWidth * 100);
+
+          slider.style.transform = `translateX(${translateX}%)`;
+        };
+
+        const handleMouseEnd = () => {
+          if (!isMouseDown) return;
+
+          isMouseDown = false;
+          slider.style.transition = 'transform 0.3s ease-in-out';
+          slider.style.cursor = 'grab';
+
+          const diff = currentX - startX;
+          const threshold = container.offsetWidth * 0.2;
+
+          if (Math.abs(diff) > threshold) {
+            const direction = diff > 0 ? -1 : 1;
+            const navButton = container.querySelector('.slider-nav.next');
+            this.slide(navButton, direction);
+          } else {
+            const currentIndex = parseInt(slider.dataset.current) || 0;
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+          }
+        };
+
+        slider.addEventListener('mousedown', handleMouseDown);
+        slider.addEventListener('mousemove', handleMouseMove);
+        slider.addEventListener('mouseup', handleMouseEnd);
+        slider.addEventListener('mouseleave', handleMouseEnd);
       }
-    }
-
-    // Modal Functions
-    let scrollTop = 0;
-    window.openModal = function (car) {
-      document.getElementById("modal-title").innerText = car.name;
-      document.getElementById("modal-image2").src = car.image2;
-      document.getElementById("modal-features").innerHTML = car.features.map(f => `<li>${f}</li>`).join("");
-      document.getElementById("modal-additional").innerText = car.additional || "";
-      document.getElementById("modal-exteriorColor").innerText = car.exteriorColor;
-      modal.style.display = "flex";
-      scrollTop = window.scrollY;
-      document.body.classList.add("modal-open");
-      document.body.style.top = `-${scrollTop}px`;
     };
-    window.closeModal = function () {
-      modal.style.display = "none";
-      document.body.classList.remove("modal-open");
-      document.body.style.top = "";
-      window.scrollTo(0, scrollTop);
-    };
-    document.addEventListener('DOMContentLoaded', () => {
-    });
 
-    // WhatsApp Chat Auto-popup
-    const chat = document.getElementById('whatsapp-chat');
-    const bubble = document.getElementById('whatsapp-bubble');
-    const closeBtn = document.getElementById('close-chat');
-    const dealscontainer = document.getElementById('deals-container');
-    let chatVisible = false;
-    let chatClosed = false;
-    // Show chat after 5 seconds
-    setTimeout(() => {
-      if (!chatClosed) {
+    // ====== SEARCH AND FILTER FUNCTIONALITY ======
+    const SearchFilter = {
+      filterCars() {
+        const searchTerm = Utils.getElement("search-bar").value.toLowerCase();
+        const cards = document.querySelectorAll("#cars-container > div");
+        const noResults = Utils.getElement("no-match-message");
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+          const text = card.textContent.toLowerCase();
+          const isVisible = text.includes(searchTerm);
+          card.style.display = isVisible ? "block" : "none";
+          if (isVisible) visibleCount++;
+        });
+
+        Utils.toggleElement(noResults, visibleCount === 0 && searchTerm !== "");
+        updateResultsCount(visibleCount);
+      },
+
+      applyFilters() {
+        // Update filter state
+        AppState.filters.makes = this.getCheckedValues('makes');
+        AppState.filters.exteriorColor = this.getCheckedValues('exteriorColor');
+        AppState.filters.features = this.getCheckedValues('features');
+        AppState.filters.price = parseInt(Utils.getElement('priceRange').value);
+
+        // Filter cars
+        const filtered = AppState.cars.filter(car => {
+          const matchesPrice = !car.pricing?.price || car.pricing.price <= AppState.filters.price;
+          const matchesMake = AppState.filters.makes.length === 0 || AppState.filters.makes.includes(car.car?.make);
+          const matchesColor = AppState.filters.exteriorColor.length === 0 || AppState.filters.exteriorColor.includes(car.details?.exteriorColor);
+          const matchesFeatures = AppState.filters.features.length === 0 || (car.features || []).some(f => AppState.filters.features.includes(f));
+
+          return matchesPrice && matchesMake && matchesColor && matchesFeatures;
+        });
+
+        // Display filtered results
+        if (filtered.length === 0) {
+          Utils.toggleElement(Utils.getElement("no-match-message"), true);
+          Utils.getElement("cars-container").innerHTML = "";
+          updateResultsCount(0);
+        } else {
+          Utils.toggleElement(Utils.getElement("no-match-message"), false);
+          CarManager.displayCars(filtered);
+          updateResultsCount(filtered.length);
+        }
+
+        // Update active filters UI
+        updateActiveFilters();
+
+        // Close filter sidebar on mobile after applying filters
+        if (window.innerWidth < 1024) { // lg breakpoint
+          closeFilterSidebar();
+        }
+      },
+
+      resetFilters() {
+        // Reset filter values
+        AppState.filters = {
+          price: 2000,
+          makes: [],
+          exteriorColor: [],
+          features: []
+        };
+
+        // Reset UI
+        Utils.getElement('priceRange').value = 2000;
+        this.updatePriceLabel();
+        document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+
+        // Show all cars
+        CarManager.displayCars(AppState.cars);
+        Utils.toggleElement(Utils.getElement("no-match-message"), false);
+        updateResultsCount(AppState.cars.length);
+
+        // Clear active filters UI
+        updateActiveFilters();
+      },
+
+      getCheckedValues(type) {
+        const section = Utils.getElement(`section-${type}`);
+        const uncheckAll = section.querySelector('.uncheck-all');
+
+        if (uncheckAll?.checked) return [];
+
+        return Array.from(section.querySelectorAll('input.option:checked')).map(cb => cb.value);
+      },
+
+      updatePriceLabel() {
+        const value = Utils.getElement('priceRange').value;
+        AppState.filters.price = parseInt(value);
+        Utils.getElement('priceLabel').textContent = value;
+      }
+    };
+
+    // ====== FILTER UI MANAGEMENT ======
+    const FilterUI = {
+      toggleSection(id) {
+        const section = Utils.getElement(`section-${id}`);
+        const icon = Utils.getElement(`icon-${id}`);
+
+        section.classList.toggle('hidden');
+        icon.textContent = section.classList.contains('hidden') ? '+' : '−';
+      },
+
+      populateCheckboxes(list, containerId) {
+        const container = Utils.getElement(containerId);
+        container.innerHTML = '';
+
+        // Uncheck All option
+        const uncheckWrapper = document.createElement('div');
+        uncheckWrapper.className = 'flex items-center space-x-2 mb-1';
+        uncheckWrapper.innerHTML = `
+      <input type="checkbox" class="uncheck-all" id="uncheck-${containerId}" />
+      <label class="text-sm font-semibold text-gray-700">Uncheck All</label>
+    `;
+        container.appendChild(uncheckWrapper);
+
+        uncheckWrapper.querySelector('input').addEventListener('change', function () {
+          container.querySelectorAll('input.option').forEach(cb => cb.checked = false);
+        });
+
+        // Individual options
+        list.forEach(item => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'flex items-center space-x-2';
+          wrapper.innerHTML = `
+        <input type="checkbox" value="${item}" class="option" />
+        <label class="text-sm text-gray-700">${item}</label>
+      `;
+          container.appendChild(wrapper);
+        });
+
+        // Handle uncheck all logic
+        container.addEventListener('change', e => {
+          if (e.target.classList.contains('option') && e.target.checked) {
+            const uncheckAll = container.querySelector('.uncheck-all');
+            if (uncheckAll) uncheckAll.checked = false;
+          }
+        });
+      },
+
+      initialize() {
+        this.populateCheckboxes(FilterData.makes, 'section-makes');
+        this.populateCheckboxes(FilterData.colors, 'section-exteriorColor');
+        this.populateCheckboxes(FilterData.features, 'section-features');
+        SearchFilter.updatePriceLabel();
+      }
+    };
+
+    // ====== WHATSAPP CHAT FUNCTIONALITY ======
+    const WhatsAppChat = {
+      initialize() {
+        const chat = Utils.getElement('whatsapp-chat');
+        const bubble = Utils.getElement('whatsapp-bubble');
+        const closeBtn = Utils.getElement('close-chat');
+        const dealsContainer = Utils.getElement('deals-container');
+
+        // Show chat after 5 seconds
+        setTimeout(() => {
+          if (!AppState.ui.chatClosed) {
+            this.showChat(chat, bubble, closeBtn);
+            AppState.ui.chatVisible = true;
+          }
+        }, 5000);
+
+        // Handle scroll events
+        window.addEventListener('scroll', () => {
+          if (!AppState.ui.chatVisible || AppState.ui.chatClosed) return;
+
+          const dealsBottom = dealsContainer.offsetTop + dealsContainer.offsetHeight;
+          const scrollY = window.scrollY + window.innerHeight;
+
+          if (scrollY > dealsBottom + 50) {
+            this.hideChat(chat, bubble);
+          } else {
+            this.showChat(chat, bubble, closeBtn);
+          }
+        });
+
+        // Handle close button
+        closeBtn.addEventListener('click', () => {
+          this.hideChat(chat, bubble);
+          closeBtn.classList.add('hidden');
+          AppState.ui.chatClosed = true;
+        });
+      },
+
+      showChat(chat, bubble, closeBtn) {
         chat.classList.remove('opacity-0', 'scale-90');
         chat.classList.add('opacity-100', 'scale-100');
         bubble.classList.remove('opacity-0', 'translate-y-2');
         bubble.classList.add('opacity-100', 'translate-y-0');
         closeBtn.classList.remove('hidden');
-        chatVisible = true;
-      }
-    }, 5000);
-    // Hide chat if scrolling past dealscontainer
-    window.addEventListener('scroll', () => {
-      if (!chatVisible || chatClosed) return;
-      const dealscontainerBottom = dealscontainer.offsetTop + dealscontainer.offsetHeight;
-      const scrollY = window.scrollY + window.innerHeight;
-      if (scrollY > dealscontainerBottom + 50) {
+      },
+
+      hideChat(chat, bubble) {
         chat.classList.add('opacity-0', 'scale-90');
         chat.classList.remove('opacity-100', 'scale-100');
         bubble.classList.add('opacity-0', 'translate-y-2');
         bubble.classList.remove('opacity-100', 'translate-y-0');
-      } else {
-        chat.classList.remove('opacity-0', 'scale-90');
-        chat.classList.add('opacity-100', 'scale-100');
-        bubble.classList.remove('opacity-0', 'translate-y-2');
-        bubble.classList.add('opacity-100', 'translate-y-0');
       }
-    });
-    // Close button: permanently hide chat
-    closeBtn.addEventListener('click', () => {
-      chat.classList.add('opacity-0', 'scale-90');
-      chat.classList.remove('opacity-100', 'scale-100');
-      bubble.classList.add('opacity-0', 'translate-y-2');
-      bubble.classList.remove('opacity-100', 'translate-y-0');
-      closeBtn.classList.add('hidden');
-      chatClosed = true;
-    });
-
-    // FilterSidebar
-    const makes = ['Acura', 'Alfa Romeo', 'Audi', 'Bentley', 'BMW', 'Buick', 'Cadillac', 'Chevrolet',
-      'Chrysler', 'Dodge', 'Fiat', 'Ford', 'Genesis', 'GMC', 'Honda', 'Hyundai', 'Infiniti',
-      'Jaguar', 'Jeep', 'Kia', 'Land Rover', 'Lexus', 'Lincoln', 'Maserati', 'Mazda',
-      'Mercedes-Benz', 'Mitsubishi', 'Nissan', 'Peugeot', 'Ram', 'Subaru', 'Suzuki',
-      'Tesla', 'Toyota', 'Volkswagen', 'Volvo'];
-    const colors = ['Black', 'White', 'Gray', 'Silver', 'Gold', 'Red', 'Blue', 'Green', 'Brown'];
-    const features = ['Sunroof', 'Leather Seats', 'Navigation', 'Bluetooth'];
-
-    const filters = {
-      price: 1000,
-      makes: [],
-      exteriorColor: [],
-      features: []
     };
 
+    // ====== ADDITIONAL FUNCTIONALITY ======
+    let currentSort = 'newest'; // Default sort
+
+    function sortCars(sortType) {
+      currentSort = sortType;
+
+      // Update sort label
+      const sortLabel = document.getElementById('sort-label');
+      const labels = {
+        'price-low': 'Price: Low to High',
+        'price-high': 'Price: High to Low',
+        'newest': 'Newest First',
+        'oldest': 'Oldest First',
+        'make': 'Make (A-Z)'
+      };
+      sortLabel.textContent = labels[sortType] || 'Sort By';
+
+      // Sort the cars array
+      let sortedCars = [...AppState.cars];
+
+      switch (sortType) {
+        case 'price-low':
+          sortedCars.sort((a, b) => (a.pricing?.price || 0) - (b.pricing?.price || 0));
+          break;
+        case 'price-high':
+          sortedCars.sort((a, b) => (b.pricing?.price || 0) - (a.pricing?.price || 0));
+          break;
+        case 'newest':
+          sortedCars.sort((a, b) => new Date(b.timestamp?.toDate?.() || b.timestamp || 0) - new Date(a.timestamp?.toDate?.() || a.timestamp || 0));
+          break;
+        case 'oldest':
+          sortedCars.sort((a, b) => new Date(a.timestamp?.toDate?.() || a.timestamp || 0) - new Date(b.timestamp?.toDate?.() || b.timestamp || 0));
+          break;
+        case 'make':
+          sortedCars.sort((a, b) => (a.car?.make || '').localeCompare(b.car?.make || ''));
+          break;
+      }
+
+      // Update the displayed cars
+      CarManager.displayCars(sortedCars);
+      updateResultsCount(sortedCars.length);
+    }
+
+    function toggleFilterSidebar() {
+      const sidebar = document.getElementById('filterSidebar');
+      const backdrop = document.getElementById('filter-backdrop');
+      const isHidden = sidebar.classList.contains('-translate-x-full');
+
+      if (isHidden) {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+        backdrop.classList.add('active');
+        document.body.classList.add('modal-open');
+      } else {
+        closeFilterSidebar();
+      }
+    }
+
+    function closeFilterSidebar() {
+      const sidebar = document.getElementById('filterSidebar');
+      const backdrop = document.getElementById('filter-backdrop');
+
+      sidebar.classList.add('-translate-x-full');
+      sidebar.classList.remove('translate-x-0');
+      backdrop.classList.remove('active');
+      document.body.classList.remove('modal-open');
+    }
+
+    function updateResultsCount(count) {
+      const resultsCount = document.getElementById('results-count');
+      if (resultsCount) {
+        resultsCount.textContent = count || 0;
+      }
+    }
+
+    function updateActiveFilters() {
+      const activeFiltersDesktop = document.getElementById('active-filters');
+      const activeFiltersMobile = document.getElementById('active-filters-mobile');
+
+      let filtersHTML = '';
+
+      // Price filter (only show if different from default 2000)
+      if (AppState.filters.price < 2000) {
+        filtersHTML += `
+      <div class="filter-pill text-xs">
+        <span>Up to ${AppState.filters.price}</span>
+        <i class="fas fa-times text-xs remove-filter" onclick="removeFilter('price')"></i>
+      </div>
+    `;
+      }
+
+      // Makes filter
+      AppState.filters.makes.forEach(make => {
+        filtersHTML += `
+      <div class="filter-pill text-xs">
+        <span>${make}</span>
+        <i class="fas fa-times text-xs remove-filter" onclick="removeFilter('make', '${make}')"></i>
+      </div>
+    `;
+      });
+
+      // Colors filter
+      AppState.filters.exteriorColor.forEach(color => {
+        filtersHTML += `
+      <div class="filter-pill text-xs">
+        <span>${color}</span>
+        <i class="fas fa-times text-xs remove-filter" onclick="removeFilter('color', '${color}')"></i>
+      </div>
+    `;
+      });
+
+      // Features filter
+      AppState.filters.features.forEach(feature => {
+        filtersHTML += `
+      <div class="filter-pill text-xs">
+        <span>${feature}</span>
+        <i class="fas fa-times text-xs remove-filter" onclick="removeFilter('feature', '${feature}')"></i>
+      </div>
+    `;
+      });
+
+      // Show clear all button if there are active filters
+      if (filtersHTML) {
+        filtersHTML += `
+      <button onclick="clearAllFilters()" class="text-xs text-blue-600 hover:text-blue-800 font-medium ml-2">
+        Clear All
+      </button>
+    `;
+      }
+
+      activeFiltersDesktop.innerHTML = filtersHTML;
+      activeFiltersMobile.innerHTML = filtersHTML;
+    }
+
+    function removeFilter(type, value) {
+      switch (type) {
+        case 'price':
+          AppState.filters.price = 2000;
+          document.getElementById('priceRange').value = 2000;
+          updatePriceLabel();
+          break;
+        case 'make':
+          AppState.filters.makes = AppState.filters.makes.filter(m => m !== value);
+          const makeCheckbox = document.querySelector(`#section-makes input[value="${value}"]`);
+          if (makeCheckbox) makeCheckbox.checked = false;
+          break;
+        case 'color':
+          AppState.filters.exteriorColor = AppState.filters.exteriorColor.filter(c => c !== value);
+          const colorCheckbox = document.querySelector(`#section-exteriorColor input[value="${value}"]`);
+          if (colorCheckbox) colorCheckbox.checked = false;
+          break;
+        case 'feature':
+          AppState.filters.features = AppState.filters.features.filter(f => f !== value);
+          const featureCheckbox = document.querySelector(`#section-features input[value="${value}"]`);
+          if (featureCheckbox) featureCheckbox.checked = false;
+          break;
+      }
+
+      SearchFilter.applyFilters();
+    }
+
+    function clearAllFilters() {
+      SearchFilter.resetFilters();
+    }
+
+    // ====== GLOBAL FUNCTIONS (for HTML onclick handlers) ======
     function toggleSection(id) {
-      const section = document.getElementById(`section-${id}`);
-      const icon = document.getElementById(`icon-${id}`);
-      section.classList.toggle('hidden');
-      icon.textContent = section.classList.contains('hidden') ? '+' : '−';
+      FilterUI.toggleSection(id);
     }
 
     function updatePriceLabel() {
-      const value = document.getElementById('priceRange').value;
-      filters.price = parseInt(value);
-      document.getElementById('priceLabel').textContent = value;
+      SearchFilter.updatePriceLabel();
     }
-
-    function getCheckedValues(type) {
-      const section = document.getElementById(`section-${type}`);
-      const uncheckAll = section.querySelector('.uncheck-all');
-
-      if (uncheckAll && uncheckAll.checked) {
-        return []; // Return empty array to indicate "no filtering" (i.e. match all)
-      }
-
-      return Array.from(section.querySelectorAll('input.option:checked')).map(cb => cb.value);
-    }
-
-    function populateCheckboxes(list, containerId) {
-      const container = document.getElementById(containerId);
-
-      // Create the "Uncheck All" checkbox
-      const uncheckWrapper = document.createElement('div');
-      uncheckWrapper.className = 'flex items-center space-x-2 mb-1';
-      uncheckWrapper.innerHTML = `
-    <input type="checkbox" class="uncheck-all" data-group="${containerId}" id="uncheck-${containerId}" />
-    <label class="text-sm font-semibold text-gray-700">Uncheck All</label>
-  `;
-      container.appendChild(uncheckWrapper);
-
-      // Listen to "Uncheck All" toggle
-      uncheckWrapper.querySelector('input').addEventListener('change', function () {
-        const checkboxes = container.querySelectorAll('input[type=checkbox]:not(.uncheck-all)');
-        checkboxes.forEach(cb => cb.checked = false);
-      });
-
-      // Create normal checkboxes
-      list.forEach(item => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'flex items-center space-x-2';
-        wrapper.innerHTML = `
-      <input type="checkbox" value="${item}" class="option" data-group="${containerId}" />
-      <label class="text-sm">${item}</label>
-    `;
-        container.appendChild(wrapper);
-      });
-
-      // Listen for any other checkbox being checked, to uncheck "Uncheck All"
-      container.addEventListener('change', function (e) {
-        if (e.target.classList.contains('option') && e.target.checked) {
-          const uncheckAll = container.querySelector('.uncheck-all');
-          if (uncheckAll) uncheckAll.checked = false;
-        }
-      });
-    }
-
-
-    // Initial population
-    populateCheckboxes(makes, 'section-makes');
-    populateCheckboxes(colors, 'section-exteriorColor');
-    populateCheckboxes(features, 'section-features');
-    updatePriceLabel();
 
     function applyFilters() {
-      // Update filter selections
-      filters.makes = getCheckedValues('makes');
-      filters.exteriorColor = getCheckedValues('exteriorColor');
-      filters.features = getCheckedValues('features');
-      filters.price = parseInt(document.getElementById('priceRange').value);
-
-      // Apply filtering logic
-      const filtered = cars.filter(car => {
-        const matchesPrice = !car.price || car.price <= filters.price;
-
-        const matchesMake = filters.makes.length === 0 || filters.makes.includes(car.make);
-
-        const matchesColor = filters.exteriorColor.length === 0 || filters.exteriorColor.includes(car.exteriorColor);
-
-        const matchesFeatures =
-          filters.features.length === 0 ||
-          filters.features.every(f => car.features && car.features.includes(f));
-
-        return matchesPrice && matchesMake && matchesColor && matchesFeatures;
-      });
-
-      filteredCarsGlobal = filtered;
-      generateCars(filteredCarsGlobal, 1); // Show filtered cars
-
-      filterSidebar.classList.add('-translate-x-full');
-      filterSidebar.classList.remove('translate-x-0');
+      SearchFilter.applyFilters();
     }
+
     function resetFilters() {
-      filters.price = 1000;
-      filters.makes = [];
-      filters.exteriorColor = [];
-      filters.features = [];
-
-      document.getElementById('priceRange').value = 1000;
-      updatePriceLabel();
-
-      // Uncheck all checkboxes
-      document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
-
-      console.log("Filters Reset:", filters);
-
-      // Reset filteredCarsGlobal to all cars
-      filteredCarsGlobal = cars;
-
-      // Generate first page of all cars to refresh UI and pagination
-      generateCars(filteredCarsGlobal, 1);
+      SearchFilter.resetFilters();
     }
 
-    // toggle sidebar sliding up/down on small screens:
-    const filterSidebar = document.getElementById('filterSidebar');
-    const openFilterBtn = document.getElementById('openFilterBtn');
-    const closeFilterBtn = document.getElementById('closeFilterBtn');
+    function filterCars() {
+      SearchFilter.filterCars();
+    }
 
-    openFilterBtn.addEventListener('click', () => {
-      filterSidebar.classList.remove('-translate-x-full');
-      filterSidebar.classList.add('translate-x-0');
-      dealscontainer.classList.add('overflow-hidden');  // Disable main content scroll
-    });
+    function updateSuggestions() {
+      SearchFilter.filterCars();
+    }
 
-    closeFilterBtn.addEventListener('click', () => {
-      filterSidebar.classList.add('-translate-x-full');
-      filterSidebar.classList.remove('translate-x-0');
-      dealscontainer.classList.remove('overflow-hidden'); // Enable main content scroll
+    // ====== APPLICATION INITIALIZATION ======
+    document.addEventListener("DOMContentLoaded", () => {
+      FilterUI.initialize();
+      CarManager.loadCars();
+      WhatsAppChat.initialize();
     });
   </script>
 </body>

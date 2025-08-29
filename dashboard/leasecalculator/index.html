@@ -32,12 +32,37 @@
 </style>
 
 <body>
-    <section class="bg-white  border-b">
-        <nav x-data="{ isOpen: false }" class="p-5 mx-auto lg:flex lg:justify-between lg:items-center">
-            <div class="flex items-center justify-between">
+    <!-- Navbar -->
+    <header class="bg-white border-b border-gray-200">
+        <nav x-data="{ isOpen: false }" class="max-w-[2000px] p-5 mx-auto lg:px-8 lg:py-5">
+            <div class="flex justify-between items-center relative">
+                <!-- Logo -->
                 <a href="/">
                     <img class="w-auto h-5 sm:h-7" src="/images/logo-blue.png" alt="logo">
                 </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-12">
+                    <a href="/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Home</a>
+                    <a href="/leasing-deals/"
+                        class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Leasing
+                        Deals</a>
+                    <a href="/about-us/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">About
+                        us</a>
+                    <a href="/blog/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Blog</a>
+                    <a href="/contact/"
+                        class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Contact</a>
+                </div>
+
+
+                <!-- Login -->
+                <div class="hidden lg:flex items-center">
+                    <a id="logout-btn"
+                        class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-red-600 rounded-lg lg:mt-0 hover:bg-red-500 lg:w-auto"
+                        href="#">
+                        Log out
+                    </a>
+                </div>
 
                 <!-- Mobile menu button -->
                 <div class="flex lg:hidden">
@@ -58,84 +83,74 @@
             </div>
 
             <!-- Mobile Menu open: "block", Menu closed: "hidden"-->
-           <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
-        class="absolute inset-x-0 z-20 w-full px-6 py-6 transition-all duration-300 ease-in-out bg-white shadow-md lg:bg-transparent lg: lg:shadow-none  lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center">
-        <div class="flex flex-col space-y-4 lg:mt-0 lg:flex-row lg:-px-8 lg:space-y-0">
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-            href="/">Home</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-            href="/leasing-deals/">Leasing Deals</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-            href="/about-us/">About us</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-            href="/blog/">Blog</a>
-          <a class="text-gray-700 transition-colors duration-300 transform lg:mx-5   hover:text-blue-500"
-            href="/contact/">Contact</a>
-        </div>
-        <div class="flex flex-col mt-6 space-y-4 md:hidden border-t pt-4">
-          <a class="flex items-center text-gray-600 hover:text-blue-600" href="/dashboard/">
-            <i class="fas fa-grip mr-2 w-5"></i> Dashboard
-          </a>
-          <a class="flex items-center text-gray-600 hover:text-blue-600" href="/dashboard/editlistings">
-            <i class="fas fa-pen-to-square mr-2 w-5"></i> Edit Listings
-          </a>
-          <a class="flex items-center text-gray-600 hover:text-blue-600" href="/dashboard/leasecalculator/">
-            <i class="fas fa-calculator mr-2 w-5"></i> Lease Calculator
-          </a>
-          <a class="flex items-center text-gray-600 hover:text-blue-600" href="#">
-            <i class="fa-solid fa-gear mr-2 w-5"></i> Settings
-          </a>
-        </div>
-
-        <a id="logout-btn"
-          class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-red-600 rounded-lg lg:mt-0 hover:bg-red-500 lg:w-auto"
-          href="#">
-          Log out
-        </a>
+            <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
+                class="lg:hidden absolute inset-x-0 transition-all duration-300 ease-in-out bg-white border-b border-gray-200 shadow-lg z-40">
+                <div class="px-4 py-6 space-y-4">
+                    <a href="/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Home</a>
+                    <a href="/leasing-deals/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Leasing
+                        Deals</a>
+                    <a href="/about-us/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">About
+                        us</a>
+                    <a href="/blog/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Blog</a>
+                    <a href="/contact/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Contact</a>
+                    <hr class="my-4">
+                    <a class="flex items-center text-gray-600 hover:text-blue-600" href="/dashboard/">
+                        <i class="fas fa-chart-pie mr-2 w-5"></i>Overview
+                    </a>
+                    <a class="flex items-center text-gray-600 hover:text-blue-600" href="/dashboard/listings/">
+                        <i class="fas fa-list mr-2 w-5"></i>Listings
+                    </a>
+                    <a class="flex items-center text-gray-600 hover:text-blue-600" href="/dashboard/leasecalculator/">
+                        <i class="fas fa-calculator mr-2 w-5"></i>Lease Calculator
+                    </a>
+                    <a class="flex items-center text-gray-600 hover:text-blue-600" href="#">
+                        <i class="fa-solid fa-gear mr-2 w-5"></i>Settings
+                    </a>
+                    <a id="logout-btn"
+                        class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-red-600 rounded-lg lg:mt-0 hover:bg-red-500 lg:w-auto"
+                        href="#">
+                        Log out
+                    </a>
+                </div>
             </div>
         </nav>
-    </section>
+    </header>
 
     <div class="flex">
         <!-- Sidebar -->
-        <aside class="hidden md:block w-64 h-screen px-4 py-8 overflow-y-auto bg-white shadow-md">
-            <div class="flex flex-col justify-between flex-1">
-                <nav>
-                    <a class="flex items-center px-4 py-2 text-gray-600 transition-colors duration-300 transform rounded-md hover:bg-gray-100 hover:text-gray-700"
-                        href="/dashboard/">
-                        <i class="fas fa-grip"></i>
-                        <span class="mx-4 font-medium">Dashboard</span>
+        <aside class="hidden lg:block w-72 bg-white border-r border-gray-200 min-h-screen">
+            <div class="p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-6">Dashboard</h2>
+                <nav class="space-y-2">
+                    <a href="/dashboard/"
+                        class="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                        <i class="fas fa-chart-pie w-5 mr-3"></i>
+                        <span class="font-medium">Overview</span>
                     </a>
-
-                    <a class="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-md hover:bg-gray-100 hover:text-gray-700"
-                        href="/dashboard/editlistings">
-                        <i class="fas fa-pen-to-square"></i>
-                        <span class="mx-4 font-medium">Edit Listings</span>
+                    <a href="/dashboard/listings/"
+                        class="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                        <i class="fas fa-list w-5 mr-3"></i>
+                        <span>Listings</span>
                     </a>
-
-                    <a class="flex items-center px-4 py-2 mt-5 text-gray-600 bg-gray-100 transition-colors duration-300 transform rounded-md hover:bg-gray-100 hover:text-gray-700"
-                        href="/dashboard/leasecalculator/">
-                        <i class="fas fa-calculator"></i>
-                        <span class="mx-4 font-medium">Lease Calculator</span>
+                    <a href="/dashboard/leasecalculator/"
+                        class="flex items-center px-4 py-3 bg-blue-50 text-blue-700 rounded-lg font-medium">
+                        <i class="fas fa-calculator w-5 mr-3"></i>
+                        <span class="font-medium">Leasing Calculator</span>
                     </a>
-
-                    <a class="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-md hover:bg-gray-100 hover:text-gray-700"
-                        href="#">
-                        <i class="fa-solid fa-gear"></i>
-                        <span class="mx-4 font-medium">Settings</span>
+                    <a href="#"
+                        class="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                        <i class="fas fa-cog w-5 mr-3"></i>
+                        <span class="font-medium">Settings</span>
                     </a>
-
-                    <hr class="my-6 border-gray-200" />
                 </nav>
-
-                <a href="#" class="flex items-center px-4 -mx-2">
-                    <img class="object-cover mx-2 rounded-full h-9 w-9"
-                        src="https://tse1.mm.bing.net/th/id/OIP.nZ0mlqfGSlnx4w5Nr6Aw_QHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
-                        alt="avatar" />
-                    <span class="mx-2 font-medium text-gray-800">Hershy S</span>
-                </a>
             </div>
         </aside>
+
 
         <!-- Main Section -->
         <main class="flex-1 justify-center m-6">
@@ -198,34 +213,34 @@
     </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-<script>
-    function calculateLease() {
-        const capCost = parseFloat(document.getElementById('capCost').value);
-        const downPayment = parseFloat(document.getElementById('downPayment').value);
-        const residualPercent = parseFloat(document.getElementById('residualPercent').value);
-        const moneyFactor = parseFloat(document.getElementById('moneyFactor').value);
-        const term = parseInt(document.getElementById('term').value);
-        const taxRate = parseFloat(document.getElementById('taxRate').value) / 100;
-        const acqFee = parseFloat(document.getElementById('acqFee').value);
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script>
+        function calculateLease() {
+            const capCost = parseFloat(document.getElementById('capCost').value);
+            const downPayment = parseFloat(document.getElementById('downPayment').value);
+            const residualPercent = parseFloat(document.getElementById('residualPercent').value);
+            const moneyFactor = parseFloat(document.getElementById('moneyFactor').value);
+            const term = parseInt(document.getElementById('term').value);
+            const taxRate = parseFloat(document.getElementById('taxRate').value) / 100;
+            const acqFee = parseFloat(document.getElementById('acqFee').value);
 
-        const residualValue = capCost * (residualPercent / 100);
-        const depreciation = (capCost - downPayment - residualValue) / term;
-        const financeCharge = ((capCost - downPayment) + residualValue) * moneyFactor;
-        const baseMonthly = depreciation + financeCharge;
-        const monthlyWithTax = baseMonthly * (1 + taxRate);
+            const residualValue = capCost * (residualPercent / 100);
+            const depreciation = (capCost - downPayment - residualValue) / term;
+            const financeCharge = ((capCost - downPayment) + residualValue) * moneyFactor;
+            const baseMonthly = depreciation + financeCharge;
+            const monthlyWithTax = baseMonthly * (1 + taxRate);
 
-        const firstMonth = monthlyWithTax;
-        const totalDriveOff = downPayment + acqFee + firstMonth;
+            const firstMonth = monthlyWithTax;
+            const totalDriveOff = downPayment + acqFee + firstMonth;
 
-        document.getElementById('result').innerHTML = `
+            document.getElementById('result').innerHTML = `
         <p><strong>Monthly Payment (incl. tax):</strong> $${monthlyWithTax.toFixed(2)}</p>
         <p><strong>First Month's Payment:</strong> $${firstMonth.toFixed(2)}</p>
         <p><strong>Acquisition Fee:</strong> $${acqFee.toFixed(2)}</p>
         <p><strong>Total Due at Signing:</strong> $${totalDriveOff.toFixed(2)}</p>
       `;
-    }
-</script>
+        }
+    </script>
 </body>
 
 </html>
