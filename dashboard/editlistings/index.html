@@ -942,6 +942,16 @@
                 <div class="bg-white rounded-xl shadow-md p-4 text-center transform transition-transform duration-300 relative">
     <!-- Image container -->
     <div class="relative w-full rounded-lg overflow-hidden pt-3">
+        <div class="absolute top-3 right-3 space-y-2">
+            <button onclick="editCar('${id}')"
+                class="w-8 h-8 bg-white bg-opacity-90 rounded-full hover:bg-opacity-100 transition-all flex items-center justify-center shadow-md">
+                <i class="fas fa-edit text-primary-600 text-sm"></i>
+            </button>
+            <button onclick="deleteCar('${id}')"
+                class="w-8 h-8 bg-white bg-opacity-90 rounded-full hover:bg-opacity-100 transition-all flex items-center justify-center shadow-md">
+                <i class="fas fa-trash text-red-500 text-sm"></i>
+            </button>
+        </div>
         <img loading="lazy" src="${mainImage}" alt="Car Image" class="w-full h-[200px] object-cover rounded-lg">
         ${car.details.label && car.details.label.trim() !== "" ? `
         <div
@@ -992,10 +1002,6 @@
 
             return card;
         }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            loadCars();
-        });
 
         // Search and Filter Functionality
         function filterCars() {
