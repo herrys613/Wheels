@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Success</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/tailwind.config.js"></script>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+
+
+
+<body class="bg-gray-50 flex items-center justify-center min-h-screen font-[Inter]">
+
+  <div class="p-8 max-w-md w-full text-center">
+    <!-- Animated Hourglass -->
+    <div class="flex justify-center mb-6">
+  <div class="w-16 h-16 flex items-center justify-center rounded-full bg-gray-100">
+    <i class="fas fa-hourglass-half text-gray-500 text-2xl"></i>
+  </div>
+</div>
+
+    <h1 class="text-xl font-bold text-gray-800 mb-3">Thank you!</h1>
+            <p class="text-gray-600 mb-8">Your dress listing is being reviewed. You'll receive an email once it's live.</p>
+
+    <a href="/" class="inline-block px-5 py-2 text-sm font-medium text-center text-cream-500 leading-5 bg-charcoal-800 hover:bg-charcoal-700 rounded-lg focus:outline-none
+              transition-all duration-300">
+      Go to Homepage
+    </a>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDzYucxzEhmH3XgxGZd_YODxzzvpNp2P0s",
+      authDomain: "project-2145d.firebaseapp.com",
+      projectId: "project-2145d",
+      storageBucket: "project-2145d.firebasestorage.app",
+      messagingSenderId: "296278039161",
+      appId: "1:296278039161:web:e1049596a67bfe51ab12a8"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const pending = sessionStorage.getItem("pendingListing");
+      if (!pending) {
+        console.error("⚠️ No pendingListing found in sessionStorage.");
+        return;
+      }
+
+      // Parse the stored data
+      const formData = JSON.parse(pending);
+
+      // Add server timestamp + status before saving
+      const saveData = {
+        ...formData,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        status: "pending",
+        sold: false,
+      };
+
+      try {
+        await db.collection("dressListings").add(saveData);
+        console.log("✅ Listing saved to Firestore");
+        sessionStorage.removeItem("pendingListing");
+      } catch (err) {
+        console.error("❌ Error saving to Firestore:", err);
+      }
+    });
+  </script>
+
+</body>
+
+</html>

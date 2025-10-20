@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Next Dress | Buy & Sell Modest Dresses</title>
+    <meta name="description"
+        content="A simple platform to buy and sell pre-loved dresses online. Easy, modest, and friendly for everyone.">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="The Next Dress | Buy & Sell Modest Dresses">
+    <meta property="og:description"
+        content="Buy and sell pre-loved dresses easily. A modest, user-friendly online marketplace.">
+    <meta property="og:url" content="https://www.thenextdress.com/">
+    <meta property="og:image" content="https://www.thenextdress.com/images/home-social-preview.png">
+    <meta property="og:image:alt" content="The Next Dress – modest dress marketplace">
+    <meta property="og:site_name" content="The Next Dress">
+
+    <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
+    <link rel="canonical" href="https://www.thenextdress.com/">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/tailwind.config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<style>
+
+</style>
+
+<body>
+    <!-- Navbar -->
+    <header class="bg-white border-b border-gray-200">
+        <nav x-data="{ isOpen: false }" class="max-w-[2000px] p-5 mx-auto lg:px-8 lg:py-5">
+            <div class="flex justify-between items-center relative">
+                <!-- Logo -->
+                <a href="/">
+                    <img class="h-8 sm:h-10" src="/images/logo.png" alt="logo">
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-12">
+                    <a href="/" class="text-charcoal-800 hover:text-warm-gray-400 transition duration-300">Home</a>
+                    <a href="/shop-collection.html"
+                        class="text-charcoal-800 hover:text-warm-gray-400 transition duration-300">Shop
+                        Collection</a>
+                    <a href="/sell-your-dress.html"
+                        class="text-charcoal-800 hover:text-warm-gray-400 transition duration-300">Sell
+                        Your Dress</a>
+                    <a href="/about-us.html"
+                        class="text-charcoal-800 hover:text-warm-gray-400 transition duration-300">About
+                        us</a>
+                    <a href="/contact.html"
+                        class="text-charcoal-800 hover:text-warm-gray-400 transition duration-300">Contact</a>
+                </div>
+
+
+                <!-- Login -->
+                <div class="hidden lg:flex items-center">
+                    <a class="block px-5 py-2 mt-4 text-sm text-center capitalize bg-charcoal-800 text-cream-500 hover:bg-charcoal-900 rounded-lg lg:mt-0 lg:w-auto"
+                        href="/login.html">
+                        Log in
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="flex lg:hidden">
+                    <button x-cloak @click="isOpen = !isOpen" type="button"
+                        class="text-charcoal-800  hover:text-charcoal-900  focus:outline-none focus:text-charcoal-900"
+                        aria-label="toggle menu">
+                        <svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
+                        </svg>
+
+                        <svg x-show="isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu open: "block", Menu closed: "hidden"-->
+            <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
+                class="lg:hidden absolute inset-x-0 transition-all duration-300 ease-in-out bg-white border-b border-gray-200 shadow-lg z-40">
+                <div class="px-4 py-6 space-y-4">
+                    <a href="/"
+                        class="block text-charcoal-800 hover:text-warm-gray-400 font-medium transition-colors duration-300">Home</a>
+                    <a href="/shop-collection.html"
+                        class="block text-charcoal-800 hover:text-warm-gray-400 font-medium transition-colors duration-300">Shop
+                        Collection</a>
+                    <a href="/sell-your-dress.html"
+                        class="block text-charcoal-800 hover:text-warm-gray-400 font-medium transition-colors duration-300">Sell
+                        Your Dress</a>
+                    <a href="/about-us.html"
+                        class="block text-charcoal-800 hover:text-warm-gray-400 font-medium transition-colors duration-300">About
+                        us</a>
+                    <a href="/contact.html"
+                        class="block text-charcoal-800 hover:text-warm-gray-400 font-medium transition-colors duration-300">Contact</a>
+                    <a class="block px-5 py-2 mt-4 text-sm text-center capitalize bg-charcoal-800 text-cream-500 hover:bg-charcoal-900 rounded-lg lg:mt-0 lg:w-auto"
+                        href="/login.html">
+                        Log in
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="bg-white">
+        <div class="container px-6 py-10 pt-16 mx-auto text-center">
+            <div class="max-w-3xl mx-auto">
+                <h1 class="text-4xl font-luxury text-gray-800 lg:text-6xl">Where Every Dress Finds It's Next Story
+                </h1>
+                <p class="mt-6 text-charcoal-700">Buy and sell modest wedding and occasion dresses with ease — a
+                    place where timeless beauty meets new beginnings.</p>
+                <a href="/shop-collection/" class="inline-block px-5 py-2 mt-6 text-sm font-medium text-center leading-5 bg-cream-500 hover:bg-cream-700 rounded-lg focus:outline-none
+                    transition-all duration-300 hover:-translate-y-1">
+                    Shop Dresses
+                </a>
+            </div>
+
+            <div class="flex justify-center mt-10">
+                <img class="object-cover w-full lg:h-96 h-80 rounded-xl lg:w-4/5" src="/images/hero2.png" />
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Featuress -->
+    <section class="bg-white">
+        <div class="container px-6 py-16 mx-auto">
+            <h1 class="text-3xl font-luxury font-light text-center text-charcoal-800 capitalize lg:text-4xl mb-4">
+                Built for Your Convenience
+            </h1>
+            <p class="text-center text-warm-gray-600 mb-16 max-w-2xl mx-auto">
+                Experience seamless dress buying and selling with our thoughtfully designed platform
+            </p>
+
+            <div class="grid grid-cols-1 gap-8 mt-8 xl:mt-12 xl:gap-16 md:grid-cols-3">
+                <div class="flex flex-col items-center p-6 space-y-3 text-center border border-r-gray-200 rounded-2xl ">
+                    <span
+                        class="text-xl flex items-center justify-center w-14 h-14 rounded-full bg-charcoal-800 text-cream-500">
+                        <i class="fas fa-search text-2xl"></i>
+                    </span>
+
+                    <h1 class="text-xl font-luxury text-charcoal-800 font-medium capitalize">Browse & Discover
+                    </h1>
+
+                    <p class="text-charcoal-600 leading-relaxed">
+                        Browse a curated collection of dresses by style, size, designer, and occasion — making it easy
+                        to
+                        find
+                        the perfect dress for your special moment.
+                    </p>
+                </div>
+
+                <div class="flex flex-col items-center p-6 space-y-3 text-center border border-r-gray-200 rounded-2xl ">
+                    <span
+                        class="text-xl flex items-center justify-center w-14 h-14 rounded-full bg-charcoal-800 text-cream-500">
+                        <i class="fas fa-comments text-2xl"></i>
+                    </span>
+
+                    <h1 class="text-xl font-luxury text-charcoal-800 font-medium capitalize">Connect & Chat</h1>
+
+                    <p class="text-charcoal-600 leading-relaxed">
+                        Reach out directly to sellers to ask about sizing, style, and condition, see more photos, and
+                        get all the
+                        information you need before making your decision.
+                    </p>
+                </div>
+
+                <div class="flex flex-col items-center p-6 space-y-3 text-center border border-r-gray-200 rounded-2xl ">
+                    <span
+                        class="text-xl flex items-center justify-center w-14 h-14 rounded-full bg-charcoal-800 text-cream-500">
+                        <i class="fas fa-headset text-2xl"></i>
+                    </span>
+
+                    <h1 class="text-xl font-luxury text-charcoal-800 font-medium capitalize">Dedicated Support
+                    </h1>
+
+                    <p class="text-charcoal-600 leading-relaxed">
+                        Our team is here to help you showcase your dresses and connect with interested buyers
+                        smoothly.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+        <div class="max-w-2xl mx-auto px-6 py-10 pb-8">
+            <h2 class="text-3xl font-luxury font-light text-center text-charcoal-800 mb-4">
+                Frequently Asked Questions
+            </h2>
+            <p class="text-center text-warm-gray-600 mb-12">
+                Everything you need to know about our platform
+            </p>
+            <div id="accordion" class="space-y-2">
+                <div class="bg-charcoal-50 rounded-xl overflow-hidden">
+                    <button data-accordion-button
+                        class="w-full text-base text-left p-3 font-medium text-charcoal-700 flex justify-between items-center">
+                        What is The next dress?
+                        <svg class="w-5 h-5 ml-2 transition-transform duration-300" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div
+                        class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out text-sm text-charcoal-600 px-4">
+                        <p class="py-2">The next dress is an online marketplace where you can buy and sell special
+                            occasion dresses, connecting buyers and sellers seamlessly.</p>
+                    </div>
+                </div>
+
+                <div class="bg-charcoal-50 rounded-xl overflow-hidden">
+                    <button data-accordion-button
+                        class="w-full text-base text-left p-3 font-medium text-charcoal-700 flex justify-between items-center">
+                        What is the cost to list a dress?
+                        <svg class="w-5 h-5 ml-2 transition-transform duration-300" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div
+                        class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out text-sm text-charcoal-600 px-4">
+                        <p class="py-2">We charge a one-time listing fee, with no additional commissions. For detailed
+                            pricing information, please refer to our [Pricing Page].</p>
+                    </div>
+                </div>
+
+                <div class="bg-charcoal-50 rounded-xl overflow-hidden">
+                    <button data-accordion-button
+                        class="w-full text-base text-left p-3 font-medium text-charcoal-700 flex justify-between items-center">
+                        How can I sell multiple sizes of the same dress?
+                        <svg class="w-5 h-5 ml-2 transition-transform duration-300" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div
+                        class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out text-sm text-charcoal-600 px-4">
+                        <p class="py-2">List each size in your listing, and we’ll calculate the total price based on all
+                            gowns. See our [Pricing Page] for details.</p>
+                    </div>
+                </div>
+
+                <div class="bg-charcoal-50 rounded-xl overflow-hidden">
+                    <button data-accordion-button
+                        class="w-full text-base text-left p-3 font-medium text-charcoal-700 flex justify-between items-center">
+                        How do I contact a seller about a dress?
+                        <svg class="w-5 h-5 ml-2 transition-transform duration-300" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div
+                        class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out text-sm text-charcoal-600 px-4">
+                        <p class="py-2">On each dress listing , you'll find contact options such as email or phone
+                            number. Reach out to the seller directly to
+                            inquire about the dress, and any other questions you may have.</p>
+                    </div>
+                </div>
+
+                <div class="bg-charcoal-50 rounded-xl overflow-hidden">
+                    <button data-accordion-button
+                        class="w-full text-base text-left p-3 font-medium text-charcoal-700 flex justify-between items-center">
+                        How do I mark my dress as sold?
+                        <svg class="w-5 h-5 ml-2 transition-transform duration-300" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div
+                        class="accordion-content max-h-0 overflow-hidden transition-all duration-500 ease-in-out text-sm text-charcoal-600 px-4">
+                        <p class="py-2">After your gown is sold, simply notify us and we’ll update the listing as sold
+                            to keep the listings up to date.</p>
+                    </div>
+                </div>
+            </div>
+            <p class="mt-6 text-center text-sm text-gray-600 ">
+                Still have questions?
+                <a href="/contact/" class="text-[#B3A394] hover:underline ">Contact us</a> and we’ll be happy
+                to
+                help.
+            </p>
+    </section>
+
+    <!-- Partner -->
+    <section class="bg-white">
+        <div class="container flex flex-col items-center px-12 py-16 mx-auto text-center">
+            <h2
+                class="max-w-2xl mx-auto text-3xl font-luxury font-semibold tracking-tight text-charcoal-800 xl:text-3xl">
+                Partner with us.
+            </h2>
+
+            <p class="max-w-4xl my-5 text-center text-charcoal-700">
+                Own a bridal salon or boutique? Let’s grow together. Partner with us and showcase your
+                gowns to thousands of brides-to-be through a seamless, high-visibility platform.
+            </p>
+
+            <div class="inline-flex mt-4">
+                <a href="/contact/"
+                    class="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-xl shadow-lg bg-charcoal-800 text-cream-500 hover:bg-charcoal-900">
+                    Let’s Talk <i class="fas fa-rocket text-base"></i>
+                </a>
+            </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-cream-200 border-t">
+        <div class="max-w-[2000px] p-6 lg:pt-10 lg:px-16 mx-auto">
+            <div class="lg:flex">
+                <div class="w-full pb-8 lg:w-2/5">
+                    <a href="/">
+                        <img class="w-auto h-9" src="/images/logo.png" alt="logo">
+                    </a>
+                    <p class="max-w-sm text-xs text-charcoal-800">Modest Dress Marketplace.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="https://wa.me/9175837073" target="_blank" class="text-charcoal-800 text-2xl"
+                            aria-label="Chat on WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://instagram.com/" target="_blank" class="text-charcoal-800 text-2xl"
+                            aria-label="Visit Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-0 lg:mt-0 lg:flex-1">
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+                        <div>
+                            <h3 class="text-charcoal-800 font-semibold ">Company</h3>
+                            <a href="/shop-collection/"
+                                class="block mt-2 text-sm text-charcoal-600  hover:underline">Shop
+                                Collection</a>
+                            <a href="/sell-your-dress/"
+                                class="block mt-2 text-sm text-charcoal-600  hover:underline">Sell
+                                Your Dress</a>
+                            <a href="/contact/" class="block mt-2 text-sm text-charcoal-600  hover:underline">Partner
+                                with
+                                Us</a>
+                        </div>
+
+                        <div>
+                            <h3 class="text-charcoal-800 font-semibold ">Support</h3>
+                            <a href="/#faq" class="block mt-2 text-sm text-charcoal-600  hover:underline">FAQ</a>
+                            <a href="/pricing/"
+                                class="block mt-2 text-sm text-charcoal-600  hover:underline">Pricing</a>
+                            <a href="/contact/" class="block mt-2 text-sm text-charcoal-600  hover:underline">Contact
+                                Us</a>
+                        </div>
+
+                        <div>
+                            <h3 class="text-charcoal-800 font-semibold ">Get in touch</h3>
+                            <span class="block mt-2 text-sm text-charcoal-600  hover:underline">+1 (555)
+                                000-0000</span>
+                            <span
+                                class="block mt-2 text-sm text-charcoal-600  hover:underline">thenextdresscollection@gmail.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="h-px my-6 bg-gray-200 border-none ">
+
+            <div>
+                <p class="text-center text-charcoal-600">&copy;
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script> The next dress. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Accordion
+        const buttons = document.querySelectorAll('[data-accordion-button]');
+        buttons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                const svg = button.querySelector('svg');
+                const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+                // Close all other contents
+                document.querySelectorAll('.accordion-content').forEach((c) => {
+                    if (c !== content) {
+                        c.style.maxHeight = '0px';
+                        const otherButton = c.previousElementSibling;
+                        const otherSvg = otherButton.querySelector('svg');
+                        otherSvg.classList.remove('rotate-180');
+                    }
+                });
+                // Toggle current content
+                if (isOpen) {
+                    content.style.maxHeight = '0px';
+                    svg.classList.remove('rotate-180');
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    svg.classList.add('rotate-180');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
