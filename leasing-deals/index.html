@@ -21,7 +21,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/style.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/tailwind.config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -31,6 +30,23 @@
   .sort-option.active {
     background-color: #f4f4f4;
     font-weight: 500;
+  }
+
+  /* Modal scrollbar - prevent content shift */
+  .modal-scroll-container {
+    scrollbar-gutter: stable;
+  }
+
+  /* For browsers that don't support scrollbar-gutter */
+  @supports not (scrollbar-gutter: stable) {
+    .modal-scroll-container {
+      padding-right: calc(1.5rem + 6px);
+      /* 1.5rem (p-6) + scrollbar width */
+    }
+
+    .modal-scroll-container::-webkit-scrollbar {
+      width: 6px;
+    }
   }
 
   /* Image Slider - Swiper Customization */
@@ -396,7 +412,7 @@
     <!-- FilterSidebar -->
     <aside
       class="absolute top-0 left-0 pb-52 z-50 h-full w-2/3 bg-white shadow-lg transform transition-transform duration-500
-         -translate-x-full lg:translate-x-0 lg:static lg:w-[320px] lg:min-h-[100vh] lg:shadow-none lg:border-r lg:space-y-4"
+         -translate-x-full lg:translate-x-0 lg:static lg:w-[350px] lg:min-h-[100vh] lg:shadow-none lg:border-r lg:space-y-4"
       id="filterSidebar">
       <div class="filter-sidebar-scroll px-6 lg:pt-10 py-2">
         <div class="flex justify-end py-2 lg:hidden">
@@ -474,7 +490,7 @@
     </aside>
 
 
-    <main id="cars-container" class="flex-1 p-5">
+    <main id="cars-container" class=" flex-1 p-5">
       <!-- Header with Search -->
       <div class="mb-3">
         <div class="flex flex-col gap-4">
@@ -492,7 +508,7 @@
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <i class="fas fa-search text-gray-400"></i>
               </div>
-              <input id="search-bar" type="text" placeholder="Search listings..."
+              <input id="search-bar" type="text" placeholder="Search car deals..."
                 onkeyup="CarApp.Search.handleSearch(event)" oninput="CarApp.Search.toggleClearButton()"
                 onfocus="CarApp.Search.showSuggestions()"
                 class="w-full text-[16px] pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-charcoal-500 focus:border-transparent" />
@@ -992,7 +1008,7 @@
           if (price > filters.price) return false;
 
           // Size filter
-          if (filters.makes.length > 0 && !filters.makes.includes(car.car.makes)) {
+          if (filters.makes.length > 0 && !filters.makes.includes(car.car.make)) {
             return false;
           }
 
@@ -1321,67 +1337,73 @@
         }
 
         const imageSliderHTML = images.map((img, index) =>
-          `<div class="swiper-slide"><img loading="lazy" data-src="${img}" alt="Cars Image" class="w-full h-[250px] object-contain opacity-0"
+          `<div class="swiper-slide"><img loading="lazy" data-src="${img}" alt="Cars Image" class="w-full h-[170px] object-contain opacity-0"
                         onclick="event.stopPropagation(); CarApp.ImageViewer.open(${imagesJSON}, ${index});">
                     </div>`
         ).join('');
 
         return `
-                    <div class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
-                        <!-- Image Container with Swiper -->
-                        <div class="relative w-full px-6 rounded-t-lg overflow-hidden image-slider-container ${images.length === 1 ? 'swiper-single' : ''} bg-white">
-                            <div class="swiper">
-                                <div class="swiper-wrapper">
-                                    ${imageSliderHTML}
-                                </div>
-                                <!-- Pagination -->
-                                <div class="swiper-pagination"></div>
-                                <!-- Navigation buttons -->
-                                <div class="swiper-button-prev"></div>
-                                <div class="swiper-button-next"></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Contant -->
-                        <div class="border-t p-5">
-                            <!-- Car Name -->
-                            <button data-car-id='${car.id}' onclick='CarApp.Display.viewCarDetailsByID(this.getAttribute("data-car-id"))'
-                            class="flex items-center text-left font-bold text-lg text-gray-800 cursor-pointer">
-                              ${car.car?.name || 'Unknown Car'}
-                            </button>
-                        
-                            <!-- Details -->
-                            <div class="flex justify-between items-center text-sm text-gray-800 my-4">
-                                  <div class="flex-1 text-center relative">
-                                    <p class="text-[0.6rem] font-medium text-gray-500">Term</p>
-                                    <p class="font-semibold">${car.details?.term || 'N/A'} Months</p>
-                                    <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
-                                  </div>
-                                  <div class="flex-1 text-center relative">
-                                    <p class="text-[0.6rem] font-medium text-gray-500">Annual Mileage</p>
-                                    <p class="font-semibold">${car.details?.mileage || 'N/A'} MPY</p>
-                                    <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
-                                  </div>
-                                  <div class="flex-1 text-center">
-                                    <p class="text-[0.6rem] font-medium text-gray-500">Due At Signing</p>
-                                    <p class="font-semibold">$${car.pricing.due}</p>
-                                  </div>
-                            </div>
-                        
-                            <!-- Price + Button -->
-                            <div class="py-2 flex items-center justify-between">
-                                  <p class="text-3xl font-bold text-gray-800">${price}
-                                    <span class="text-sm text-gray-600 font-semibold">/ Month</span>
-                                  </p>
-                                  <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${encodeURIComponent(car.car?.name || 'car')}"
-                                     target="_blank"
-                                     class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium ml-3 py-1.5 px-4 rounded-lg">
-                                    Get Quote
-                                  </a>
-                            </div>
-                        </div>
-                    </div>
-                `;
+          <div class="bg-white rounded-2xl border border-2 hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <!-- Image Container with Swiper -->
+            <div class="relative w-full p-6 py-10 rounded-t-lg overflow-hidden image-slider-container ${images.length === 1 ? 'swiper-single' : ''} bg-white">
+              <div class="swiper">
+                <div class="swiper-wrapper">
+                  ${imageSliderHTML}
+                </div>
+                <!-- Pagination -->
+                <div class="swiper-pagination"></div>
+                <!-- Navigation buttons -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+              </div>
+              ${car.details.label ? `
+                <div class="absolute top-3 right-3 bg-red-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full z-50">
+                  ${car.details.label}
+                </div>
+              ` : ''}
+            </div>
+              
+            <!-- Contant -->
+            <div class="border-t p-5">
+                <!-- Car Name -->
+                <button data-car-id='${car.id}' onclick='CarApp.Display.viewCarDetailsByID(this.getAttribute("data-car-id"))'
+                class="flex items-center text-left font-bold text-lg text-gray-800 cursor-pointer">
+                <span class="inline-block w-1 h-5 bg-blue-600 rounded-sm mr-1.5"></span>
+                  ${car.car?.name || 'Unknown Car'}
+                </button>
+            
+                <!-- Details -->
+                <div class="flex justify-between items-center text-sm text-gray-800 my-4">
+                      <div class="flex-1 text-center relative">
+                        <p class="text-[0.6rem] font-medium text-gray-500">Term</p>
+                        <p class="font-semibold">${car.details?.term || 'N/A'} Months</p>
+                        <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
+                      </div>
+                      <div class="flex-1 text-center relative">
+                        <p class="text-[0.6rem] font-medium text-gray-500">Annual Mileage</p>
+                        <p class="font-semibold">${car.details?.mileage || 'N/A'} MPY</p>
+                        <div class="absolute right-0 top-1/2 transform -translate-y-1/2 h-[18px] w-[1px] bg-gray-300"></div>
+                      </div>
+                      <div class="flex-1 text-center">
+                        <p class="text-[0.6rem] font-medium text-gray-500">Due At Signing</p>
+                        <p class="font-semibold">$${car.pricing.due}</p>
+                      </div>
+                </div>
+            
+                <!-- Price + Button -->
+                <div class="py-2 flex items-center justify-between">
+                      <p class="text-3xl font-bold text-gray-800">${price}
+                        <span class="text-sm text-gray-600 font-semibold">/ Month</span>
+                      </p>
+                      <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${encodeURIComponent(car.car?.name || 'car')}"
+                         target="_blank"
+                         class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium ml-3 py-1.5 px-4 rounded-lg">
+                        Get Quote
+                      </a>
+                </div>
+            </div>
+          </div>
+        `;
       },
 
       formatCurrency(value) {
@@ -1404,18 +1426,167 @@
       },
 
       viewCarDetails(car) {
+        const images = car.images?.length > 0 ? car.images : ['/images/placeholder-car.jpg'];
+        const imagesJSON = JSON.stringify(images).replace(/"/g, '&quot;');
+
+
+        const imageSliderHTML = images.map((img, index) =>
+          `<div class="swiper-slide"><img loading="lazy" data-src="${img}" alt="Cars Image" class="w-full h-[150px] object-contain opacity-0"
+                        onclick="event.stopPropagation(); CarApp.ImageViewer.open(${imagesJSON}, ${index});">
+                    </div>`
+        ).join('');
+
         // Create modal for car details
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4';
+        modal.id = 'car-details-modal';
 
         modal.innerHTML = `
-                    <div class="bg-white rounded-xl p-6 shadow-2xl max-w-lg w-full animate-slideIn">
-                       
+          <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full animate-slideIn overflow-hidden">
+            <!-- Header -->
+            <div class="flex items-center justify-between px-6 pr-3 py-2 border-b">
+              <div>
+                <h2 class="text-md font-bold text-gray-800">${car.car.name}</h2>
+                <p class="text-gray-600"></p>
+              </div>
+              <button onclick="CarApp.Display.closeCarDetailsModal();" class="p-2 px-4 text-gray-400 hover:text-charcoal-600 rounded-full hover:bg-gray-100 transition-colors">
+                <i class="fas fa-times text-xl"></i>
+              </button>
+            </div>
+
+            <!-- Scrollable Content with stable gutter -->
+            <div class="h-[70vh] overflow-y-auto custom-scroll modal-scroll-container">
+              <div class="px-6 py-6">
+                <!-- Image Container with Swiper -->
+                <div class="relative w-full p-6 rounded-t-lg overflow-hidden image-slider-container ${images.length === 1 ? 'swiper-single' : ''} bg-white">
+                  <div class="swiper">
+                    <div class="swiper-wrapper">
+                      ${imageSliderHTML}
                     </div>
-                `;
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                  </div>
+                </div>
+              
+                <!-- Tabs -->
+                <div class="mb-4 border-b">
+                  <div class="flex space-x-6">
+                    <button class="modal-tab-button active py-2 px-1 text-sm font-semibold border-b-2 border-blue-600 text-blue-600" onclick="CarApp.Display.switchModalTab('specs', event)">
+                      Specifications
+                    </button>
+                    <button class="modal-tab-button py-2 px-1 text-sm font-semibold border-b-2 border-transparent text-gray-600" onclick="CarApp.Display.switchModalTab('features', event)">
+                      Features
+                    </button>
+                    <button class="modal-tab-button py-2 px-1 text-sm font-semibold border-b-2 border-transparent text-gray-600" onclick="CarApp.Display.switchModalTab('terms', event)">
+                      Lease Terms
+                    </button>
+                  </div>
+                </div>
+              
+                <!-- Tab Content - Specifications -->
+                <div id="modal-specs-tab" class="modal-tab-content">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex justify-between py-1 border-b">
+                      <span class="text-sm text-gray-600">Drivetrain</span>
+                      <span class="text-sm font-semibold">AWD</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b">
+                      <span class="text-sm text-gray-600">Seating</span>
+                      <span class="text-sm font-semibold">5 Passengers</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b">
+                      <span class="text-sm text-gray-600">Exterior Color</span>
+                      <span class="text-sm font-semibold">Alpine White</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b">
+                      <span class="text-sm text-gray-600">Interior Color</span>
+                      <span class="text-sm font-semibold">Black Leather</span>
+                    </div>
+                  </div>
+                </div>
+              
+                <!-- Tab Content - Features -->
+                <div id="modal-features-tab" class="modal-tab-content hidden">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="text-sm flex items-center space-x-2">
+                      <i class="fas fa-check-circle text-green-500"></i>
+                      <span>Panoramic Moonroof</span>
+                    </div>
+                    <div class="text-sm flex items-center space-x-2">
+                      <i class="fas fa-check-circle text-green-500"></i>
+                      <span>Navigation System</span>
+                    </div>
+                    <div class="text-sm flex items-center space-x-2">
+                      <i class="fas fa-check-circle text-green-500"></i>
+                      <span>Heated Seats</span>
+                    </div>
+                    <div class="text-sm flex items-center space-x-2">
+                      <i class="fas fa-check-circle text-green-500"></i>
+                      <span>Apple CarPlay & Android Auto</span>
+                    </div>
+                    <div class="text-sm flex items-center space-x-2">
+                      <i class="fas fa-check-circle text-green-500"></i>
+                      <span>Adaptive Cruise Control</span>
+                    </div>
+                    <div class="text-sm flex items-center space-x-2">
+                      <i class="fas fa-check-circle text-green-500"></i>
+                      <span>Blind Spot Monitoring</span>
+                    </div>
+                    <div class="text-sm flex items-center space-x-2">
+                      <i class="fas fa-check-circle text-green-500"></i>
+                      <span>Premium Sound System</span>
+                    </div>
+                    <div class="text-sm flex items-center space-x-2">
+                      <i class="fas fa-check-circle text-green-500"></i>
+                      <span>LED Headlights</span>
+                    </div>
+                  </div>
+                </div>
+              
+                <!-- Tab Content - Lease Terms -->
+                <div id="modal-terms-tab" class="modal-tab-content hidden">
+                  <div class="space-y-4">
+                    <div class="bg-gray-50 rounded-lg p-4">
+                      <h4 class="font-semibold mb-2">Lease Details</h4>
+                      <ul class="space-y-2 text-sm text-gray-700">
+                        <li>• Term: 36 months</li>
+                        <li>• Annual Mileage: 12,000 miles</li>
+                        <li>• Excess Mileage Charge: $0.25 per mile</li>
+                        <li>• Due at Signing: $3,500 (includes first month payment)</li>
+                      </ul>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                      <h4 class="font-semibold mb-2">Additional Information</h4>
+                      <ul class="space-y-2 text-sm text-gray-700">
+                        <li>• Security Deposit: $0</li>
+                        <li>• Acquisition Fee: $925</li>
+                        <li>• Disposition Fee: $350 (at lease end)</li>
+                        <li>• Includes: Maintenance & Warranty</li>
+                      </ul>
+                    </div>
+                    <p class="text-xs text-gray-500 italic">
+                      *Lease offer available to qualified customers with approved credit. Taxes, title, and registration fees extra.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
 
         document.body.appendChild(modal);
         CarApp.UI.preventBodyShift(); // Use the new helper
+
+        // Initialize sliders after modal is added to DOM
+        setTimeout(() => {
+          const images = modal.querySelectorAll('img[data-src]');
+          images.forEach(img => {
+            img.src = img.dataset.src;
+            img.onload = () => img.classList.add('opacity-100');
+          });
+          ImageSlider.initAll('#car-details-modal .image-slider-container');
+        }, 50);
 
         // Close on background click
         modal.addEventListener('click', (e) => {
@@ -1426,11 +1597,37 @@
         });
       },
 
-      initializeAllSliders() {
-        document.querySelectorAll('.image-slider-container').forEach(container => {
-          ImageSlider.initialize(container);
+
+      // Add these new methods to the Display module:
+      switchModalTab(tabName, event) {
+        // Hide all tabs
+        document.querySelectorAll('.modal-tab-content').forEach(tab => {
+          tab.classList.add('hidden');
         });
-      }
+
+        // Remove active styling from all buttons
+        document.querySelectorAll('.modal-tab-button').forEach(btn => {
+          btn.classList.remove('active', 'border-blue-600', 'text-blue-600');
+          btn.classList.add('border-transparent', 'text-gray-600');
+        });
+
+        // Show selected tab
+        document.getElementById(`modal-${tabName}-tab`).classList.remove('hidden');
+
+        // Add active styling to clicked button
+        if (event && event.target) {
+          event.target.classList.add('active', 'border-blue-600', 'text-blue-600');
+          event.target.classList.remove('border-transparent', 'text-gray-600');
+        }
+      },
+
+      closeCarDetailsModal() {
+        const modal = document.getElementById('car-details-modal');
+        if (modal) {
+          modal.remove();
+          CarApp.UI.restoreBodyScroll();
+        }
+      },
     };
 
     // ========================================
@@ -2029,7 +2226,7 @@
                                     <p class="text-sm font-medium text-gray-800 truncate">${car.car.name || 'Untitled'} ${isSold ? '<span class="text-red-500 text-xs ml-1">(Sold)</span>' : ''}</p>
                                     <p class="text-xs text-gray-500">${car.details.exteriorColor}</p>
                                 </div>
-                                <p class="text-sm font-semibold ${isSold ? 'text-gray-400 line-through' : 'text-charcoal-700'} flex-shrink-0">$${car.pricing.price}/M</p>
+                                <p class="text-sm font-semibold flex-shrink-0">$${car.pricing.price}/M</p>
                             </div>
                         </div>
                     `;
