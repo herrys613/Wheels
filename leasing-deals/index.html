@@ -490,7 +490,7 @@
     </aside>
 
 
-    <main id="cars-container" class=" flex-1 p-5">
+    <main id="cars-container" class="flex-1 p-5">
       <!-- Header with Search -->
       <div class="mb-3">
         <div class="flex flex-col gap-4">
@@ -575,21 +575,6 @@
                   <span>Filter</span>
                 </button>
               </div>
-
-              <!-- Show Sold Btn -->
-              <!-- <div class="flex items-center">
-                                <span class="mr-3 text-xs text-charcoal-700">Show Sold</span>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="toggle-sold-btn" class="sr-only peer"
-                                        onchange="CarApp.toggleShowSold()">
-                                    <div
-                                        class="w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-cream-800 transition-all duration-300">
-                                    </div>
-                                    <div
-                                        class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform transition-all peer-checked:translate-x-full">
-                                    </div>
-                                </label>
-                            </div> -->
             </div>
 
             <!-- Desktop Results Count -->
@@ -1343,7 +1328,7 @@
         ).join('');
 
         return `
-          <div class="bg-white rounded-2xl border border-2 hover:shadow-xl transition-all duration-300 overflow-hidden">
+          <div class="bg-white rounded-2xl border shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden">
             <!-- Image Container with Swiper -->
             <div class="relative w-full p-6 py-10 rounded-t-lg overflow-hidden image-slider-container ${images.length === 1 ? 'swiper-single' : ''} bg-white">
               <div class="swiper">
@@ -1364,16 +1349,15 @@
             </div>
               
             <!-- Contant -->
-            <div class="border-t p-5">
+            <div class="border-t p-5 space-y-6">
                 <!-- Car Name -->
                 <button data-car-id='${car.id}' onclick='CarApp.Display.viewCarDetailsByID(this.getAttribute("data-car-id"))'
-                class="flex items-center text-left font-bold text-lg text-gray-800 cursor-pointer">
-                <span class="inline-block w-1 h-5 bg-blue-600 rounded-sm mr-1.5"></span>
+                class="flex items-center text-left font-bold text-xl text-gray-800 cursor-pointer">
                   ${car.car?.name || 'Unknown Car'}
                 </button>
             
                 <!-- Details -->
-                <div class="flex justify-between items-center text-sm text-gray-800 my-4">
+                <div class="flex justify-between items-center text-sm text-gray-800">
                       <div class="flex-1 text-center relative">
                         <p class="text-[0.6rem] font-medium text-gray-500">Term</p>
                         <p class="font-semibold">${car.details?.term || 'N/A'} Months</p>
@@ -1390,17 +1374,16 @@
                       </div>
                 </div>
             
-                <!-- Price + Button -->
-                <div class="py-2 flex items-center justify-between">
-                      <p class="text-3xl font-bold text-gray-800">${price}
-                        <span class="text-sm text-gray-600 font-semibold">/ Month</span>
-                      </p>
-                      <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${encodeURIComponent(car.car?.name || 'car')}"
-                         target="_blank"
-                         class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium ml-3 py-1.5 px-4 rounded-lg">
-                        Get Quote
-                      </a>
-                </div>
+                <p class="text-3xl font-bold text-gray-800">
+                  ${price}
+                  <span class="text-sm text-gray-600 font-semibold">/ Month</span>
+                </p>
+              
+                <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${encodeURIComponent(car.car?.name || 'car')}"
+                   target="_blank"
+                   class="block w-full text-center text-white py-2.5 px-4 rounded-full font-medium bg-blue-600 hover:bg-blue-700">
+                  Get Deal
+                </a>
             </div>
           </div>
         `;
