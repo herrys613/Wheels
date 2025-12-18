@@ -17,7 +17,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/tailwind.config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 </head>
 
@@ -539,23 +538,33 @@
                 filteredDeals = [...allDeals];
                 updateStats();
                 renderTable();
-                document.getElementById('loading-row').style.display = 'none';
+
+                const loadingRow = document.getElementById('loading-row');
+                if (loadingRow) {
+                    loadingRow.style.display = 'none';
+                }
 
                 if (allDeals.length === 0) {
-                    document.getElementById('deals-tbody').innerHTML = `
-                        <tr>
-                            <td colspan="9" class="px-4 py-8 text-center text-gray-500">No deals found.</td>
-                        </tr>
-                    `;
+                    const tbody = document.getElementById('deals-tbody');
+                    if (tbody) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="9" class="px-4 py-8 text-center text-gray-500">No deals found.</td>
+                            </tr>
+                        `;
+                    }
                 }
             } catch (error) {
                 console.error('Error loading deals:', error);
-                document.getElementById('loading-row').innerHTML = `
-                    <td colspan="9" class="px-4 py-8 text-center text-red-500">
-                        <p class="font-bold mb-2">Error loading data</p>
-                        <p class="text-sm">${error.message}</p>
-                    </td>
-                `;
+                const loadingRow = document.getElementById('loading-row');
+                if (loadingRow) {
+                    loadingRow.innerHTML = `
+                        <td colspan="9" class="px-4 py-8 text-center text-red-500">
+                            <p class="font-bold mb-2">Error loading data</p>
+                            <p class="text-sm">${error.message}</p>
+                        </td>
+                    `;
+                }
             }
         }
 
@@ -1023,7 +1032,6 @@
                         <hr class="border-gray-200">
 
                         <!-- Car Information -->
-                        <section class="space-y-4">
                         <section class="space-y-4">
                             <h3 class="text-lg font-semibold text-gray-900">Car Information</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
