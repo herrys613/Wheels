@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Car Deals Calculator | Dashboard</title>
+    <meta name="description" content="Administrative area for Car Deals. Authorized access only.">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Car Deals Database | Dashboard">
+    <meta property="og:description" content="Administrative area for Car Deals. Authorized access only.">
+
+    <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/tailwind.config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<style>
+</style>
+
+<body class="flex flex-col min-h-screen" x-data="{ isOpen: false }">
+    <!-- Navbar -->
+    <header class="bg-white border-b border-gray-200">
+        <nav class="max-w-[2000px] p-5 mx-auto lg:px-8 lg:py-5">
+            <div class="flex justify-between items-center relative">
+                <a href="/">
+                    <img class="h-5 sm:h-7" src="/images/logo-blue.png" alt="logo">
+                </a>
+
+                <div class="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-12">
+                    <a href="/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Home</a>
+                    <a href="/leasing-deals/"
+                        class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Leasing Deals</a>
+                    <a href="/about-us/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">About
+                        us</a>
+                    <a href="/blog/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Blog</a>
+                    <a href="/contact/"
+                        class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Contact</a>
+                </div>
+
+                <div class="hidden lg:flex items-center">
+                    <a class="logout-btn block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-red-600 rounded-lg lg:mt-0 hover:bg-red-500 lg:w-auto"
+                        href="#">
+                        Log out
+                    </a>
+                </div>
+
+                <div class="flex lg:hidden">
+                    <button x-cloak @click="isOpen = !isOpen" type="button"
+                        class="text-gray-800 hover:text-gray-900 focus:outline-none" aria-label="toggle menu">
+                        <svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
+                        </svg>
+                        <svg x-show="isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="flex flex-1 relative">
+        <!-- Dashboard Sidebar -->
+        <aside class="hidden lg:block w-72 bg-white border-r border-gray-200">
+            <div class="p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-6">Dashboard</h2>
+                <nav class="space-y-2">
+                    <a href="/dashboard/"
+                        class="flex items-center px-4 py-3 text-blue-600 bg-blue-50 rounded-lg">
+                        <i class="fas fa-chart-pie w-5 mr-3"></i>
+                        <span class="font-medium">Overview</span>
+                    </a>
+                    <a href="/dashboard/car-deals/"
+                        class="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                        <i class="fas fa-car w-5 mr-3"></i>
+                        <span class="font-medium">Car Deals</span>
+                    </a>
+                    <a href="/dashboard/leasing-calculator/"
+                        class="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                        <i class="fas fa-calculator w-5 mr-3"></i>
+                        <span class="font-medium">Leasing Calculator</span>
+                    </a>
+                    <a href="#"
+                        class="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                        <i class="fas fa-cog w-5 mr-3"></i>
+                        <span class="font-medium">Settings</span>
+                    </a>
+                </nav>
+            </div>
+            <hr class="my-6 border-gray-200" />
+            <a href="#" class="flex items-center px-4 -mx-2">
+                <img class="object-cover mx-2 rounded-full h-9 w-9" src="/images/default-avatar.png" alt="avatar" />
+                <span class="mx-2 font-medium text-gray-800 truncate">admin@cardeals.com</span>
+            </a>
+        </aside>
+
+        <!-- Mobile Sidebar -->
+        <aside
+            class="absolute top-0 left-0 px-6 py-5 h-full z-50 w-2/3 bg-white shadow-lg transform transition-transform duration-500 -translate-x-full lg:hidden"
+            :class="[isOpen ? 'translate-x-0 opacity-100' : 'opacity-0 -translate-x-full']">
+            <div class="space-y-4">
+                <a href="/"
+                    class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Home</a>
+                <a href="/leasing-deals/"
+                    class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Leasing
+                    Deals</a>
+                <a href="/about-us/"
+                    class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">About
+                    us</a>
+                <a href="/blog/"
+                    class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Blog</a>
+                <a href="/contact/"
+                    class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Contact</a>
+                <hr class="my-4 border-gray-200">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Dashboard</h3>
+                <a class="flex items-center text-blue-600" href="/dashboard/">
+                    <i class="fas fa-chart-pie mr-2 w-5"></i>Overview
+                </a>
+                <a class="flex items-center text-gray-600 hover:text-blue-600" href="/dashboard/car-deals/">
+                    <i class="fas fa-car mr-2 w-5"></i>Car Deals
+                </a>
+                <a class="flex items-center text-gray-600 hover:text-blue-600" href="/dashboard/leasing-calculator/">
+                    <i class="fas fa-calculator mr-2 w-5"></i>Leasing Calculator
+                </a>
+                <a class="flex items-center text-gray-600 hover:text-blue-600" href="#">
+                    <i class="fa-solid fa-gear mr-2 w-5"></i>Settings
+                </a>
+                <a class="logout-btn block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-red-600 rounded-lg hover:bg-red-500"
+                    href="#">
+                    Log out
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Section -->
+        <main class="bg-zinc-50 flex-1 p-4 lg:p-8">
+            
+        </main>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script>
+        
+    </script>
+</body>
+
+</html>

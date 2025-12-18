@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Car Deals Calculator | Dashboard</title>
+    <meta name="description" content="Administrative area for Car Deals. Authorized access only.">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Car Deals Database | Dashboard">
+    <meta property="og:description" content="Administrative area for Car Deals. Authorized access only.">
+
+    <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/tailwind.config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<style>
+</style>
+
+<body class="flex flex-col min-h-screen" x-data="{ isOpen: false }">
+    <!-- Navbar -->
+    <header class="bg-white border-b border-gray-200">
+        <nav class="max-w-[2000px] p-5 mx-auto lg:px-8 lg:py-5">
+            <div class="flex justify-between items-center relative">
+                <a href="/">
+                    <img class="h-5 sm:h-7" src="/images/logo-blue.png" alt="logo">
+                </a>
+
+                <div class="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-12">
+                    <a href="/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Home</a>
+                    <a href="/leasing-deals/"
+                        class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Leasing Deals</a>
+                    <a href="/about-us/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">About
+                        us</a>
+                    <a href="/blog/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Blog</a>
+                    <a href="/contact/"
+                        class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Contact</a>
+                </div>
+
+                <div class="hidden lg:flex items-center">
+                    <a class="logout-btn block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-red-600 rounded-lg lg:mt-0 hover:bg-red-500 lg:w-auto"
+                        href="#">
+                        Log out
+                    </a>
+                </div>
+
+                <div class="flex lg:hidden">
+                    <button x-cloak @click="isOpen = !isOpen" type="button"
+                        class="text-gray-800 hover:text-gray-900 focus:outline-none" aria-label="toggle menu">
+                        <svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
+                        </svg>
+                        <svg x-show="isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="flex flex-1 relative">
+        <!-- Dashboard Sidebar -->
+        <aside class="hidden lg:block w-72 bg-white border-r border-gray-200">
+            <div class="p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-6">Dashboard</h2>
+                <nav class="space-y-2">
+                    <a href="/dashboard/"
+                        class="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                        <i class="fas fa-chart-pie w-5 mr-3"></i>
+                        <span class="font-medium">Overview</span>
+                    </a>
+                    <a href="/dashboard/car-deals/"
+                        class="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                        <i class="fas fa-car w-5 mr-3"></i>
+                        <span class="font-medium">Car Deals</span>
+                    </a>
+                    <a href="/dashboard/leasing-calculator/"
+                        class="flex items-center px-4 py-3 text-blue-600 bg-blue-50 rounded-lg">
+                        <i class="fas fa-calculator w-5 mr-3"></i>
+                        <span class="font-medium">Leasing Calculator</span>
+                    </a>
+                    <a href="#"
+                        class="flex items-center px-4 py-3 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                        <i class="fas fa-cog w-5 mr-3"></i>
+                        <span class="font-medium">Settings</span>
+                    </a>
+                </nav>
+            </div>
+            <hr class="my-6 border-gray-200" />
+            <a href="#" class="flex items-center px-4 -mx-2">
+                <img class="object-cover mx-2 rounded-full h-9 w-9" src="/images/default-avatar.png" alt="avatar" />
+                <span class="mx-2 font-medium text-gray-800 truncate">admin@cardeals.com</span>
+            </a>
+        </aside>
+
+        <!-- Mobile Sidebar -->
+        <aside
+            class="absolute top-0 left-0 px-6 py-5 h-full z-50 w-2/3 bg-white shadow-lg transform transition-transform duration-500 -translate-x-full lg:hidden"
+            :class="[isOpen ? 'translate-x-0 opacity-100' : 'opacity-0 -translate-x-full']">
+            <div class="space-y-4">
+                <a href="/"
+                    class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Home</a>
+                <a href="/leasing-deals/"
+                    class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Leasing
+                    Deals</a>
+                <a href="/about-us/"
+                    class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">About
+                    us</a>
+                <a href="/blog/"
+                    class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Blog</a>
+                <a href="/contact/"
+                    class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Contact</a>
+                <hr class="my-4 border-gray-200">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Dashboard</h3>
+                <a class="flex items-center text-gray-600 hover:text-blue-600" href="/dashboard/">
+                    <i class="fas fa-chart-pie mr-2 w-5"></i>Overview
+                </a>
+                <a class="flex items-center text-gray-600 hover:text-blue-600" href="/dashboard/car-deals/">
+                    <i class="fas fa-car mr-2 w-5"></i>Car Deals
+                </a>
+                <a class="flex items-center text-blue-600" href="/dashboard/leasing-calculator/">
+                    <i class="fas fa-calculator mr-2 w-5"></i>Leasing Calculator
+                </a>
+                <a class="flex items-center text-gray-600 hover:text-blue-600" href="#">
+                    <i class="fa-solid fa-gear mr-2 w-5"></i>Settings
+                </a>
+                <a class="logout-btn block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-red-600 rounded-lg hover:bg-red-500"
+                    href="#">
+                    Log out
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Section -->
+        <main class="bg-zinc-50 flex-1 overflow-hidden p-4 lg:p-6">
+            <div class="max-w-[1800px] mx-auto h-full flex flex-col">
+                <!-- Header -->
+                <div class="bg-white rounded-xl shadow-sm p-4 mb-4 flex-shrink-0">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-calculator text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-gray-900">Lease Deal Calculator</h1>
+                            <p class="text-xs text-gray-500">Calculate monthly payments and total costs</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-5 gap-4 flex-1 min-h-0">
+                    <!-- Calculator Form -->
+                    <div class="lg:col-span-3 bg-white rounded-xl shadow-sm p-5">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 h-full">
+                            <!-- Column 1: Vehicle Pricing -->
+                            <div class="space-y-4">
+                                <h3 class="text-sm font-semibold text-gray-700 flex items-center gap-2 pb-2 border-b">
+                                    <i class="fas fa-car text-blue-600"></i>
+                                    Vehicle Pricing
+                                </h3>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1.5">MSRP / Cap Cost</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                                        <input id="capCost" type="number" placeholder="30,000"
+                                            class="w-full pl-7 pr-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1.5">Down Payment</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                                        <input id="downPayment" type="number" placeholder="3,000"
+                                            class="w-full pl-7 pr-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1.5">Acquisition Fee</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">$</span>
+                                        <input id="acqFee" type="number" placeholder="695"
+                                            class="w-full pl-7 pr-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Column 2: Lease Terms -->
+                            <div class="space-y-4">
+                                <h3 class="text-sm font-semibold text-gray-700 flex items-center gap-2 pb-2 border-b">
+                                    <i class="fas fa-file-contract text-blue-600"></i>
+                                    Lease Terms
+                                </h3>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1.5">Residual Value</label>
+                                    <div class="relative">
+                                        <input id="residualPercent" type="number" placeholder="60"
+                                            class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                                        <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">%</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1.5">Money Factor</label>
+                                    <input id="moneyFactor" type="number" step="0.0001" placeholder="0.002"
+                                        class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1.5">Lease Term</label>
+                                    <div class="relative">
+                                        <input id="term" type="number" placeholder="36"
+                                            class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                                        <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xs">months</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Column 3: Tax & Calculate -->
+                            <div class="space-y-4 flex flex-col">
+                                <h3 class="text-sm font-semibold text-gray-700 flex items-center gap-2 pb-2 border-b">
+                                    <i class="fas fa-percentage text-blue-600"></i>
+                                    Tax & Action
+                                </h3>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1.5">Sales Tax Rate</label>
+                                    <div class="relative">
+                                        <input id="taxRate" type="number" step="0.1" placeholder="8.875"
+                                            class="w-full px-3 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                                        <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">%</span>
+                                    </div>
+                                </div>
+                                <button onclick="calculateLease()"
+                                    class="w-full py-3 mt-auto bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                                    <i class="fas fa-calculator"></i>
+                                    Calculate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Panel -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-xl shadow-sm p-5 h-full flex flex-col">
+                            <h2 class="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2 pb-2 border-b flex-shrink-0">
+                                <i class="fas fa-receipt text-blue-600"></i>
+                                Results
+                            </h2>
+                            <div id="result" class="space-y-2.5 flex-1 flex items-center justify-center">
+                                <div class="text-center text-gray-400">
+                                    <i class="fas fa-calculator text-3xl mb-2"></i>
+                                    <p class="text-xs">Enter values and click calculate</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script>
+        function calculateLease() {
+            const capCost = parseFloat(document.getElementById('capCost').value);
+            const downPayment = parseFloat(document.getElementById('downPayment').value);
+            const residualPercent = parseFloat(document.getElementById('residualPercent').value);
+            const moneyFactor = parseFloat(document.getElementById('moneyFactor').value);
+            const term = parseInt(document.getElementById('term').value);
+            const taxRate = parseFloat(document.getElementById('taxRate').value) / 100;
+            const acqFee = parseFloat(document.getElementById('acqFee').value);
+
+            // Validation
+            if (isNaN(capCost) || isNaN(downPayment) || isNaN(residualPercent) || isNaN(moneyFactor) || isNaN(term) || isNaN(taxRate) || isNaN(acqFee)) {
+                document.getElementById('result').innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-3 w-full">
+                        <div class="flex items-center gap-2 text-red-700">
+                            <i class="fas fa-exclamation-circle text-sm"></i>
+                            <span class="font-medium text-xs">Please fill in all fields</span>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('result').classList.add('flex', 'items-center', 'justify-center');
+                return;
+            }
+
+            const residualValue = capCost * (residualPercent / 100);
+            const depreciation = (capCost - downPayment - residualValue) / term;
+            const financeCharge = ((capCost - downPayment) + residualValue) * moneyFactor;
+            const baseMonthly = depreciation + financeCharge;
+            const monthlyWithTax = baseMonthly * (1 + taxRate);
+
+            const firstMonth = monthlyWithTax;
+            const totalDriveOff = downPayment + acqFee + firstMonth;
+
+            document.getElementById('result').innerHTML = `
+                <div class="space-y-2.5 w-full">
+                    <!-- Monthly Payment -->
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3 border border-blue-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs text-blue-600 font-medium">Monthly Payment</p>
+                                <p class="text-xl font-bold text-blue-900">$${monthlyWithTax.toFixed(2)}</p>
+                            </div>
+                            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-calendar-alt text-white text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Breakdown -->
+                    <div class="space-y-1.5">
+                        <div class="bg-gray-50 rounded-lg p-2.5 border border-gray-200">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-gray-600">First Month</span>
+                                <span class="font-semibold text-gray-900">$${firstMonth.toFixed(2)}</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-2.5 border border-gray-200">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-gray-600">Acquisition Fee</span>
+                                <span class="font-semibold text-gray-900">$${acqFee.toFixed(2)}</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-2.5 border border-gray-200">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-gray-600">Down Payment</span>
+                                <span class="font-semibold text-gray-900">$${downPayment.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Due at Signing -->
+                    <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-3 border border-green-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs text-green-600 font-medium">Due at Signing</p>
+                                <p class="text-xl font-bold text-green-900">$${totalDriveOff.toFixed(2)}</p>
+                            </div>
+                            <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-hand-holding-usd text-white text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary -->
+                    <div class="bg-blue-50 rounded-lg p-2.5 border border-blue-100">
+                        <div class="text-xs text-blue-700 space-y-1">
+                            <p><span class="font-medium">Term:</span> ${term} months</p>
+                            <p><span class="font-medium">Residual:</span> ${residualPercent}% ($${residualValue.toFixed(2)})</p>
+                            <p><span class="font-medium">Money Factor:</span> ${moneyFactor}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove the flexbox classes that center the empty state
+            document.getElementById('result').classList.remove('flex', 'items-center', 'justify-center');
+        }
+
+        // Optional: Calculate on Enter key press
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                calculateLease();
+            }
+        });
+    </script>
+</body>
+
+</html>
