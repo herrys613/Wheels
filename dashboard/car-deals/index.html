@@ -470,7 +470,7 @@
             apiKey: "AIzaSyC25Tdl5GtnRXcHeBBGeIOuIcVX_WdiHP4",
             authDomain: "cars-8bdd6.firebaseapp.com",
             projectId: "cars-8bdd6",
-            storageBucket: "cars-8bdd6.appspot.com",
+            storageBucket: "cars-8bdd6.firebasestorage.app",
             messagingSenderId: "597823500976",
             appId: "1:597823500976:web:71f23d89e38a5cdb010175"
         };
@@ -884,93 +884,6 @@
             }
         }
 
-        // Handle image upload
-        document.addEventListener('change', async (e) => {
-            if (e.target.id === 'image-upload') {
-                const files = Array.from(e.target.files);
-                const uploadStatus = document.getElementById('upload-status');
-                const previewGrid = document.getElementById('image-preview-grid');
-
-                if (files.length === 0) return;
-
-                uploadStatus.classList.remove('hidden');
-                uploadStatus.textContent = 'Uploading images...';
-
-                try {
-                    const uploadedUrls = await uploadImagesToFirebase(files);
-
-                    // Add new images to current deal
-                    currentEditingDeal.images = [...(currentEditingDeal.images || []), ...uploadedUrls];
-
-                    // Re-render the image grid
-                    previewGrid.innerHTML = currentEditingDeal.images.map((img, index) => `
-                <div class="relative group">
-                    <img src="${img}" alt="Car" class="w-full h-32 object-cover rounded-lg border">
-                    <button type="button" onclick="removeImage(${index})" 
-                        class="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <i class="fas fa-times text-xs"></i>
-                    </button>
-                </div>
-            `).join('');
-
-                    previewGrid.classList.remove('hidden');
-                    uploadStatus.textContent = `${files.length} image(s) uploaded successfully!`;
-                    uploadStatus.className = 'text-sm text-green-600';
-
-                    setTimeout(() => uploadStatus.classList.add('hidden'), 3000);
-
-                    // Clear input
-                    e.target.value = '';
-
-                } catch (error) {
-                    console.error('Upload error:', error);
-                    uploadStatus.textContent = 'Error uploading images. Please try again.';
-                    uploadStatus.className = 'text-sm text-red-600';
-                }
-            }
-        });
-
-        // Upload images to Firebase Storage
-        async function uploadImagesToFirebase(files) {
-            const uploadedUrls = [];
-
-            for (const file of files) {
-                // Create unique filename with timestamp
-                const timestamp = Date.now();
-                const filename = `car-deals/${timestamp}_${file.name}`;
-
-                // Upload to Firebase Storage
-                const storageRef = storage.ref(filename);
-                const snapshot = await storageRef.put(file);
-
-                // Get download URL
-                const downloadURL = await snapshot.ref.getDownloadURL();
-                uploadedUrls.push(downloadURL);
-            }
-
-            return uploadedUrls;
-        }
-
-        // Remove image from preview
-        function removeImage(index) {
-            currentEditingDeal.images.splice(index, 1);
-
-            const previewGrid = document.getElementById('image-preview-grid');
-            previewGrid.innerHTML = currentEditingDeal.images.map((img, i) => `
-        <div class="relative group">
-            <img src="${img}" alt="Car" class="w-full h-32 object-cover rounded-lg border">
-            <button type="button" onclick="removeImage(${i})" 
-                class="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <i class="fas fa-times text-xs"></i>
-            </button>
-        </div>
-    `).join('');
-
-            if (currentEditingDeal.images.length === 0) {
-                previewGrid.classList.add('hidden');
-            }
-        }
-
         // Add New Deal
         document.getElementById('add-new-deal-btn').addEventListener('click', () => {
             currentEditingDeal = {
@@ -1129,33 +1042,18 @@
                         <hr class="border-gray-200">
 
                         <!-- Images -->
-                        <section class="space-y-4">
-                            <h3 class="text-lg font-semibold text-gray-900">Images</h3>
-
-                            <!-- Upload Area -->
-                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors">
-                                <input type="file" id="image-upload" accept="image/*" multiple class="hidden">
-                                <label for="image-upload" class="cursor-pointer">
-                                    <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
-                                    <p class="text-sm text-gray-600">Click to upload images or drag and drop</p>
-                                    <p class="text-xs text-gray-500 mt-1">PNG, JPG, WEBP up to 5MB each</p>
-                                </label>
-                            </div>
-                        
-                            <!-- Image Preview Grid -->
-                            <div id="image-preview-grid" class="grid grid-cols-3 gap-3 ${deal.images && deal.images.length > 0 ? '' : 'hidden'}">
-                                ${deal.images && deal.images.length > 0 ? deal.images.map((img, index) => `
-                                    <div class="relative group">
-                                        <img src="${img}" alt="Car" class="w-full h-32 object-cover rounded-lg border">
-                                        <button type="button" onclick="removeImage(${index})" 
-                                            class="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <i class="fas fa-times text-xs"></i>
-                                        </button>
-                                    </div>
-                                `).join('') : ''}
-                            </div>
-                            <div id="upload-status" class="text-sm text-gray-600 hidden"></div>
-                        </section>
+<section class="space-y-4">
+    <h3 class="text-lg font-semibold text-gray-900">Images</h3>
+    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+        <input type="file" id="image-upload" accept="image/*" multiple class="hidden">
+        <label for="image-upload" class="cursor-pointer">
+            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-2"></i>
+            <p class="text-sm text-gray-600">Click to upload images</p>
+            <p class="text-xs text-gray-500 mt-1">PNG, JPG up to 10MB each</p>
+        </label>
+    </div>
+    <div id="image-preview" class="grid grid-cols-3 gap-2 mt-4"></div>
+</section>
                     </div>
                 `;
 
@@ -1343,6 +1241,13 @@
                 });
             });
 
+            // Initialize image upload
+            const imageUpload = document.getElementById('image-upload');
+            if (imageUpload) {
+                imageUpload.addEventListener('change', handleImageUpload);
+                displayExistingImages();
+            }
+
             // Close dropdowns when clicking outside
             document.addEventListener('click', () => {
                 if (openDropdown) {
@@ -1363,6 +1268,63 @@
                 });
             }
         }
+
+        function displayExistingImages() {
+    const preview = document.getElementById('image-preview');
+    if (!preview) return;
+    
+    const deal = currentEditingDeal;
+    if (deal.images && deal.images.length > 0) {
+        preview.innerHTML = deal.images.map((img, index) => `
+            <div class="relative group">
+                <img src="${img}" class="w-full h-32 object-cover rounded-lg">
+                <button onclick="removeImage(${index})" 
+                    class="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                    <i class="fas fa-times text-xs"></i>
+                </button>
+            </div>
+        `).join('');
+    }
+}
+
+async function handleImageUpload(event) {
+    const files = Array.from(event.target.files);
+    const preview = document.getElementById('image-preview');
+    
+    if (!files.length) return;
+    
+    for (const file of files) {
+        if (file.size > 10 * 1024 * 1024) {
+            alert(`${file.name} is too large. Max size is 10MB`);
+            continue;
+        }
+        
+        try {
+            const storageRef = storage.ref(`car-images/${Date.now()}_${file.name}`);
+            const snapshot = await storageRef.put(file);
+            const url = await snapshot.ref.getDownloadURL();
+            
+            if (!currentEditingDeal.images) {
+                currentEditingDeal.images = [];
+            }
+            currentEditingDeal.images.push(url);
+            
+            displayExistingImages();
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Failed to upload image: ' + file.name);
+        }
+    }
+    
+    event.target.value = '';
+}
+
+function removeImage(index) {
+    if (confirm('Remove this image?')) {
+        currentEditingDeal.images.splice(index, 1);
+        displayExistingImages();
+    }
+}
 
         // Delete
         let deleteTargetId = null;
