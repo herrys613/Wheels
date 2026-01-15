@@ -1,0 +1,2747 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leasing Deals | Wheels</title>
+    <meta name="title" content="Leasing Deals | Wheels">
+    <meta name="description" content="Explore current car lease deals from trusted dealerships.">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Leasing Deals | Wheels">
+    <meta property="og:description" content="Explore current car lease deals from trusted dealerships.">
+    <meta property="og:url" content="https://wheelsautoleasing.com/leasing-deals/">
+    <meta property="og:image" content="https://wheelsautoleasing.com/images/leasing-deals-social-preview.png">
+
+    <link rel="icon" type="image/png" href="/images/favicon.png" sizes="32x32">
+    <link rel="canonical" href="https://wheelsautoleasing.com/leasing-deals/">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+</head>
+<style>
+    /* Image Slider - Swiper Customization */
+    .image-slider-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Swiper pagination dots */
+    .swiper-pagination {
+        bottom: 5px !important;
+    }
+
+    .swiper-pagination-bullet {
+        width: 4px !important;
+        height: 4px !important;
+        background: rgba(255, 255, 255, 0.5) !important;
+        opacity: 1 !important;
+        backdrop-filter: blur(4px);
+    }
+
+    .swiper-pagination-bullet-active {
+        background: white !important;
+        transform: scale(1.2);
+    }
+
+    /* Swiper navigation arrows */
+    .swiper-button-next,
+    .swiper-button-prev {
+        width: 32px !important;
+        height: 32px !important;
+        background: rgba(255, 255, 255, 0.9) !important;
+        border-radius: 50% !important;
+        opacity: 0 !important;
+        transition: opacity 0.2s ease !important;
+        backdrop-filter: blur(4px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        display: none;
+    }
+
+    /* Show navigation arrows on desktop only (640px and up) */
+    @media (min-width: 640px) {
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Show arrows only on hover */
+        .image-slider-container:hover .swiper-button-next,
+        .image-slider-container:hover .swiper-button-prev {
+            opacity: 1 !important;
+        }
+    }
+
+    .swiper-button-next:after,
+    .swiper-button-prev:after {
+        font-size: 14px !important;
+        font-weight: bold;
+        color: #333 !important;
+    }
+
+    .swiper-button-next:hover,
+    .swiper-button-prev:hover {
+        background: rgba(255, 255, 255, 1) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+
+    /* Hide navigation for single images */
+    .swiper-single .swiper-button-next,
+    .swiper-single .swiper-button-prev {
+        display: none;
+    }
+
+    /* Pagination Styles */
+    .pagination-btn {
+        min-width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #E5E7EB;
+        background-color: white;
+        color: #374151;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .pagination-btn:hover:not(:disabled) {
+        background-color: #F3F4F6;
+        border-color: #D1D5DB;
+    }
+
+    .pagination-btn.active {
+        background-color: #2C2C2C;
+        color: white;
+        border-color: #2C2C2C;
+    }
+
+    .pagination-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    .pagination-ellipsis {
+        min-width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6B7280;
+    }
+
+    /* Image Viewer Modal - Full Screen Gallery Style */
+    .image-viewer-modal {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.95);
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+    }
+
+    .image-viewer-modal.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Top bar - absolute, no space taken */
+    .image-viewer-top-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 20px;
+        z-index: 10001;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), transparent);
+    }
+
+    /* Image counter - top left */
+    .image-viewer-counter {
+        color: white;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    /* Top right controls */
+    .image-viewer-top-controls {
+        display: flex;
+        gap: 8px;
+    }
+
+    .image-viewer-top-controls button {
+        width: 36px;
+        height: 36px;
+        background-color: transparent;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s;
+    }
+
+    .image-viewer-top-controls button:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .image-viewer-top-controls button i {
+        color: white;
+        font-size: 18px;
+    }
+
+    /* Main image container - full screen */
+    .image-viewer-container {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .image-viewer-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        will-change: transform;
+        cursor: grab;
+    }
+
+    /* Navigation arrows */
+    .image-viewer-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 44px;
+        height: 44px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10001;
+        transition: background-color 0.2s;
+    }
+
+    .image-viewer-nav:hover:not(:disabled) {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .image-viewer-nav.prev {
+        left: 16px;
+    }
+
+    .image-viewer-nav.next {
+        right: 16px;
+    }
+
+    .image-viewer-nav:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    .image-viewer-nav i {
+        color: white;
+        font-size: 20px;
+    }
+
+    /* Thumbnails - bottom center */
+    .image-viewer-thumbnails {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        padding: 8px;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
+        max-width: 90%;
+        overflow-x: auto;
+        z-index: 10001;
+    }
+
+    .image-viewer-thumbnails::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .image-viewer-thumbnails::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .image-viewer-thumbnails::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+    }
+
+    .image-viewer-thumbnail {
+        width: 60px;
+        height: 60px;
+        border-radius: 4px;
+        overflow: hidden;
+        cursor: pointer;
+        flex-shrink: 0;
+        border: 2px solid transparent;
+        transition: border-color 0.2s, opacity 0.2s;
+        opacity: 0.6;
+    }
+
+    .image-viewer-thumbnail:hover {
+        opacity: 0.8;
+    }
+
+    .image-viewer-thumbnail.active {
+        border-color: white;
+        opacity: 1;
+    }
+
+    .image-viewer-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Hide thumbnails when only 1 image */
+    .image-viewer-thumbnails.single-image {
+        display: none;
+    }
+
+    @media (max-width: 640px) {
+
+        .image-viewer-nav {
+            width: 36px;
+            height: 36px;
+        }
+
+        .image-viewer-nav.prev {
+            left: 8px;
+        }
+
+        .image-viewer-nav.next {
+            right: 8px;
+        }
+    }
+
+    /* Skeleton Loading Animation */
+    .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: skeleton-loading 1.5s infinite;
+    }
+
+    @keyframes skeleton-loading {
+        0% {
+            background-position: 200% 0;
+        }
+
+        100% {
+            background-position: -200% 0;
+        }
+    }
+
+    .skeleton-card {
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+
+    .skeleton-box {
+        background-color: #e0e0e0;
+    }
+</style>
+
+<body>
+    <!-- Navbar -->
+    <header class="bg-white border-b border-gray-200">
+        <nav x-data="{ isOpen: false }" class="max-w-[2000px] p-5 mx-auto lg:px-8 lg:py-5">
+            <div class="flex justify-between items-center relative">
+                <!-- Logo -->
+                <a href="/">
+                    <img class="w-auto h-5 sm:h-7" src="/images/logo-blue.png" alt="logo">
+                </a>
+
+                <!-- Desktop Navigation -->
+                <div class="hidden lg:flex absolute left-1/2 transform -translate-x-1/2 space-x-12">
+                    <a href="/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Home</a>
+                    <a href="/leasing-deals/"
+                        class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Leasing
+                        Deals</a>
+                    <a href="/about-us/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">About
+                        us</a>
+                    <a href="/blog/" class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Blog</a>
+                    <a href="/contact/"
+                        class="text-gray-600 hover:text-blue-600 transition-colors duration-300">Contact</a>
+                </div>
+
+
+                <!-- Login -->
+                <div class="hidden lg:flex items-center">
+                    <a class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-blue-600 rounded-lg lg:mt-0 hover:bg-blue-500 lg:w-auto"
+                        href="/login/">
+                        Log in
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="flex lg:hidden">
+                    <button x-cloak @click="isOpen = !isOpen" type="button"
+                        class="text-gray-500  hover:text-gray-600  focus:outline-none focus:text-gray-600 "
+                        aria-label="toggle menu">
+                        <svg x-show="!isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 8h16M4 16h16" />
+                        </svg>
+
+                        <svg x-show="isOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu open: "block", Menu closed: "hidden"-->
+            <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
+                class="lg:hidden absolute inset-x-0 transition-all duration-300 ease-in-out bg-white border-b border-gray-200 shadow-lg z-40">
+                <div class="px-4 py-6 space-y-4">
+                    <a href="/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Home</a>
+                    <a href="/leasing-deals/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Leasing
+                        Deals</a>
+                    <a href="/about-us/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">About
+                        us</a>
+                    <a href="/blog/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Blog</a>
+                    <a href="/contact/"
+                        class="block text-gray-600 hover:text-blue-600 font-medium transition-colors duration-300">Contact</a>
+                    <a class="block px-5 py-2 mt-4 text-sm text-center text-white capitalize bg-blue-600 rounded-lg lg:mt-0 hover:bg-blue-500 lg:w-auto"
+                        href="/login/">
+                        Log in
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="max-w-[2000px] mx-auto flex flex-col md:flex-row min-h-screen relative">
+        <!-- FilterSidebar -->
+        <aside class="absolute top-0 left-0 px-6 lg:pt-10 py-2 pb-52 z-50 w-2/3 bg-white shadow-lg transform transition-transform duration-500
+         -translate-x-full lg:translate-x-0 lg:w-[320px] lg:shadow-none lg:border-r" id="filterSidebar">
+
+            <div class="flex justify-end py-2 lg:hidden">
+                <button id="closeFilterBtn" onclick="UI.closeFilterSidebar()"
+                    class="text-gray-800 hover:text-black">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="text-xl font-semibold">Filters</h2>
+                <button onclick="Filters.resetAll()" class="text-sm text-warm-gray-500 hover:underline font-medium">
+                    Reset All
+                </button>
+            </div>
+
+            <!-- Price Range -->
+            <div>
+                <button onclick="UI.toggleSection('price')"
+                    class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+                    Price
+                    <span id="icon-price">+</span>
+                </button>
+                <div id="section-price" class="mt-5 hidden">
+                    <input type="range" id="priceRange" min="100" max="5000" step="100" class="w-full" value="5000"
+                        oninput="Filters.updatePriceLabel()">
+                    <p class="text-sm text-gray-800 mt-1">Up to $<span id="priceLabel">5000</span></p>
+                </div>
+            </div>
+
+            <!-- Makes -->
+            <div>
+                <button onclick="UI.toggleSection('makes')"
+                    class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+                    Makes
+                    <span id="icon-makes">+</span>
+                </button>
+                <div id="section-makes" class="mt-5 space-y-1 hidden">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Colors -->
+            <div>
+                <button onclick="UI.toggleSection('colors')"
+                    class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+                    Colors
+                    <span id="icon-colors">+</span>
+                </button>
+                <div id="section-colors" class="mt-5 space-y-1 hidden">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div>
+                <button onclick="UI.toggleSection('features')"
+                    class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+                    Features
+                    <span id="icon-features">+</span>
+                </button>
+                <div id="section-features" class="mt-5 space-y-1 hidden">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Apply Filters Button -->
+            <div class="mt-6">
+                <button onclick="Filters.applyFilters()"
+                    class="w-full bg-gray-950 text-white font-semibold py-2 px-4 rounded-lg hover:bg-warm-gray-500 transition duration-200">
+                    Apply Filters
+                </button>
+            </div>
+        </aside>
+
+
+        <main id="cars-container" class="flex-1 p-4 lg:p-8">
+            <!-- Header with Search -->
+            <div class="mb-3">
+                <div class="flex flex-col gap-4">
+                    <!-- Title and Search Row -->
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                        <div class="flex items-center justify-between">
+                            <h1 class="text-xl font-bold text-gray-00">Car Listings</h1>
+                            <div class="text-xs text-gray-800 block lg:hidden whitespace-nowrap">
+                                <span id="results-count">0</span> cars found
+                            </div>
+                        </div>
+
+                        <!-- Search Bar -->
+                        <div class="relative w-full lg:w-96">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-gray-400"></i>
+                            </div>
+                            <input id="search-bar" type="text" placeholder="Search listings..."
+                                onkeyup="Search.onInput(event)" oninput="Search.toggleClearButton()"
+                                onfocus="Search.showSuggestions()"
+                                class="w-full text-base pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-transparent" />
+
+                            <!-- Clear Button (X) -->
+                            <button id="search-clear-btn" onclick="Search.clearSearch()"
+                                class="hidden absolute inset-y-0 right-0 pr-3 items-center text-gray-400 hover:text-gray-600 transition-colors">
+                                <i class="fas fa-times"></i>
+                            </button>
+
+                            <!-- Suggestions Dropdown -->
+                            <div id="search-suggestions"
+                                class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-50">
+                                <div id="search-suggestions-inner" class="max-h-60 overflow-y-auto custom-scroll">
+                                    <!-- Suggestions will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controls Row -->
+                    <div class="flex items-center justify-between gap-3">
+                        <!-- Sort By, Filter Pills and show sold -->
+                        <div class="flex items-center justify-between gap-3 w-full lg:w-auto">
+                            <div class="flex items-center gap-3">
+                                <!-- Sort By Dropdown -->
+                                <div class="relative" x-data="{ open: false }">
+                                    <button @click="open = !open" @click.away="open = false"
+                                        class="flex items-center gap-2 px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50">
+                                        <i class="fas fa-sort text-gray-500"></i>
+                                        <span id="sort-label">Sort By</span>
+                                        <i class="fas fa-chevron-down text-xs text-gray-500 transition-transform"
+                                            :class="{ 'rotate-180': open }"></i>
+                                    </button>
+
+                                    <div x-show="open" style="display: none;"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 scale-95"
+                                        x-transition:enter-end="opacity-100 scale-100"
+                                        x-transition:leave="transition ease-in duration-150"
+                                        x-transition:leave-start="opacity-100 scale-100"
+                                        x-transition:leave-end="opacity-0 scale-95"
+                                        class="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
+                                        <div class="py-1">
+                                            <button onclick="Sorting.sortCars('price-low')" data-sort="price-low"
+                                                class="sort-option w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
+                                                Price: Low to High
+                                            </button>
+                                            <button onclick="Sorting.sortCars('price-high')" data-sort="price-high"
+                                                class="sort-option w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
+                                                Price: High to Low
+                                            </button>
+                                            <button onclick="Sorting.sortCars('newest')" data-sort="newest"
+                                                class="sort-option w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
+                                                Newest First
+                                            </button>
+                                            <button onclick="Sorting.sortCars('oldest')" data-sort="oldest"
+                                                class="sort-option w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
+                                                Oldest First
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Filter Toggle Button -->
+                                <button id="filter-toggle" onclick="UI.toggleFilterSidebar()"
+                                    class="flex items-center gap-2 px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50 lg:hidden">
+                                    <i class="fas fa-filter text-gray-500"></i>
+                                    <span>Filter</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Desktop Results Count -->
+                        <div class="hidden lg:block text-xs text-gray-600">
+                            <span id="results-count-desktop">0</span> cars found
+                        </div>
+                    </div>
+
+                    <!-- Active Filters Pills -->
+                    <div id="active-filters"
+                        class="flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap hide-scrollbar">
+                        <!-- Active filter pills will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Listings Grid -->
+            <div id="car-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards will be populated by JavaScript -->
+            </div>
+
+            <!-- Pagination Controls -->
+            <div id="pagination-container" class="flex justify-center items-center gap-2 mt-8 mb-3">
+                <!-- Will be populated by JavaScript -->
+            </div>
+
+            <!-- No Results Message -->
+            <div id="no-match-message" class="text-center py-12 hidden">
+                <i class="fas fa-search text-gray-300 text-4xl mb-4"></i>
+                <h3 class="text-lg font-medium text-gray-800 mb-2">No cars found</h3>
+                <p class="text-gray-600">Try adjusting your search criteria or check back later for new listings
+                </p>
+            </div>
+
+            <!-- WhatsApp Chat Bubble -->
+            <div id="whatsapp-chat"
+                class="fixed bottom-5 right-5 bg-green-500 w-12 h-12 rounded-full shadow-lg flex items-center justify-center opacity-0 scale-90 transition duration-400 duration-400 z-50">
+                <div id="whatsapp-bubble"
+                    class="absolute bottom-16 right-0 bg-white text-gray-800 px-3 py-1.5 rounded-lg text-xs shadow-md opacity-0 translate-y-2 transition duration-400 duration-300 whitespace-nowrap">
+                    Follow our status<br>to see our updates
+                </div>
+                <a href="https://wa.me/13473789073?text=Hi,%20My%20name%20is%20%0AI'd%20like%20to%20see%20your%20status"
+                    target="_blank" rel="noopener noreferrer"
+                    class="w-10 h-10 flex justify-center items-center text-3xl text-white bg-green-500 rounded-full">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <button id="close-chat"
+                    class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 text-xs items-center justify-center cursor-pointer hidden hover:bg-red-700 focus:outline-none"
+                    aria-label="Close chat">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white  border-t">
+        <div class="max-w-[2000px] p-6 mx-auto">
+            <div class="lg:flex">
+                <div class="w-full py-6 lg:w-2/5">
+                    <a href="/">
+                        <img class="w-auto h-5" src="/images/logo-blue.png" alt="logo">
+                    </a>
+                    <p class="max-w-sm mt-2 text-gray-500 ">A simple auto leasing platform.</p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="https://wa.me/9175837073" target="_blank" class="text-gray-700 text-gray-700 text-2xl"
+                            aria-label="Chat on WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://instagram.com/wheelsautoleasing" target="_blank"
+                            class="text-gray-700 text-gray-700 text-2xl" aria-label="Visit Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-0 lg:mt-0 lg:flex-1">
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+                        <div>
+                            <h3 class="text-gray-700 font-semibold ">Company</h3>
+                            <a href="/leasing-deals/" class="block mt-2 text-sm text-gray-500  hover:underline">Leasing
+                                Deals</a>
+                            <a href="/about-us/" class="block mt-2 text-sm text-gray-500  hover:underline">About Us</a>
+                            <a href="/blog/" class="block mt-2 text-sm text-gray-500  hover:underline">Blog</a>
+                            <a href="/contact/" class="block mt-2 text-sm text-gray-500  hover:underline">Partner with
+                                Us</a>
+                        </div>
+
+                        <div>
+                            <h3 class="text-gray-700 font-semibold ">Support</h3>
+                            <a href="/#faq" class="block mt-2 text-sm text-gray-500  hover:underline">FAQ</a>
+                            <a href="/contact/" class="block mt-2 text-sm text-gray-500  hover:underline">Contact
+                                Us</a>
+                            <a href="/docs-&-forms/" class="block mt-2 text-sm text-gray-500  hover:underline">Docs &
+                                Forms</a>
+                        </div>
+
+                        <div>
+                            <h3 class="text-gray-700 font-semibold ">Get in touch</h3>
+                            <span class="block mt-2 text-sm text-gray-500  hover:underline">+1 917 583 7073</span>
+                            <span
+                                class="block mt-2 text-sm text-gray-500  hover:underline">hello@wheelsautoleasing.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="h-px my-6 bg-gray-200 border-none ">
+
+            <div>
+                <p class="text-center text-gray-500 ">&copy;
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script> Wheels. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script>
+        // =============================================================================
+        // CONFIGURATION
+        // =============================================================================
+
+        const CONFIG = Object.freeze({
+            // Firebase
+            FIREBASE: {
+                apiKey: "AIzaSyC25Tdl5GtnRXcHeBBGeIOuIcVX_WdiHP4",
+                authDomain: "cars-8bdd6.firebaseapp.com",
+                projectId: "cars-8bdd6",
+                storageBucket: "cars-8bdd6.appspot.com",
+                messagingSenderId: "597823500976",
+                appId: "1:597823500976:web:71f23d89e38a5cdb010175"
+            },
+
+            // Pagination
+            ITEMS_PER_PAGE: 12,
+            MAX_SEARCH_SUGGESTIONS: 15,
+
+            // Timing
+            DEBOUNCE_DELAY_MS: 300,
+            SKELETON_DELAY_MS: 500,
+            TOAST_DURATION_MS: 3000,
+            MODAL_TRANSITION_MS: 300,
+            WHATSAPP_SHOW_DELAY_MS: 5000,
+
+            // Zoom
+            ZOOM: {
+                MIN: 1,
+                MAX: 5,
+                STEP: 2
+            },
+
+            // Price
+            MAX_PRICE: 5000,
+            PRICE_STEP: 100,
+
+            // Filter Options
+            FILTER_OPTIONS: {
+                makes: [
+                    'Acura', 'Alfa Romeo', 'Audi', 'Bentley', 'BMW', 'Buick', 'Cadillac', 'Chevrolet',
+                    'Chrysler', 'Dodge', 'Fiat', 'Ford', 'Genesis', 'GMC', 'Honda', 'Hyundai', 'Infiniti',
+                    'Jaguar', 'Jeep', 'Kia', 'Land Rover', 'Lexus', 'Lincoln', 'Maserati', 'Mazda',
+                    'Mercedes-Benz', 'Mitsubishi', 'Nissan', 'Peugeot', 'Ram', 'Subaru', 'Suzuki',
+                    'Tesla', 'Toyota', 'Volkswagen', 'Volvo'
+                ],
+                colors: ['Black', 'White', 'Gray', 'Silver', 'Gold', 'Red', 'Blue', 'Green', 'Brown'],
+                features: ['Sunroof', 'Leather Seats', 'Navigation', 'Bluetooth']
+            },
+
+            // CSS Classes
+            CLASSES: {
+                HIDDEN: 'hidden',
+                INVISIBLE: 'invisible',
+                ACTIVE: 'active',
+                FIELD_ERROR: 'field-error',
+                SIDEBAR_OPEN: 'sidebar-open'
+            },
+
+            // Status values
+            STATUS: {
+                ACTIVE: 'active'
+            },
+
+            // Sort types
+            SORT: {
+                PRICE_LOW: 'price-low',
+                PRICE_HIGH: 'price-high',
+                NEWEST: 'newest',
+                OLDEST: 'oldest'
+            }
+        });
+
+        // =============================================================================
+        // UTILITIES
+        // =============================================================================
+
+        const Utils = {
+            // Debounce function execution
+            debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            },
+
+            // Format number as USD currency
+            formatCurrency(value) {
+                return new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(value);
+            },
+
+            // Calculate relative time string from date
+            getRelativeTimeString(date) {
+                const diffMs = Date.now() - date.getTime();
+                const daysAgo = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+                if (daysAgo < 1) return "Today";
+                if (daysAgo === 1) return "1d ago";
+                if (daysAgo < 30) return `${daysAgo}d ago`;
+
+                const monthsAgo = Math.floor(daysAgo / 30);
+                if (daysAgo < 365) {
+                    return monthsAgo === 1 ? "1m ago" : `${monthsAgo}m ago`;
+                }
+
+                const yearsAgo = Math.floor(daysAgo / 365);
+                return yearsAgo === 1 ? "1y ago" : `${yearsAgo}y ago`;
+            },
+
+            // Escape HTML special characters
+            escapeHtml(str) {
+                if (!str) return '';
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            },
+
+            // Escape string for use in HTML attributes
+            escapeAttr(str) {
+                if (!str) return '';
+                return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+            },
+
+            // Clean phone number to digits only
+            cleanPhoneNumber(phone) {
+                return phone ? phone.replace(/\D/g, '') : '';
+            },
+
+            // Prevent body scroll and compensate for scrollbar
+            preventBodyScroll() {
+                const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+                document.body.style.paddingRight = `${scrollbarWidth}px`;
+                document.body.style.overflow = 'hidden';
+            },
+
+            // Restore body scroll
+            restoreBodyScroll() {
+                document.body.style.paddingRight = '';
+                document.body.style.overflow = '';
+            },
+
+            // Get URL search parameter
+            getUrlParam(name) {
+                return new URLSearchParams(window.location.search).get(name);
+            },
+
+            // Update URL without page reload
+            updateUrlParam(param, value) {
+                const url = new URL(window.location);
+                if (value === null) {
+                    url.searchParams.delete(param);
+                } else {
+                    url.searchParams.set(param, value);
+                }
+                window.history.pushState({}, '', url);
+            },
+
+            // Scroll to top of page instantly
+            scrollToTop() {
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+                window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+            },
+
+            // Clear all filter-related URL params
+            clearFilterParams(url) {
+                ['price', 'makes', 'colors', 'features', 'sort', 'page', 'search'].forEach(key => {
+                    url.searchParams.delete(key);
+                });
+            }
+        };
+
+        // =============================================================================
+        // DOM CACHE
+        // =============================================================================
+
+
+        // Cached DOM element references
+        // Initialized after DOMContentLoaded
+        const DOM = {
+            _cache: {},
+
+            // Get cached element or query and cache it
+            get(id) {
+                if (!this._cache[id]) {
+                    this._cache[id] = document.getElementById(id);
+                }
+                return this._cache[id];
+            },
+
+            // Initialize commonly used elements
+            init() {
+                const ids = [
+                    'car-cards-container',
+                    'no-match-message',
+                    'pagination-container',
+                    'search-bar',
+                    'search-clear-btn',
+                    'search-suggestions',
+                    'active-filters',
+                    'results-count',
+                    'results-count-desktop',
+                    'filterSidebar',
+                    'priceRange',
+                    'priceLabel',
+                    'car-details-modal-overlay',
+                    'car-modal-title',
+                    'car-modal',
+                    'whatsapp-chat',
+                    'whatsapp-bubble',
+                    'close-chat'
+                ];
+
+                ids.forEach(id => this.get(id));
+            },
+
+            // Clear cache (useful for testing)
+            clear() {
+                this._cache = {};
+            }
+        };
+
+        // =============================================================================
+        // APPLICATION STATE
+        // =============================================================================
+
+        const State = {
+            // Car data
+            allCars: [],
+            displayedCars: [],
+
+            // UI state
+            currentSort: CONFIG.SORT.NEWEST,
+
+            // Active filters
+            activeFilters: {
+                price: CONFIG.MAX_PRICE,
+                makes: [],
+                colors: [],
+                features: []
+            },
+
+            // Pagination
+            pagination: {
+                currentPage: 1,
+                itemsPerPage: CONFIG.ITEMS_PER_PAGE,
+                totalItems: 0,
+                totalPages: 0
+            },
+
+            // WhatsApp chat
+            chat: {
+                visible: false,
+                closed: false,
+                initialDelayPassed: false
+            },
+
+            // Search
+            currentSearchMatches: [],
+
+            // Reset filters to defaults
+            resetFilters() {
+                this.activeFilters = {
+                    price: CONFIG.MAX_PRICE,
+                    makes: [],
+                    colors: [],
+                    features: [],
+                };
+            },
+
+            // Check if any filters are active
+            hasActiveFilters() {
+                const { activeFilters } = this;
+                return (
+                    activeFilters.price < CONFIG.MAX_PRICE ||
+                    activeFilters.makes.length > 0 ||
+                    activeFilters.colors.length > 0 ||
+                    activeFilters.features.length > 0
+                );
+            }
+        };
+
+        // =============================================================================
+        // URL SYNC MODULE
+        // =============================================================================
+
+        const UrlSync = {
+            pushState() {
+                const url = new URL(window.location);
+                Utils.clearFilterParams(url);
+
+                if (State.activeFilters.price < CONFIG.MAX_PRICE) {
+                    url.searchParams.set('price', State.activeFilters.price);
+                }
+                ['makes', 'colors', 'features'].forEach(key => {
+                    if (State.activeFilters[key].length) {
+                        url.searchParams.set(key, State.activeFilters[key].join(','));
+                    }
+                });
+                if (State.currentSort !== CONFIG.SORT.NEWEST) {
+                    url.searchParams.set('sort', State.currentSort);
+                }
+                if (State.pagination.currentPage > 1) {
+                    url.searchParams.set('page', State.pagination.currentPage);
+                }
+                const searchTerm = DOM.get('search-bar')?.value.trim();
+                if (searchTerm) url.searchParams.set('search', searchTerm);
+
+                window.history.pushState({}, '', url);
+            },
+
+            loadFromUrl() {
+                const url = new URL(window.location);
+
+                const price = url.searchParams.get('price');
+                if (price) State.activeFilters.price = parseInt(price);
+
+                ['makes', 'colors', 'features'].forEach(key => {
+                    const value = url.searchParams.get(key);
+                    if (value) State.activeFilters[key] = value.split(',');
+                });
+
+                const sort = url.searchParams.get('sort');
+                if (sort) State.currentSort = sort;
+
+                const page = url.searchParams.get('page');
+                if (page) State.pagination.currentPage = parseInt(page);
+
+                const search = url.searchParams.get('search');
+                if (search) {
+                    const searchBar = DOM.get('search-bar');
+                    if (searchBar) searchBar.value = search;
+                }
+
+                const car = url.searchParams.get('car');
+            }
+        };
+
+        // =============================================================================
+        // HTML TEMPLATES
+        // =============================================================================
+
+        const Templates = {
+            // Generate skeleton loading cards
+            skeletonCards(count = 6) {
+                return Array(count).fill(0).map(() => `
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden skeleton-card">
+                        <div class="skeleton w-full h-[250px]"></div>
+                        <div class="p-6">
+                            <div class="mb-6">
+                                <div class="skeleton h-4 w-3/4 rounded"></div>
+                            </div>
+                            <div class="mb-6">
+                                <div class="skeleton h-6 w-1/2 rounded mb-2"></div>
+                                <div class="skeleton h-4 w-2/3 rounded"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 mb-4">
+                                <div class="skeleton h-3 w-full rounded"></div>
+                                <div class="skeleton h-3 w-full rounded"></div>
+                                <div class="skeleton h-3 w-full rounded"></div>
+                                <div class="skeleton h-3 w-full rounded"></div>
+                            </div>
+                            <div class="flex gap-2">
+                                <div class="skeleton h-10 flex-1 rounded-lg"></div>
+                                <div class="skeleton h-10 w-12 rounded-lg"></div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
+            // Generate car card HTML
+            carCard(car) {
+                const images = car.images?.length > 0 ? car.images : ['/images/placeholder-car.jpg'];
+                const imagesJSON = JSON.stringify(images).replace(/"/g, '&quot;');
+                const price = Utils.formatCurrency(car.pricing?.price || 0);
+
+                const timestamp = car.timestamp?.toDate() || new Date();
+                const timeText = Utils.getRelativeTimeString(timestamp);
+
+                const imageSlides = images.map((img, index) => `
+                    <div class="swiper-slide">
+                        <img loading="lazy" data-src="${img}" alt="Car Image" 
+                            class="w-full h-52 object-contain opacity-0"
+                             onclick="ImageViewer.open(${imagesJSON}, ${index})">
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-lg">
+                        <div class="relative">
+                            <div class="image-slider-container ${images.length === 1 ? 'swiper-single' : ''} bg-zinc-100">
+                                <div class="swiper">
+                                    <div class="swiper-wrapper">
+                                        ${imageSlides}
+                                    </div>
+                                    <div class="swiper-pagination"></div>
+                                    <div class="swiper-button-prev"></div>
+                                    <div class="swiper-button-next"></div>
+                                </div>
+                            </div>
+                            <div class="absolute top-4 left-4 flex flex-wrap gap-2 z-10">
+                                ${car.details?.label ? `<span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md">${Utils.escapeHtml(car.details.label)}</span>` : ''}
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-3">
+                                <div>
+                                    <button onclick="Display.viewCarDetailsByID('${car.id}')"  class="text-xl font-bold text-slate-900 text-left cursor-pointer">
+                                        ${Utils.escapeHtml(car.car?.name) || 'Unknown Car'}
+                                    </button>
+                                    <p class="text-slate-500 text-sm">${Utils.escapeHtml(car.details?.year) || 'N/A'} • ${Utils.escapeHtml(car.details?.exteriorColor) || ''}</p>
+                                </div>
+                            </div>
+                            <div class="border-t border-slate-100 pt-4">
+                                <div class="flex justify-between items-center mb-4">
+                                    <div>
+                                        <p class="text-xs text-slate-500 uppercase tracking-wide">Monthly</p>
+                                        <p class="text-2xl font-extrabold text-slate-900">${price}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-xs text-slate-500 uppercase tracking-wide">Due at signing</p>
+                                        <p class="text-lg font-bold text-slate-700">$${car.pricing?.due || 0}</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 text-xs text-slate-600 mb-4">
+                                    <span class="flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        ${Utils.escapeHtml(car.details?.term) || 'N/A'} months
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+                                        ${Utils.escapeHtml(car.details?.mileage) || 'N/A'} mi/yr
+                                    </span>
+                                </div>
+                                <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${encodeURIComponent(car.car?.name || 'car')}"
+                                   target="_blank"
+                                   class="block w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition-colors text-center">
+                                    Apply Now
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            // Generate car details modal content
+            carDetailsModal(car) {
+                const images = car.images?.length > 0 ? car.images : ['/images/placeholder-car.jpg'];
+                const imagesJSON = JSON.stringify(images).replace(/"/g, '&quot;');
+
+                const imageSlides = images.map((img, index) => `
+                    <div class="swiper-slide">
+                        <img loading="lazy" data-src="${img}" alt="Car Image" 
+                            class="w-full h-[150px] object-contain opacity-0"
+                            onclick="ImageViewer.open(${imagesJSON}, ${index})">
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full animate-slideIn overflow-hidden">
+                        <div class="flex items-center justify-between px-6 pr-3 py-2 border-b">
+                            <div>
+                                <h2 class="text-md font-bold text-gray-800">${Utils.escapeHtml(car.car?.name)}</h2>
+                            </div>
+                            <button data-action="close-car-modal" class="p-2 px-4 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors">
+                                <i class="fas fa-times text-xl"></i>
+                            </button>
+                        </div>
+                    
+                        <div class="h-[70vh] overflow-y-auto custom-scroll modal-scroll-container">
+                            <div class="px-6 py-6">
+                                <div class="relative w-full p-6 rounded-t-lg overflow-hidden image-slider-container ${images.length === 1 ? 'swiper-single' : ''} bg-white">
+                                    <div class="swiper">
+                                        <div class="swiper-wrapper">
+                                            ${imageSlides}
+                                        </div>
+                                        <div class="swiper-pagination"></div>
+                                        <div class="swiper-button-prev"></div>
+                                        <div class="swiper-button-next"></div>
+                                    </div>
+                                </div>
+                            
+                                <div class="mb-4 border-b">
+                                    <div class="flex space-x-6">
+                                        <button class="modal-tab-button active py-2 px-1 text-sm font-semibold border-b-2 border-blue-600 text-blue-600" data-action="switch-tab" data-tab="specs">
+                                            Specifications
+                                        </button>
+                                        <button class="modal-tab-button py-2 px-1 text-sm font-semibold border-b-2 border-transparent text-gray-600" data-action="switch-tab" data-tab="features">
+                                            Features
+                                        </button>
+                                        <button class="modal-tab-button py-2 px-1 text-sm font-semibold border-b-2 border-transparent text-gray-600" data-action="switch-tab" data-tab="terms">
+                                            Lease Terms
+                                        </button>
+                                    </div>
+                                </div>
+                            
+                                <div id="modal-specs-tab" class="modal-tab-content">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="flex justify-between py-1 border-b">
+                                            <span class="text-sm text-gray-600">Drivetrain</span>
+                                            <span class="text-sm font-semibold">AWD</span>
+                                        </div>
+                                        <div class="flex justify-between py-2 border-b">
+                                            <span class="text-sm text-gray-600">Seating</span>
+                                            <span class="text-sm font-semibold">5 Passengers</span>
+                                        </div>
+                                        <div class="flex justify-between py-2 border-b">
+                                            <span class="text-sm text-gray-600">Exterior Color</span>
+                                            <span class="text-sm font-semibold">${Utils.escapeHtml(car.details?.exteriorColor) || 'N/A'}</span>
+                                        </div>
+                                        <div class="flex justify-between py-2 border-b">
+                                            <span class="text-sm text-gray-600">Interior Color</span>
+                                            <span class="text-sm font-semibold">${Utils.escapeHtml(car.details?.interiorColor) || 'N/A'}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div id="modal-features-tab" class="modal-tab-content hidden">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="text-sm flex items-center space-x-2">
+                                            <i class="fas fa-check-circle text-green-500"></i>
+                                            <span>Panoramic Moonroof</span>
+                                        </div>
+                                        <div class="text-sm flex items-center space-x-2">
+                                            <i class="fas fa-check-circle text-green-500"></i>
+                                            <span>Navigation System</span>
+                                        </div>
+                                        <div class="text-sm flex items-center space-x-2">
+                                            <i class="fas fa-check-circle text-green-500"></i>
+                                            <span>Heated Seats</span>
+                                        </div>
+                                        <div class="text-sm flex items-center space-x-2">
+                                            <i class="fas fa-check-circle text-green-500"></i>
+                                            <span>Apple CarPlay & Android Auto</span>
+                                        </div>
+                                        <div class="text-sm flex items-center space-x-2">
+                                            <i class="fas fa-check-circle text-green-500"></i>
+                                            <span>Adaptive Cruise Control</span>
+                                        </div>
+                                        <div class="text-sm flex items-center space-x-2">
+                                            <i class="fas fa-check-circle text-green-500"></i>
+                                            <span>Blind Spot Monitoring</span>
+                                        </div>
+                                        <div class="text-sm flex items-center space-x-2">
+                                            <i class="fas fa-check-circle text-green-500"></i>
+                                            <span>Premium Sound System</span>
+                                        </div>
+                                        <div class="text-sm flex items-center space-x-2">
+                                            <i class="fas fa-check-circle text-green-500"></i>
+                                            <span>LED Headlights</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div id="modal-terms-tab" class="modal-tab-content hidden">
+                                    <div class="space-y-4">
+                                        <div class="bg-gray-50 rounded-lg p-4">
+                                            <h4 class="font-semibold mb-2">Lease Details</h4>
+                                            <ul class="space-y-2 text-sm text-gray-700">
+                                                <li>• Term: ${car.details?.term || 36} months</li>
+                                                <li>• Annual Mileage: ${car.details?.mileage || '12,000'} miles</li>
+                                                <li>• Excess Mileage Charge: $0.25 per mile</li>
+                                                <li>• Due at Signing: $${car.pricing?.due || 0} (includes first month payment)</li>
+                                            </ul>
+                                        </div>
+                                        <div class="bg-gray-50 rounded-lg p-4">
+                                            <h4 class="font-semibold mb-2">Additional Information</h4>
+                                            <ul class="space-y-2 text-sm text-gray-700">
+                                                <li>• Security Deposit: $0</li>
+                                                <li>• Acquisition Fee: $925</li>
+                                                <li>• Disposition Fee: $350 (at lease end)</li>
+                                                <li>• Includes: Maintenance & Warranty</li>
+                                            </ul>
+                                        </div>
+                                        <p class="text-xs text-gray-500 italic">
+                                            *Lease offer available to qualified customers with approved credit. Taxes, title, and registration fees extra.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+
+            // Generate pagination controls
+            pagination(currentPage, totalPages) {
+                if (totalPages <= 1) return '';
+
+                let html = `
+                    <button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} 
+                        onclick="Pagination.goToPage(${currentPage - 1})">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                `;
+
+                const pages = this._getPageNumbers(currentPage, totalPages);
+                pages.forEach(page => {
+                    if (page === '...') {
+                        html += `<span class="pagination-ellipsis">...</span>`;
+                    } else {
+                        html += `
+                            <button class="pagination-btn ${page === currentPage ? 'active' : ''}" 
+                                onclick="Pagination.goToPage(${page})">
+                                ${page}
+                            </button>
+                        `;
+                    }
+                });
+
+                html += `
+                    <button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} 
+                        onclick="Pagination.goToPage(${currentPage + 1})">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                `;
+
+                return html;
+            },
+
+            // Calculate page numbers with ellipsis
+            _getPageNumbers(current, total) {
+                const pages = [1];
+
+                if (total <= 6) {
+                    for (let i = 2; i <= total; i++) pages.push(i);
+                } else if (current <= 3) {
+                    for (let i = 2; i <= 4; i++) pages.push(i);
+                    pages.push('...', total);
+                } else if (current >= total - 2) {
+                    pages.push('...');
+                    for (let i = total - 3; i <= total; i++) pages.push(i);
+                } else {
+                    pages.push('...', current - 1, current, current + 1, '...', total);
+                }
+
+                return pages;
+            },
+
+            // Generate filter pill HTML
+            filterPill(label, type, value = null) {
+                const dataValue = value ? `data-value="${Utils.escapeAttr(value)}"` : '';
+                return `
+                    <div class="filter-pill inline-flex items-center gap-1 bg-gray-200 rounded-full px-2 py-1 text-xs">
+                        <span>${Utils.escapeHtml(label)}</span>
+                        <i class="fas fa-times cursor-pointer" 
+                            onclick="Filters.removeFilter('${type}', ${value ? `'${value}'` : 'null'})"></i>
+                    </div>
+                `;
+            },
+
+            // Generate search suggestion item
+            searchSuggestion(car, index) {
+                const name = Utils.escapeHtml(car.car?.name || 'Unknown');
+                const color = Utils.escapeHtml(car.details?.exteriorColor || '');
+                const price = Utils.formatCurrency(car.pricing?.price || 0);
+                const image = car.images?.[0] || '/images/placeholder-car.jpg';
+                const isSold = car.status === CONFIG.STATUS.SOLD;
+
+                return `
+                    <div onclick="Search.selectSuggestion(${index})" 
+                        class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <div class="relative">
+                                <img src="${image}" alt="Car" class="w-12 h-12 object-contain rounded">
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-800 truncate">
+                                    ${name}
+                                </p>
+                                <p class="text-xs text-gray-500">${color}</p>
+                            </div>
+                            <p class="text-sm font-semibold flex-shrink-0">${price}/M</p>
+                        </div>
+                    </div>
+                `;
+            },
+
+            // Generate image viewer modal HTML
+            imageViewerModal() {
+                return `
+                    <!-- Top bar -->
+                    <div class="image-viewer-top-bar">
+                        <!-- Counter - top left -->
+                        <div class="image-viewer-counter">
+                            <span id="image-viewer-counter-text">1 / 1</span>
+                        </div>
+                    
+                        <!-- Controls - top right -->
+                        <div class="image-viewer-top-controls">
+                            <button onclick="ImageViewer.toggleZoom()" title="Zoom">
+                                <i id="zoom-toggle-icon" class="fas fa-search-plus"></i>
+                            </button>
+                            <button onclick="ImageViewer.toggleFullscreen()" title="Fullscreen">
+                                <i id="fullscreen-icon" class="fas fa-expand"></i>
+                            </button>
+                            <button onclick="ImageViewer.close()" title="Close">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                
+                    <!-- Navigation arrows -->
+                    <button class="image-viewer-nav prev" onclick="ImageViewer.prevImage()">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                
+                    <!-- Main image -->
+                    <div class="image-viewer-container">
+                        <img id="image-viewer-image" class="image-viewer-image" src="" alt="Car Image" onclick="ImageViewer.toggleZoom()">
+                    </div>
+                
+                    <button class="image-viewer-nav next" onclick="ImageViewer.nextImage()">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                
+                    <!-- Thumbnails -->
+                    <div class="image-viewer-thumbnails" id="image-viewer-thumbnails">
+                        <!-- Populated dynamically -->
+                    </div>
+                `;
+            },
+
+            // Generate error message HTML
+            errorMessage(title, message, showViewAllButton = false) {
+                return `
+                    <i class="fas fa-exclamation-triangle text-gray-300 text-4xl mb-4"></i>
+                    <h3 class="text-lg font-medium text-gray-800 mb-2">${Utils.escapeHtml(title)}</h3>
+                    <p class="text-gray-600">${Utils.escapeHtml(message)}</p>
+                    ${showViewAllButton ? `
+                        <button onclick="Filters.resetAll()"
+                            class="mt-4 px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900">
+                            View All Cars
+                        </button>
+                    ` : ''}
+                `;
+            },
+
+            // Generate filter section checkboxes
+            filterCheckboxes(type, options) {
+                const allCheckbox = `
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" value="all" class="all-option" data-category="${type}" onchange="Filters.handleAllCheckbox(this)">
+                        <label class="text-sm text-gray-700 font-semibold">Uncheck All</label>
+                    </div>
+                `;
+
+                const regularCheckboxes = options.map(option => `
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" value="${Utils.escapeAttr(option)}" class="option" data-category="${type}" onchange="Filters.handleRegularCheckbox(this)">
+                        <label class="text-sm text-gray-700">${Utils.escapeHtml(option)}</label>
+                    </div>
+                `).join('');
+
+                return allCheckbox + regularCheckboxes;
+            },
+
+            // Generate toast notification
+            toast(message) {
+                return `
+                    <i class="fas fa-check-circle"></i>
+                    <span>${Utils.escapeHtml(message)}</span>
+                `;
+            }
+        };
+
+        // =============================================================================
+        // DATABASE MODULE
+        // =============================================================================
+
+        const Database = {
+            db: null,
+            // Initialize Firebase
+            init() {
+                firebase.initializeApp(CONFIG.FIREBASE);
+                this.db = firebase.firestore();
+
+                // Enable persistence
+                this.db.enablePersistence({ synchronizeTabs: true })
+                    .catch((err) => {
+                        if (err.code === 'failed-precondition') {
+                            console.log('Multiple tabs open, persistence can only be enabled in one tab');
+                        } else if (err.code === 'unimplemented') {
+                            console.log('Browser doesn\'t support persistence');
+                        }
+                    });
+            },
+
+            async loadCars() {
+                const container = DOM.get('car-cards-container');
+                const noResults = DOM.get('no-match-message');
+
+                try {
+                    noResults.classList.add(CONFIG.CLASSES.HIDDEN);
+                    container.innerHTML = Templates.skeletonCards();
+
+                    // Normal flow
+                    const query = this.db.collection("cars")
+                        .where("status", "in", [CONFIG.STATUS.ACTIVE])
+                        .orderBy("timestamp", "desc");
+
+                    const querySnapshot = await query.get();
+
+                    if (querySnapshot.empty) {
+                        noResults.classList.remove(CONFIG.CLASSES.HIDDEN);
+                        UI.updateResultsCount(0);
+                        return;
+                    }
+
+                    State.allCars = [];
+                    querySnapshot.forEach(doc => {
+                        State.allCars.push({ id: doc.id, ...doc.data() });
+                    });
+
+                    console.log(`Loaded ${State.allCars.length} approved cars`);
+
+                } catch (error) {
+                    console.error("Error loading cars:", error);
+                    noResults.classList.remove(CONFIG.CLASSES.HIDDEN);
+                    noResults.innerHTML = Templates.errorMessage(
+                        'Error loading cars',
+                        'Please refresh the page or try again later'
+                    );
+                }
+            }
+        };
+
+        // =============================================================================
+        // DISPLAY MODULE
+        // =============================================================================
+
+        const Display = {
+            // Refresh the display with current filters/sort/search
+            refresh() {
+                console.log('Refreshing display...');
+
+                const container = DOM.get('car-cards-container');
+                const noResults = DOM.get('no-match-message');
+
+                // Show skeleton loading
+                noResults.classList.add(CONFIG.CLASSES.HIDDEN);
+                container.innerHTML = Templates.skeletonCards();
+
+                // Delay to show skeleton, then render actual content
+                setTimeout(() => {
+
+                    let cars = [...State.allCars];
+
+                    // Apply search filter
+                    const searchTerm = DOM.get('search-bar')?.value.toLowerCase() || '';
+                    if (searchTerm) {
+                        cars = cars.filter(car => {
+                            const searchableText = `${car.car?.name || ''}`.toLowerCase();
+                            return searchableText.includes(searchTerm);
+                        });
+                    }
+
+                    cars = Filters.applyAllFilters(cars);
+                    cars = Sorting.applySorting(cars);
+
+                    State.displayedCars = cars;
+                    this.renderCars(cars);
+                    UI.updateResultsCount(cars.length);
+                }, CONFIG.SKELETON_DELAY_MS);
+            },
+
+            //  Render cars to the grid
+            renderCars(cars) {
+                const container = DOM.get('car-cards-container');
+                const noResults = DOM.get('no-match-message');
+                const paginationContainer = DOM.get('pagination-container');
+
+                if (cars.length === 0) {
+                    container.innerHTML = '';
+                    noResults.classList.remove(CONFIG.CLASSES.HIDDEN);
+                    paginationContainer.innerHTML = '';
+                    return;
+                }
+
+                noResults.classList.add(CONFIG.CLASSES.HIDDEN);
+
+                // Update pagination state
+                const { currentPage, itemsPerPage } = State.pagination;
+                State.pagination.totalItems = cars.length;
+                State.pagination.totalPages = Math.ceil(cars.length / itemsPerPage);
+
+                // Get paginated cars
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const paginatedCars = cars.slice(startIndex, startIndex + itemsPerPage);
+
+                // Render
+                container.innerHTML = paginatedCars.map(d => Templates.carCard(d)).join('');
+                paginationContainer.innerHTML = Templates.pagination(currentPage, State.pagination.totalPages);
+
+                // Lazy load images and initialize sliders
+                requestAnimationFrame(() => {
+                    container.querySelectorAll('img[data-src]').forEach(img => {
+                        img.src = img.dataset.src;
+                        img.onload = () => img.classList.add('opacity-100');
+                    });
+                    ImageSlider.initAll();
+                });
+            },
+
+            // View car details by ID (for onclick handlers)
+            viewCarDetailsByID(id) {
+                const car = State.allCars.find(d => d.id === id) ||
+                    State.displayedCars.find(d => d.id === id);
+                if (car) this.viewCarDetails(car);
+            },
+
+
+            // View car details modal
+            viewCarDetails(car) {
+                const modal = DOM.get('car-details-modal-overlay');
+                const modalTitle = DOM.get('car-modal-title');
+                const modalBody = DOM.get('car-modal');
+
+                const soldStatus = car.status === CONFIG.STATUS.SOLD ? ' (SOLD)' : '';
+                modalTitle.textContent = `Car Details${soldStatus}`;
+                modalBody.innerHTML = Templates.carDetailsModal(car);
+
+                modal.classList.remove(CONFIG.CLASSES.INVISIBLE);
+                modal.style.opacity = '1';
+                Utils.preventBodyScroll();
+            },
+
+            // Close car details modal
+            closeCarDetails() {
+                const modal = DOM.get('car-details-modal-overlay');
+                modal.style.opacity = '0';
+
+                setTimeout(() => {
+                    modal.classList.add(CONFIG.CLASSES.INVISIBLE);
+                    Utils.restoreBodyScroll();
+                }, CONFIG.MODAL_TRANSITION_MS);
+            }
+        };
+
+        // =============================================================================
+        // FILTERS MODULE
+        // =============================================================================
+
+        const Filters = {
+
+            getCheckedValues(filterType) {
+                const section = document.getElementById(`section-${filterType}`);
+                if (!section) return [];
+
+                const allCheckbox = section.querySelector('.all-option');
+                if (allCheckbox?.checked) return [];
+
+                const checkedBoxes = section.querySelectorAll('input.option:checked');
+                return Array.from(checkedBoxes).map(cb => cb.value);
+            },
+
+            applyFilters() {
+                console.log('Applying filters...');
+
+                State.activeFilters = {
+                    price: parseInt(DOM.get('priceRange').value),
+                    makes: this.getCheckedValues('makes'),
+                    colors: this.getCheckedValues('colors'),
+                    features: this.getCheckedValues('features')
+                };
+
+                Pagination.resetToFirstPage();
+                Display.refresh();
+
+                // Update filter pills
+                this.updateActiveFilterPills();
+
+                // Close sidebar on mobile
+                if (window.innerWidth < 1024) {
+                    UI.closeFilterSidebar();
+                }
+
+                UrlSync.pushState();
+            },
+
+            applyAllFilters(cars) {
+                const { activeFilters } = State;
+
+                return cars.filter(car => {
+                    // Price filter
+                    const price = car.pricing?.price || 0;
+                    if (price > activeFilters.price) return false;
+
+                    // Make filter
+                    if (activeFilters.makes.length > 0 && !activeFilters.makes.includes(car.car?.make)) {
+                        return false;
+                    }
+
+                    // Color filter
+                    if (activeFilters.colors.length > 0 && !activeFilters.colors.includes(car.details?.exteriorColor)) {
+                        return false;
+                    }
+
+                    // Features filter
+                    if (activeFilters.features.length > 0 && !activeFilters.features.includes(car.details?.features)) {
+                        return false;
+                    }
+
+                    return true;
+                });
+            },
+
+            // ONE function to reset everything
+            resetAll() {
+                console.log('Resetting all...');
+
+                // Reset filters
+                State.resetFilters();
+
+                // Reset sort to default
+                State.currentSort = CONFIG.SORT.NEWEST;
+                Sorting.setActiveSort(CONFIG.SORT.NEWEST);
+
+                // Clear search
+                DOM.get('search-bar').value = '';
+                Search.toggleClearButton();
+
+                // Reset UI
+                DOM.get('priceRange').value = CONFIG.MAX_PRICE;
+                this.updatePriceLabel();
+
+                ['makes', 'colors', 'features'].forEach(type => {
+                    const section = document.getElementById(`section-${type}`);
+                    if (section) {
+                        section.querySelectorAll('input').forEach(cb => cb.checked = false);
+                    }
+                });
+
+                DOM.get('active-filters').innerHTML = '';
+                Pagination.resetToFirstPage();
+
+                // Clear URL completely
+                const url = new URL(window.location);
+                Utils.clearFilterParams(url);
+                url.searchParams.delete('car');
+                window.history.pushState({}, '', url);
+
+                Display.refresh();
+
+            },
+
+            // ONE function to remove a specific filter (including shared)
+            removeFilter(type, value = null) {
+                if (type === 'price') {
+                    State.activeFilters.price = CONFIG.MAX_PRICE;
+                    DOM.get('priceRange').value = CONFIG.MAX_PRICE;
+                    this.updatePriceLabel();
+                } else {
+                    const index = State.activeFilters[type].indexOf(value);
+                    if (index > -1) {
+                        State.activeFilters[type].splice(index, 1);
+                    }
+                    const checkbox = document.querySelector(`#section-${type} input[value="${value}"]`);
+                    if (checkbox) checkbox.checked = false;
+                }
+
+                Pagination.resetToFirstPage();
+                Display.refresh();
+                this.updateActiveFilterPills();
+                UrlSync.pushState();
+            },
+
+            // ONE function to update pills (handles both shared and regular)
+            updateActiveFilterPills() {
+                const container = DOM.get('active-filters');
+                let html = '';
+                const { activeFilters } = State;
+
+                // Price pill
+                if (activeFilters.price < CONFIG.MAX_PRICE) {
+                    html += Templates.filterPill(`Up to $${activeFilters.price}`, 'price');
+                }
+
+                // Other filter pills
+                ['makes', 'colors', 'features',].forEach(type => {
+                    activeFilters[type].forEach(value => {
+                        html += Templates.filterPill(value, type, value);
+                    });
+                });
+
+                // Clear all button (if any pills exist)
+                if (html) {
+                    html += `
+                        <button onclick="Filters.resetAll()"
+                            class="text-xs text-gray-600 hover:underline font-medium ml-2">
+                            Clear All
+                        </button>
+                    `;
+                }
+
+                container.innerHTML = html;
+            },
+
+            // Update price label display
+            updatePriceLabel() {
+                const value = DOM.get('priceRange').value;
+                DOM.get('priceLabel').textContent = value;
+            },
+
+            // Sync UI checkboxes with active filters state
+            syncUIWithActiveFilters() {
+                console.log('Syncing UI with active filters...');
+
+                // Sync price slider
+                DOM.get('priceRange').value = State.activeFilters.price;
+                this.updatePriceLabel();
+
+                // Sync checkboxes
+                ['makes', 'colors', 'features'].forEach(filterType => {
+                    const section = document.getElementById(`section-${filterType}`);
+                    if (!section) return;
+
+                    const activeValues = State.activeFilters[filterType] || [];
+                    const allCheckbox = section.querySelector('input.all-option');
+                    const optionCheckboxes = section.querySelectorAll('input.option');
+
+                    if (allCheckbox) allCheckbox.checked = false;
+                    optionCheckboxes.forEach(cb => {
+                        cb.checked = activeValues.includes(cb.value);
+                    });
+                });
+            },
+
+            // Handle "Uncheck All" checkbox
+            handleAllCheckbox(allCheckbox) {
+                const category = allCheckbox.dataset.category;
+                const section = document.getElementById(`section-${category}`);
+
+                if (allCheckbox.checked) {
+                    section.querySelectorAll('.option').forEach(cb => cb.checked = false);
+                }
+            },
+
+            // Handle regular filter checkbox
+            handleRegularCheckbox(checkbox) {
+                const category = checkbox.dataset.category;
+                const section = document.getElementById(`section-${category}`);
+                const allCheckbox = section.querySelector('.all-option');
+
+                if (checkbox.checked && allCheckbox) {
+                    allCheckbox.checked = false;
+                }
+            }
+        };
+
+        // =============================================================================
+        // SORTING MODULE
+        // =============================================================================
+
+        const Sorting = {
+            // Set active sort indicator in UI
+            setActiveSort(sortType) {
+                document.querySelectorAll('.sort-option').forEach(option => {
+                    option.classList.toggle(CONFIG.CLASSES.ACTIVE,
+                        option.dataset.sort === sortType);
+                });
+            },
+
+            // Sort cars by type
+            sortCars(sortType) {
+                console.log('Sorting by:', sortType);
+                State.currentSort = sortType;
+                this.setActiveSort(sortType);
+                Pagination.resetToFirstPage();
+                Display.refresh();
+                UrlSync.pushState();
+            },
+
+            // Apply sorting to car array
+            applySorting(cars) {
+                const sorted = [...cars];
+
+                switch (State.currentSort) {
+                    case CONFIG.SORT.PRICE_LOW:
+                        sorted.sort((a, b) =>
+                            (a.pricing?.price || 0) - (b.pricing?.price || 0));
+                        break;
+                    case CONFIG.SORT.PRICE_HIGH:
+                        sorted.sort((a, b) =>
+                            (b.pricing?.price || 0) - (a.pricing?.price || 0));
+                        break;
+                    case CONFIG.SORT.NEWEST:
+                        sorted.sort((a, b) => {
+                            const timeA = a.timestamp?.toMillis?.() || 0;
+                            const timeB = b.timestamp?.toMillis?.() || 0;
+                            return timeB - timeA;
+                        });
+                        break;
+                    case CONFIG.SORT.OLDEST:
+                        sorted.sort((a, b) => {
+                            const timeA = a.timestamp?.toMillis?.() || 0;
+                            const timeB = b.timestamp?.toMillis?.() || 0;
+                            return timeA - timeB;
+                        });
+                        break;
+                }
+
+                return sorted;
+            }
+        };
+
+        // =============================================================================
+        // SEARCH MODULE
+        // =============================================================================
+
+        const Search = {
+            // Debounced search handler
+            handleSearch: Utils.debounce(function (searchTerm) {
+                Search._performSearch(searchTerm);
+            }, CONFIG.DEBOUNCE_DELAY_MS),
+
+            // Perform search
+            _performSearch(searchTerm) {
+                this.updateSuggestions(searchTerm);
+                Pagination.resetToFirstPage();
+                Display.refresh();
+            },
+
+            //   Handle search input
+            onInput(event) {
+                const searchTerm = event.target.value.trim();
+                this.handleSearch(searchTerm);
+
+                if (event.key === 'Enter' || event.key === 'Escape') {
+                    this.hideSuggestions();
+                }
+            },
+
+            //   Toggle clear button visibility
+            toggleClearButton() {
+                const searchBar = DOM.get('search-bar');
+                const clearBtn = DOM.get('search-clear-btn');
+                clearBtn.classList.toggle(CONFIG.CLASSES.HIDDEN, searchBar.value.trim().length === 0);
+            },
+
+            //   Clear search
+            clearSearch() {
+                const searchBar = DOM.get('search-bar');
+                searchBar.value = '';
+                this.toggleClearButton();
+                this.hideSuggestions();
+                Pagination.resetToFirstPage();
+                Display.refresh();
+                UrlSync.pushState();
+                searchBar.focus();
+            },
+
+            //   Update search suggestions
+            updateSuggestions(searchTerm) {
+                const suggestionsDiv = DOM.get('search-suggestions');
+                const suggestionsInner = DOM.get('search-suggestions-inner');
+
+                if (!searchTerm) {
+                    this.hideSuggestions();
+                    return;
+                }
+
+                let carsToSearch = [...State.allCars];
+                carsToSearch = Filters.applyAllFilters(carsToSearch);
+
+                const matches = carsToSearch.filter(car => {
+                    const searchableText = `
+                            ${car.car?.name || ''}
+                        ` .toLowerCase();
+
+                    return searchableText.includes(searchTerm.toLowerCase());
+                }).slice(0, CONFIG.MAX_SEARCH_SUGGESTIONS);
+
+                if (matches.length === 0) {
+                    this.hideSuggestions();
+                    return;
+                }
+
+                State.currentSearchMatches = matches;
+
+                suggestionsInner.innerHTML = matches
+                    .map((car, i) => Templates.searchSuggestion(car, i))
+                    .join('');
+
+                suggestionsDiv.classList.remove(CONFIG.CLASSES.HIDDEN);
+            },
+
+            //   Select a search suggestion
+            selectSuggestion(index) {
+                const car = State.currentSearchMatches[index];
+                if (!car) return;
+
+                DOM.get('search-bar').value = car.car?.name || '';
+                State.displayedCars = [car];
+                Display.renderCars([car]);
+                UI.updateResultsCount(1);
+
+                this.hideSuggestions();
+                this.toggleClearButton();
+                UrlSync.pushState();
+            },
+
+            //   Show suggestions if search has content
+            showSuggestions() {
+                const searchTerm = DOM.get('search-bar').value.trim();
+                if (searchTerm.length >= 2) {
+                    this.updateSuggestions(searchTerm);
+                }
+            },
+
+            //   Hide suggestions dropdown
+            hideSuggestions() {
+                const suggestionsDiv = DOM.get('search-suggestions');
+                const suggestionsInner = DOM.get('search-suggestions-inner');
+
+                suggestionsInner.innerHTML = '';
+                suggestionsDiv.classList.add(CONFIG.CLASSES.HIDDEN);
+            }
+        };
+
+        // =============================================================================
+        // IMAGE SLIDER MODULE
+        // =============================================================================
+
+        const ImageSlider = {
+            // Initialize a single slider container
+            initialize(container) {
+                const slides = container.querySelectorAll('.swiper-slide');
+
+                if (slides.length <= 1) {
+                    container.classList.add('swiper-single');
+                    return;
+                }
+
+                new Swiper(container.querySelector('.swiper'), {
+                    loop: false,
+                    speed: 300,
+                    pagination: {
+                        el: container.querySelector('.swiper-pagination'),
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: container.querySelector('.swiper-button-next'),
+                        prevEl: container.querySelector('.swiper-button-prev'),
+                    },
+                    touchRatio: 1,
+                    threshold: 3,
+                    resistanceRatio: 0.85,
+                });
+            },
+
+            // Initialize all sliders on page
+            initAll() {
+                document.querySelectorAll('.image-slider-container').forEach(
+                    container => this.initialize(container)
+                );
+            }
+        };
+
+        // =============================================================================
+        // IMAGE VIEWER MODULE
+        // =============================================================================
+
+        const ImageViewer = {
+            currentImages: [],
+            currentIndex: 0,
+            zoomLevel: 1,
+            translateX: 0,
+            translateY: 0,
+
+            // Internal state for touch/mouse handling
+            _isDragging: false,
+            _hasMoved: false,
+            _startX: 0,
+            _startY: 0,
+            _lastTranslateX: 0,
+            _lastTranslateY: 0,
+            _modalCreated: false,
+
+            // Open image viewer
+            open(images, startIndex = 0) {
+                this.currentImages = images;
+                this.currentIndex = startIndex;
+                this._resetZoom();
+
+                if (!this._modalCreated) {
+                    this._createModal();
+                    this._modalCreated = true;
+                }
+
+                this._updateImage();
+                document.getElementById('image-viewer-modal').classList.add(CONFIG.CLASSES.ACTIVE);
+                Utils.preventBodyScroll();
+            },
+
+            // Close image viewer
+            close() {
+                const modal = document.getElementById('image-viewer-modal');
+                modal.classList.remove(CONFIG.CLASSES.ACTIVE);
+
+                setTimeout(() => {
+                    Utils.restoreBodyScroll();
+                }, CONFIG.MODAL_TRANSITION_MS);
+
+                this._resetZoom();
+            },
+
+            // Navigate to next image
+            nextImage() {
+                if (this.currentIndex < this.currentImages.length - 1) {
+                    this.currentIndex++;
+                    this._updateImage();
+                }
+            },
+
+            // Navigate to previous image
+            prevImage() {
+                if (this.currentIndex > 0) {
+                    this.currentIndex--;
+                    this._updateImage();
+                }
+            },
+
+            // Zoom in
+            zoomIn() {
+                if (this.zoomLevel < CONFIG.ZOOM.MAX) {
+                    this.zoomLevel = Math.min(this.zoomLevel + CONFIG.ZOOM.STEP, CONFIG.ZOOM.MAX);
+                    this._applyZoom();
+                }
+            },
+
+            // Zoom out
+            zoomOut() {
+                if (this.zoomLevel > CONFIG.ZOOM.MIN) {
+                    this.zoomLevel = Math.max(this.zoomLevel - CONFIG.ZOOM.STEP, CONFIG.ZOOM.MIN);
+                    this._applyZoom();
+                }
+            },
+
+            // Reset zoom to default
+            resetZoom() {
+                this._resetZoom();
+                this._applyZoom();
+            },
+
+            // Toggle zoom on click (desktop only)
+            // Toggle zoom on click
+            toggleZoom() {
+                if (this._hasMoved) {
+                    this._hasMoved = false;
+                    return;
+                }
+
+                if (this.zoomLevel === 1) {
+                    this.zoomIn();
+                } else {
+                    this.resetZoom();
+                }
+            },
+
+            // Toggle fullscreen
+            toggleFullscreen() {
+                const modal = document.getElementById('image-viewer-modal');
+                const icon = document.getElementById('fullscreen-icon');
+
+                if (!document.fullscreenElement) {
+                    modal.requestFullscreen().then(() => {
+                        if (icon) icon.className = 'fas fa-compress';
+                    }).catch(err => console.log(err));
+                } else {
+                    document.exitFullscreen().then(() => {
+                        if (icon) icon.className = 'fas fa-expand';
+                    }).catch(err => console.log(err));
+                }
+            },
+
+            // Reset zoom state
+            _resetZoom() {
+                this.zoomLevel = 1;
+                this.translateX = 0;
+                this.translateY = 0;
+                this._lastTranslateX = 0;
+                this._lastTranslateY = 0;
+            },
+
+            //  Update displayed image
+            _updateImage() {
+                const img = document.getElementById('image-viewer-image');
+                const counter = document.getElementById('image-viewer-counter-text');
+                const prevBtn = document.querySelector('.image-viewer-nav.prev');
+                const nextBtn = document.querySelector('.image-viewer-nav.next');
+                const thumbnailsContainer = document.getElementById('image-viewer-thumbnails');
+
+                img.src = this.currentImages[this.currentIndex];
+                counter.textContent = `${this.currentIndex + 1} / ${this.currentImages.length}`;
+
+                // Hide nav buttons for single image
+                if (this.currentImages.length <= 1) {
+                    prevBtn.style.display = 'none';
+                    nextBtn.style.display = 'none';
+                } else {
+                    prevBtn.style.display = '';
+                    nextBtn.style.display = '';
+                    prevBtn.disabled = this.currentIndex === 0;
+                    nextBtn.disabled = this.currentIndex === this.currentImages.length - 1;
+                }
+
+                // Update thumbnails
+                this._updateThumbnails(thumbnailsContainer);
+
+                this._resetZoom();
+                this._applyZoom();
+            },
+
+            // Update thumbnails
+            _updateThumbnails(container) {
+                if (this.currentImages.length <= 1) {
+                    container.classList.add('single-image');
+                    container.innerHTML = '';
+                    return;
+                }
+
+                container.classList.remove('single-image');
+                container.innerHTML = this.currentImages.map((src, idx) => `
+                    <div class="image-viewer-thumbnail ${idx === this.currentIndex ? 'active' : ''}" 
+                         onclick="ImageViewer.goToImage(${idx})">
+                        <img src="${src}" alt="Thumbnail ${idx + 1}">
+                    </div>
+                `).join('');
+            },
+
+            // Go to specific image (for thumbnail clicks)
+            goToImage(index) {
+                if (index >= 0 && index < this.currentImages.length) {
+                    this.currentIndex = index;
+                    this._updateImage();
+                }
+            },
+
+            // Apply current zoom and transform
+            _applyZoom() {
+                const img = document.getElementById('image-viewer-image');
+                const container = document.querySelector('.image-viewer-container');
+                const zoomIcon = document.getElementById('zoom-toggle-icon');
+
+                img.style.transform = `translate(${this.translateX}px, ${this.translateY}px) scale(${this.zoomLevel})`;
+
+                // Update cursor
+                if (this.zoomLevel > 1) {
+                    container.style.cursor = this._isDragging ? 'grabbing' : 'grab';
+                } else {
+                    container.style.cursor = 'zoom-in';
+                }
+
+                // Update zoom icon
+                if (zoomIcon) {
+                    zoomIcon.className = this.zoomLevel > 1 ? 'fas fa-search-minus' : 'fas fa-search-plus';
+                }
+            },
+
+            // Constrain pan to keep image on screen
+            _constrainPan() {
+                if (this.zoomLevel <= 1) {
+                    this.translateX = 0;
+                    this.translateY = 0;
+                    return;
+                }
+
+                const container = document.querySelector('.image-viewer-container');
+                const img = document.getElementById('image-viewer-image');
+                const containerRect = container.getBoundingClientRect();
+
+                const scaledWidth = img.naturalWidth * this.zoomLevel;
+                const scaledHeight = img.naturalHeight * this.zoomLevel;
+
+                const maxTranslateX = Math.max(0, (scaledWidth - containerRect.width) / 2);
+                const maxTranslateY = Math.max(0, (scaledHeight - containerRect.height) / 2);
+
+                this.translateX = Math.max(-maxTranslateX, Math.min(maxTranslateX, this.translateX));
+                this.translateY = Math.max(-maxTranslateY, Math.min(maxTranslateY, this.translateY));
+            },
+
+            // Create modal element and attach event listeners
+            _createModal() {
+                const modal = document.createElement('div');
+                modal.id = 'image-viewer-modal';
+                modal.className = 'image-viewer-modal';
+                modal.innerHTML = Templates.imageViewerModal();
+                document.body.appendChild(modal);
+
+                this._attachEventListeners(modal);
+            },
+
+            // Attach touch and mouse event listeners
+            _attachEventListeners(modal) {
+                const container = modal.querySelector('.image-viewer-container');
+                const img = modal.querySelector('#image-viewer-image');
+
+                // Prevent native image drag
+                img.addEventListener('dragstart', e => e.preventDefault());
+                img.addEventListener('contextmenu', e => e.preventDefault());
+
+                // Touch events
+                let initialDistance = 0;
+                let initialZoom = 1;
+                let pinchCenterX = 0;
+                let pinchCenterY = 0;
+
+                container.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 2) {
+                        e.preventDefault();
+                        const [touch1, touch2] = e.touches;
+                        initialDistance = Math.hypot(
+                            touch2.pageX - touch1.pageX,
+                            touch2.pageY - touch1.pageY
+                        );
+                        initialZoom = this.zoomLevel;
+
+                        const rect = container.getBoundingClientRect();
+                        pinchCenterX = ((touch1.clientX + touch2.clientX) / 2) - rect.left - rect.width / 2;
+                        pinchCenterY = ((touch1.clientY + touch2.clientY) / 2) - rect.top - rect.height / 2;
+                        this._isDragging = false;
+                    } else if (e.touches.length === 1 && this.zoomLevel > 1) {
+                        this._isDragging = true;
+                        this._startX = e.touches[0].clientX - this._lastTranslateX;
+                        this._startY = e.touches[0].clientY - this._lastTranslateY;
+                    }
+                }, { passive: false });
+
+                container.addEventListener('touchmove', (e) => {
+                    if (e.touches.length === 2) {
+                        e.preventDefault();
+                        const [touch1, touch2] = e.touches;
+                        const newDistance = Math.hypot(
+                            touch2.pageX - touch1.pageX,
+                            touch2.pageY - touch1.pageY
+                        );
+                        const newZoom = Math.min(
+                            CONFIG.ZOOM.MAX,
+                            Math.max(CONFIG.ZOOM.MIN, (newDistance / initialDistance) * initialZoom)
+                        );
+
+                        const zoomRatio = newZoom / this.zoomLevel;
+                        this.translateX = pinchCenterX - (pinchCenterX - this.translateX) * zoomRatio;
+                        this.translateY = pinchCenterY - (pinchCenterY - this.translateY) * zoomRatio;
+                        this.zoomLevel = newZoom;
+
+                        this._constrainPan();
+                        this._applyZoom();
+                    } else if (this._isDragging && e.touches.length === 1) {
+                        e.preventDefault();
+                        this.translateX = e.touches[0].clientX - this._startX;
+                        this.translateY = e.touches[0].clientY - this._startY;
+                        this._applyZoom();
+                    }
+                }, { passive: false });
+
+                container.addEventListener('touchend', (e) => {
+                    if (e.touches.length === 0) {
+                        this._isDragging = false;
+                        this._constrainPan();
+                        this._lastTranslateX = this.translateX;
+                        this._lastTranslateY = this.translateY;
+                        this._applyZoom();
+                    } else if (e.touches.length === 1 && this.zoomLevel > 1) {
+                        this._isDragging = true;
+                        this._startX = e.touches[0].clientX - this._lastTranslateX;
+                        this._startY = e.touches[0].clientY - this._lastTranslateY;
+                    }
+                });
+
+                // Mouse events for desktop
+                container.addEventListener('mousedown', (e) => {
+                    if (this.zoomLevel > 1) {
+                        e.preventDefault();
+                        this._isDragging = true;
+                        this._hasMoved = false;
+                        this._startX = e.clientX - this._lastTranslateX;
+                        this._startY = e.clientY - this._lastTranslateY;
+                        container.style.cursor = 'grabbing';
+                    }
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (!this._isDragging) return;
+                    e.preventDefault();
+
+                    const deltaX = Math.abs(e.clientX - this._startX - this._lastTranslateX);
+                    const deltaY = Math.abs(e.clientY - this._startY - this._lastTranslateY);
+                    if (deltaX > 5 || deltaY > 5) this._hasMoved = true;
+
+                    this.translateX = e.clientX - this._startX;
+                    this.translateY = e.clientY - this._startY;
+                    this._applyZoom();
+                });
+
+                document.addEventListener('mouseup', () => {
+                    if (this._isDragging) {
+                        this._isDragging = false;
+                        this._constrainPan();
+                        this._lastTranslateX = this.translateX;
+                        this._lastTranslateY = this.translateY;
+                        this._applyZoom();
+                    }
+                });
+
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (!modal.classList.contains(CONFIG.CLASSES.ACTIVE)) return;
+
+                    switch (e.key) {
+                        case 'Escape': this.close(); break;
+                        case 'ArrowLeft': this.prevImage(); break;
+                        case 'ArrowRight': this.nextImage(); break;
+                    }
+                });
+
+                // Listen for fullscreen change (handles Escape key exiting fullscreen)
+                document.addEventListener('fullscreenchange', () => {
+                    const icon = document.getElementById('fullscreen-icon');
+                    if (icon) {
+                        icon.className = document.fullscreenElement ? 'fas fa-compress' : 'fas fa-expand';
+                    }
+                });
+            }
+        };
+
+        // =============================================================================
+        // PAGINATION MODULE
+        // =============================================================================
+
+        const Pagination = {
+            // Go to specific page
+            goToPage(page) {
+                const { totalPages } = State.pagination;
+                if (page < 1 || page > totalPages) return;
+
+                State.pagination.currentPage = page;
+                Utils.scrollToTop();
+                Display.refresh();
+                UrlSync.pushState();
+            },
+
+            // Reset to first page
+            resetToFirstPage() {
+                State.pagination.currentPage = 1;
+            }
+        };
+
+        // =============================================================================
+        // WHATSAPP CHAT MODULE
+        // =============================================================================
+
+        const WhatsAppChat = {
+            // Initialize WhatsApp chat bubble
+            init() {
+                const chat = DOM.get('whatsapp-chat');
+                const bubble = DOM.get('whatsapp-bubble');
+                const closeBtn = DOM.get('close-chat');
+                const carsContainer = document.getElementById('cars-container');
+
+                if (!chat || !bubble || !closeBtn) return;
+
+                // Show after delay
+                setTimeout(() => {
+                    State.chat.initialDelayPassed = true;
+                    if (!State.chat.closed) {
+                        this._show(chat, bubble, closeBtn);
+                        State.chat.visible = true;
+                    }
+                }, CONFIG.WHATSAPP_SHOW_DELAY_MS);
+
+                // Handle scroll
+                window.addEventListener('scroll', () => {
+                    if (!State.chat.initialDelayPassed || State.chat.closed) return;
+
+                    const carBottom = carsContainer.offsetTop + carsContainer.offsetHeight;
+                    const scrollY = window.scrollY + window.innerHeight;
+
+                    if (scrollY > carBottom + 50) {
+                        this._hide(chat, bubble);
+                    } else {
+                        this._show(chat, bubble, closeBtn);
+                    }
+                });
+
+                // Handle close
+                closeBtn.addEventListener('click', () => {
+                    this._hide(chat, bubble);
+                    closeBtn.classList.add(CONFIG.CLASSES.HIDDEN);
+                    State.chat.closed = true;
+                });
+            },
+
+            // Show chat bubble
+            _show(chat, bubble, closeBtn) {
+                chat.classList.remove('opacity-0', 'scale-90');
+                chat.classList.add('opacity-100', 'scale-100');
+                bubble.classList.remove('opacity-0', 'translate-y-2');
+                bubble.classList.add('opacity-100', 'translate-y-0');
+                closeBtn.classList.remove(CONFIG.CLASSES.HIDDEN);
+            },
+
+            // Hide chat bubble
+            _hide(chat, bubble) {
+                chat.classList.add('opacity-0', 'scale-90');
+                chat.classList.remove('opacity-100', 'scale-100');
+                bubble.classList.add('opacity-0', 'translate-y-2');
+                bubble.classList.remove('opacity-100', 'translate-y-0');
+            }
+        };
+
+        // =============================================================================
+        // UI MODULE
+        // =============================================================================
+
+        const UI = {
+            // Initialize filter section checkboxes
+            initializeFilterSections() {
+                const mapping = {
+                    'makes': 'makes',
+                    'colors': 'colors',
+                    'features': 'features'
+                };
+
+                Object.entries(mapping).forEach(([type, optionKey]) => {
+                    const section = document.getElementById(`section-${type}`);
+                    const options = CONFIG.FILTER_OPTIONS[optionKey];
+
+                    if (section && options) {
+                        section.innerHTML = Templates.filterCheckboxes(type, options);
+                    }
+                });
+
+                Filters.updatePriceLabel();
+            },
+
+            // Toggle filter sidebar visibility
+            toggleFilterSidebar() {
+                const sidebar = DOM.get('filterSidebar');
+                const isHidden = sidebar.classList.contains('-translate-x-full');
+
+                if (isHidden) {
+                    Filters.syncUIWithActiveFilters();
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebar.classList.add('translate-x-0');
+
+                    if (window.innerWidth < 1024) {
+                        const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+                        document.body.style.paddingRight = `${scrollbarWidth}px`;
+                        document.body.classList.add(CONFIG.CLASSES.SIDEBAR_OPEN);
+
+                        const searchBar = DOM.get('search-bar');
+                        if (searchBar) searchBar.disabled = true;
+                    }
+
+                    // Collapse all sections
+                    ['price', 'makes', 'colors', 'features'].forEach(id => {
+                        const section = document.getElementById(`section-${id}`);
+                        const icon = document.getElementById(`icon-${id}`);
+                        if (section && !section.classList.contains(CONFIG.CLASSES.HIDDEN)) {
+                            section.classList.add(CONFIG.CLASSES.HIDDEN);
+                            icon.textContent = '+';
+                        }
+                    });
+                } else {
+                    this.closeFilterSidebar();
+                }
+            },
+
+            // Close filter sidebar
+            closeFilterSidebar() {
+                const sidebar = DOM.get('filterSidebar');
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+
+                document.body.style.paddingRight = '';
+                document.body.classList.remove(CONFIG.CLASSES.SIDEBAR_OPEN);
+
+                const searchBar = DOM.get('search-bar');
+                if (searchBar) searchBar.disabled = false;
+            },
+
+            // Toggle filter section visibility
+            toggleSection(id) {
+                const section = document.getElementById(`section-${id}`);
+                const icon = document.getElementById(`icon-${id}`);
+                const isHidden = section.classList.contains(CONFIG.CLASSES.HIDDEN);
+
+                // Close all other sections
+                ['price', 'makes', 'colors', 'features'].forEach(otherId => {
+                    if (otherId !== id) {
+                        const otherSection = document.getElementById(`section-${otherId}`);
+                        const otherIcon = document.getElementById(`icon-${otherId}`);
+                        if (otherSection && !otherSection.classList.contains(CONFIG.CLASSES.HIDDEN)) {
+                            otherSection.classList.add(CONFIG.CLASSES.HIDDEN);
+                            otherIcon.textContent = '+';
+                        }
+                    }
+                });
+
+                // Toggle clicked section
+                section.classList.toggle(CONFIG.CLASSES.HIDDEN, !isHidden);
+                icon.textContent = isHidden ? '−' : '+';
+            },
+
+            // Update results count display
+            updateResultsCount(count) {
+                DOM.get('results-count').textContent = count;
+                DOM.get('results-count-desktop').textContent = count;
+            }
+        };
+
+        // =============================================================================
+        // EVENT HANDLERS (Event Delegation)
+        // =============================================================================
+
+        const EventHandlers = {
+            init() {
+                // Close suggestions when clicking outside
+                document.addEventListener('click', (e) => {
+                    const searchBar = DOM.get('search-bar');
+                    const suggestions = DOM.get('search-suggestions');
+                    if (searchBar && suggestions &&
+                        !searchBar.contains(e.target) && !suggestions.contains(e.target)) {
+                        Search.hideSuggestions();
+                    }
+                });
+
+                // Modal background click to close
+                const carModal = DOM.get('car-details-modal-overlay');
+                if (carModal) {
+                    carModal.addEventListener('click', (e) => {
+                        if (e.target === carModal) {
+                            Display.closeCarDetails();
+                        }
+                    });
+                }
+
+                // Handle browser back/forward
+                window.addEventListener('popstate', () => {
+                    window.location.reload();
+                });
+            }
+        };
+
+        // =============================================================================
+        // MAIN APPLICATION CONTROLLER
+        // =============================================================================
+
+        const App = {
+            // Initialize the application
+            async init() {
+                console.log('Initializing Car Application...');
+
+                // Initialize Firebase
+                Database.init();
+
+                // Cache DOM elements
+                DOM.init();
+
+                // Setup filter UI
+                UI.initializeFilterSections();
+
+                // Load state from URL and sync UI
+                UrlSync.loadFromUrl();
+                Filters.syncUIWithActiveFilters();
+                Sorting.setActiveSort(State.currentSort);
+                Search.toggleClearButton();
+                Filters.updateActiveFilterPills();
+
+                // Setup event handlers
+                EventHandlers.init();
+
+                // Load cars from Firebase
+                await Database.loadCars();
+
+                // Set default sort indicator
+                Sorting.setActiveSort(CONFIG.SORT.NEWEST);
+
+                // Display initial cars
+                Display.refresh();
+
+                // Initialize WhatsApp chat
+                WhatsAppChat.init();
+            },
+        };
+
+        // =============================================================================
+        // INITIALIZATION
+        // =============================================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            App.init();
+        });
+    </script>
+</body>
+
+</html>
