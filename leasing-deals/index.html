@@ -26,27 +26,9 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </head>
 <style>
-    /* Sort CSS */
-    .sort-option.active {
-        background-color: #f4f4f4;
-        font-weight: 500;
-    }
-
     /* Modal scrollbar - prevent content shift */
     .modal-scroll-container {
         scrollbar-gutter: stable;
-    }
-
-    /* For browsers that don't support scrollbar-gutter */
-    @supports not (scrollbar-gutter: stable) {
-        .modal-scroll-container {
-            padding-right: calc(1.5rem + 6px);
-            /* 1.5rem (p-6) + scrollbar width */
-        }
-
-        .modal-scroll-container::-webkit-scrollbar {
-            width: 6px;
-        }
     }
 
     /* Image Slider - Swiper Customization */
@@ -364,12 +346,38 @@
             right: 8px;
         }
     }
+
+    /* Skeleton Loading Animation */
+    .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: skeleton-loading 1.5s infinite;
+    }
+
+    @keyframes skeleton-loading {
+        0% {
+            background-position: 200% 0;
+        }
+
+        100% {
+            background-position: -200% 0;
+        }
+    }
+
+    .skeleton-card {
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+
+    .skeleton-box {
+        background-color: #e0e0e0;
+    }
 </style>
 
 <body>
     <!-- Navbar -->
     <header class="bg-white border-b border-gray-200">
-        <nav x-data="{ isOpen: false }" class="max-w-[2000px] p-5 mx-auto lg:px-8 lg:py-5">
+        <nav x-data="{ isOpen: false }" class="max-w-[1600px] p-5 mx-auto lg:px-8 lg:py-5">
             <div class="flex justify-between items-center relative">
                 <!-- Logo -->
                 <a href="/">
@@ -441,97 +449,92 @@
         </nav>
     </header>
 
-    <div class="max-w-[2000px] mx-auto flex flex-col md:flex-row lg:min-h-screen relative">
+    <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row min-h-screen relative">
         <!-- FilterSidebar -->
-        <aside
-            class="absolute top-0 left-0 pb-52 z-50 h-full w-2/3 bg-white shadow-lg transform transition-transform duration-500
-         -translate-x-full lg:translate-x-0 lg:static lg:w-[350px] lg:min-h-[100vh] lg:shadow-none lg:border-r lg:space-y-4"
-            id="filterSidebar">
-            <div class="filter-sidebar-scroll px-6 lg:pt-10 py-2">
-                <div class="flex justify-end py-2 lg:hidden">
-                    <button id="closeFilterBtn" onclick="CarApp.UI.closeFilterSidebar()"
-                        class="text-charcoal-600 hover:text-black">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="flex justify-between items-center mb-2">
-                    <h2 class="text-xl font-semibold">Filters</h2>
-                    <button onclick="CarApp.Filters.resetFilters()"
-                        class="text-sm text-warm-gray-500 hover:underline font-medium">
-                        Reset All
-                    </button>
-                </div>
+        <aside class="absolute top-0 left-0 px-6 lg:pt-10 py-2 pb-52 z-50 w-2/3 bg-white shadow-lg transform transition-transform duration-500
+         -translate-x-full lg:translate-x-0 lg:w-[320px] lg:shadow-none lg:border-r" id="filterSidebar">
 
-                <!-- Price Range -->
-                <div>
-                    <button onclick="CarApp.UI.toggleSection('price')"
-                        class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
-                        Price
-                        <span id="icon-price">+</span>
-                    </button>
-                    <div id="section-price" class="mt-5 hidden">
-                        <input type="range" id="priceRange" min="100" max="5000" step="100" class="w-full" value="5000"
-                            oninput="CarApp.Filters.updatePriceLabel()">
-                        <p class="text-sm text-charcoal-600 mt-1">Up to $<span id="priceLabel">5000</span></p>
-                    </div>
-                </div>
+            <div class="flex justify-end py-2 lg:hidden">
+                <button id="closeFilterBtn" onclick="UI.closeFilterSidebar()" class="text-gray-800 hover:text-black">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="text-xl font-semibold">Filters</h2>
+                <button onclick="Filters.resetAll()" class="text-sm text-warm-gray-500 hover:underline font-medium">
+                    Reset All
+                </button>
+            </div>
 
-                <!-- Makes -->
-                <div>
-                    <button onclick="CarApp.UI.toggleSection('makes')"
-                        class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
-                        Makes
-                        <span id="icon-makes">+</span>
-                    </button>
-                    <div id="section-makes" class="mt-5 space-y-1 hidden">
-                        <!-- Populated by JavaScript -->
-                    </div>
+            <!-- Price Range -->
+            <div>
+                <button onclick="UI.toggleSection('price')"
+                    class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+                    Price
+                    <span id="icon-price">+</span>
+                </button>
+                <div id="section-price" class="mt-5 hidden">
+                    <input type="range" id="priceRange" min="100" max="5000" step="100" class="w-full" value="5000"
+                        oninput="Filters.updatePriceLabel()">
+                    <p class="text-sm text-gray-800 mt-1">Up to $<span id="priceLabel">5000</span></p>
                 </div>
+            </div>
 
-                <!-- Colors -->
-                <div>
-                    <button onclick="CarApp.UI.toggleSection('colors')"
-                        class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
-                        Colors
-                        <span id="icon-colors">+</span>
-                    </button>
-                    <div id="section-colors" class="mt-5 space-y-1 hidden">
-                        <!-- Populated by JavaScript -->
-                    </div>
+            <!-- Makes -->
+            <div>
+                <button onclick="UI.toggleSection('makes')"
+                    class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+                    Makes
+                    <span id="icon-makes">+</span>
+                </button>
+                <div id="section-makes" class="mt-5 space-y-1 hidden">
+                    <!-- Populated by JavaScript -->
                 </div>
+            </div>
 
-                <!-- Features -->
-                <div>
-                    <button onclick="CarApp.UI.toggleSection('features')"
-                        class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
-                        Features
-                        <span id="icon-features">+</span>
-                    </button>
-                    <div id="section-features" class="mt-5 space-y-1 hidden">
-                        <!-- Populated by JavaScript -->
-                    </div>
+            <!-- Colors -->
+            <div>
+                <button onclick="UI.toggleSection('colors')"
+                    class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+                    Exterior Color
+                    <span id="icon-colors">+</span>
+                </button>
+                <div id="section-colors" class="mt-5 space-y-1 hidden">
+                    <!-- Populated by JavaScript -->
                 </div>
+            </div>
 
-                <!-- Apply Filters Button -->
-                <div class="mt-6">
-                    <button onclick="CarApp.Filters.applyFilters()"
-                        class="w-full bg-gray-950 text-white font-semibold py-2 px-4 rounded-lg hover:bg-warm-gray-500 transition duration-200">
-                        Apply Filters
-                    </button>
+            <!-- Features -->
+            <div>
+                <button onclick="UI.toggleSection('features')"
+                    class="w-full flex justify-between items-center font-medium text-left py-2 px-1 border-b border-gray-200 hover:bg-gray-50">
+                    Features
+                    <span id="icon-features">+</span>
+                </button>
+                <div id="section-features" class="mt-5 space-y-1 hidden">
+                    <!-- Populated by JavaScript -->
                 </div>
+            </div>
+
+            <!-- Apply Filters Button -->
+            <div class="mt-6">
+                <button onclick="Filters.applyFilters()"
+                    class="w-full bg-gray-950 text-white font-semibold py-2 px-4 rounded-lg hover:bg-warm-gray-500 transition duration-200">
+                    Apply Filters
+                </button>
             </div>
         </aside>
 
 
-        <main id="cars-container" class="flex-1 p-5 lg:p-7">
+        <main id="cars-container" class="flex-1 p-4 lg:p-8">
             <!-- Header with Search -->
             <div class="mb-3">
                 <div class="flex flex-col gap-4">
                     <!-- Title and Search Row -->
                     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                         <div class="flex items-center justify-between">
-                            <h1 class="text-xl font-bold text-charcoal-800">Car Listings</h1>
-                            <div class="text-xs text-charcoal-600 block lg:hidden whitespace-nowrap">
+                            <h1 class="text-xl font-bold text-gray-00">Car Listings</h1>
+                            <div class="text-xs text-gray-800 block lg:hidden whitespace-nowrap">
                                 <span id="results-count">0</span> cars found
                             </div>
                         </div>
@@ -541,21 +544,23 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-search text-gray-400"></i>
                             </div>
-                            <input id="search-bar" type="text" placeholder="Search car deals..."
-                                onkeyup="CarApp.Search.handleSearch(event)" oninput="CarApp.Search.toggleClearButton()"
-                                onfocus="CarApp.Search.showSuggestions()"
-                                class="w-full text-[16px] pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-charcoal-500 focus:border-transparent" />
+                            <input id="search-bar" type="text" placeholder="Search listings..."
+                                onkeyup="Search.onInput(event)" oninput="Search.toggleClearButton()"
+                                onfocus="Search.showSuggestions()"
+                                class="w-full text-base pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-transparent" />
 
                             <!-- Clear Button (X) -->
-                            <button id="search-clear-btn" onclick="CarApp.Search.clearSearch()"
+                            <button id="search-clear-btn" onclick="Search.clearSearch()"
                                 class="hidden absolute inset-y-0 right-0 pr-3 items-center text-gray-400 hover:text-gray-600 transition-colors">
                                 <i class="fas fa-times"></i>
                             </button>
 
                             <!-- Suggestions Dropdown -->
                             <div id="search-suggestions"
-                                class="custom-scroll hidden absolute top-full left-0 right-0 mt-0.5 bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-y-auto z-50">
-                                <!-- Suggestions will be populated here -->
+                                class="hidden absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden z-50">
+                                <div id="search-suggestions-inner" class="max-h-60 overflow-y-auto custom-scroll">
+                                    <!-- Suggestions will be populated here -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -568,7 +573,7 @@
                                 <!-- Sort By Dropdown -->
                                 <div class="relative" x-data="{ open: false }">
                                     <button @click="open = !open" @click.away="open = false"
-                                        class="flex items-center gap-2 px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-charcoal-500 focus:border-transparent transition-colors">
+                                        class="flex items-center gap-2 px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50">
                                         <i class="fas fa-sort text-gray-500"></i>
                                         <span id="sort-label">Sort By</span>
                                         <i class="fas fa-chevron-down text-xs text-gray-500 transition-transform"
@@ -584,20 +589,19 @@
                                         x-transition:leave-end="opacity-0 scale-95"
                                         class="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
                                         <div class="py-1">
-                                            <button onclick="CarApp.Sorting.sortCars('price-low')" data-sort="price-low"
+                                            <button onclick="Sorting.sortCars('price-low')" data-sort="price-low"
                                                 class="sort-option w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
                                                 Price: Low to High
                                             </button>
-                                            <button onclick="CarApp.Sorting.sortCars('price-high')"
-                                                data-sort="price-high"
+                                            <button onclick="Sorting.sortCars('price-high')" data-sort="price-high"
                                                 class="sort-option w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
                                                 Price: High to Low
                                             </button>
-                                            <button onclick="CarApp.Sorting.sortCars('newest')" data-sort="newest"
+                                            <button onclick="Sorting.sortCars('newest')" data-sort="newest"
                                                 class="sort-option w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
                                                 Newest First
                                             </button>
-                                            <button onclick="CarApp.Sorting.sortCars('oldest')" data-sort="oldest"
+                                            <button onclick="Sorting.sortCars('oldest')" data-sort="oldest"
                                                 class="sort-option w-full text-left px-4 py-2 text-xs text-gray-700 hover:bg-gray-50 transition-colors">
                                                 Oldest First
                                             </button>
@@ -606,8 +610,8 @@
                                 </div>
 
                                 <!-- Filter Toggle Button -->
-                                <button id="filter-toggle" onclick="CarApp.UI.toggleFilterSidebar()"
-                                    class="flex items-center gap-2 px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-charcoal-500 focus:border-transparent transition-colors lg:hidden">
+                                <button id="filter-toggle" onclick="UI.toggleFilterSidebar()"
+                                    class="flex items-center gap-2 px-4 py-2 text-xs font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-50 lg:hidden">
                                     <i class="fas fa-filter text-gray-500"></i>
                                     <span>Filter</span>
                                 </button>
@@ -615,14 +619,14 @@
                         </div>
 
                         <!-- Desktop Results Count -->
-                        <div class="hidden lg:block text-xs text-charcoal-600">
+                        <div class="hidden lg:block text-xs text-gray-600">
                             <span id="results-count-desktop">0</span> cars found
                         </div>
                     </div>
 
                     <!-- Active Filters Pills -->
                     <div id="active-filters"
-                        class="flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap scrollbar-hide">
+                        class="flex items-center gap-2 overflow-x-auto overflow-y-hidden whitespace-nowrap hide-scrollbar">
                         <!-- Active filter pills will be populated here -->
                     </div>
                 </div>
@@ -639,10 +643,11 @@
             </div>
 
             <!-- No Results Message -->
-            <div id="no-match-message" class="text-center py-12 hidden min-h-screen">
+            <div id="no-match-message" class="text-center py-12 hidden">
                 <i class="fas fa-search text-gray-300 text-4xl mb-4"></i>
-                <h3 class="text-lg font-medium text-charcoal-800 mb-2">No cars found</h3>
-                <p class="text-charcoal-600">Try adjusting your search criteria or check back later for new listings</p>
+                <h3 class="text-lg font-medium text-gray-800 mb-2">No cars found</h3>
+                <p class="text-gray-600">Try adjusting your search criteria or check back later for new listings
+                </p>
             </div>
 
             <!-- WhatsApp Chat Bubble -->
@@ -664,12 +669,29 @@
                 </button>
             </div>
 
+            <!-- Car Details Modal -->
+            <div id="car-details-modal-overlay"
+                class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 invisible opacity-0 transition-opacity duration-300 p-4">
+                <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full overflow-hidden">
+                    <div class="flex items-center justify-between px-6 py-4 border-b">
+                        <h2 id="car-modal-title" class="text-lg font-bold text-gray-800">Car Details</h2>
+                        <button onclick="Display.closeCarDetails()"
+                            class="p-2 px-4 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div id="car-modal" class="max-h-[80vh] overflow-y-auto">
+                        <!-- Modal content will be injected here -->
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
     <!-- Footer -->
     <footer class="bg-white  border-t">
-        <div class="max-w-[2000px] p-6 mx-auto">
+        <div class="max-w-[1600px] p-6 mx-auto">
             <div class="lg:flex">
                 <div class="w-full py-6 lg:w-2/5">
                     <a href="/">
@@ -755,14 +777,16 @@
 
             // Timing
             DEBOUNCE_DELAY_MS: 300,
+            SKELETON_DELAY_MS: 500,
+            TOAST_DURATION_MS: 3000,
             MODAL_TRANSITION_MS: 300,
             WHATSAPP_SHOW_DELAY_MS: 5000,
 
             // Zoom
             ZOOM: {
                 MIN: 1,
-                MAX: 3,
-                STEP: 0.5
+                MAX: 5,
+                STEP: 2
             },
 
             // Price
@@ -785,14 +809,15 @@
             // CSS Classes
             CLASSES: {
                 HIDDEN: 'hidden',
+                INVISIBLE: 'invisible',
                 ACTIVE: 'active',
+                FIELD_ERROR: 'field-error',
                 SIDEBAR_OPEN: 'sidebar-open'
             },
 
             // Status values
             STATUS: {
-                ACTIVE: 'active',
-                SOLD: 'sold'
+                ACTIVE: 'active'
             },
 
             // Sort types
@@ -864,6 +889,11 @@
                 return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
             },
 
+            // Clean phone number to digits only
+            cleanPhoneNumber(phone) {
+                return phone ? phone.replace(/\D/g, '') : '';
+            },
+
             // Prevent body scroll and compensate for scrollbar
             preventBodyScroll() {
                 const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -877,11 +907,34 @@
                 document.body.style.overflow = '';
             },
 
+            // Get URL search parameter
+            getUrlParam(name) {
+                return new URLSearchParams(window.location.search).get(name);
+            },
+
+            // Update URL without page reload
+            updateUrlParam(param, value) {
+                const url = new URL(window.location);
+                if (value === null) {
+                    url.searchParams.delete(param);
+                } else {
+                    url.searchParams.set(param, value);
+                }
+                window.history.pushState({}, '', url);
+            },
+
             // Scroll to top of page instantly
             scrollToTop() {
                 document.documentElement.scrollTop = 0;
                 document.body.scrollTop = 0;
                 window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+            },
+
+            // Clear all filter-related URL params
+            clearFilterParams(url) {
+                ['price', 'makes', 'colors', 'features', 'sort', 'page', 'search'].forEach(key => {
+                    url.searchParams.delete(key);
+                });
             }
         };
 
@@ -889,6 +942,9 @@
         // DOM CACHE
         // =============================================================================
 
+
+        // Cached DOM element references
+        // Initialized after DOMContentLoaded
         const DOM = {
             _cache: {},
 
@@ -904,7 +960,6 @@
             init() {
                 const ids = [
                     'car-cards-container',
-                    'loading-wrapper',
                     'no-match-message',
                     'pagination-container',
                     'search-bar',
@@ -916,16 +971,18 @@
                     'filterSidebar',
                     'priceRange',
                     'priceLabel',
+                    'car-details-modal-overlay',
+                    'car-modal-title',
+                    'car-modal',
                     'whatsapp-chat',
                     'whatsapp-bubble',
-                    'close-chat',
-                    'cars-container'
+                    'close-chat'
                 ];
 
                 ids.forEach(id => this.get(id));
             },
 
-            // Clear cache
+            // Clear cache (useful for testing)
             clear() {
                 this._cache = {};
             }
@@ -975,7 +1032,7 @@
                     price: CONFIG.MAX_PRICE,
                     makes: [],
                     colors: [],
-                    features: []
+                    features: [],
                 };
             },
 
@@ -992,10 +1049,104 @@
         };
 
         // =============================================================================
+        // URL SYNC MODULE
+        // =============================================================================
+
+        const UrlSync = {
+            pushState() {
+                const url = new URL(window.location);
+                Utils.clearFilterParams(url);
+
+                if (State.activeFilters.price < CONFIG.MAX_PRICE) {
+                    url.searchParams.set('price', State.activeFilters.price);
+                }
+                ['makes', 'colors', 'features'].forEach(key => {
+                    if (State.activeFilters[key].length) {
+                        url.searchParams.set(key, State.activeFilters[key].join(','));
+                    }
+                });
+                if (State.currentSort !== CONFIG.SORT.NEWEST) {
+                    url.searchParams.set('sort', State.currentSort);
+                }
+                if (State.pagination.currentPage > 1) {
+                    url.searchParams.set('page', State.pagination.currentPage);
+                }
+                const searchTerm = DOM.get('search-bar')?.value.trim();
+                if (searchTerm) url.searchParams.set('search', searchTerm);
+
+                window.history.pushState({}, '', url);
+            },
+
+            loadFromUrl() {
+                const url = new URL(window.location);
+
+                const price = url.searchParams.get('price');
+                if (price) State.activeFilters.price = parseInt(price);
+
+                ['makes', 'colors', 'features'].forEach(key => {
+                    const value = url.searchParams.get(key);
+                    if (value) State.activeFilters[key] = value.split(',');
+                });
+
+                const sort = url.searchParams.get('sort');
+                if (sort) State.currentSort = sort;
+
+                const page = url.searchParams.get('page');
+                if (page) State.pagination.currentPage = parseInt(page);
+
+                const search = url.searchParams.get('search');
+                if (search) {
+                    const searchBar = DOM.get('search-bar');
+                    if (searchBar) searchBar.value = search;
+                }
+
+                const car = url.searchParams.get('car');
+            }
+        };
+
+        // =============================================================================
         // HTML TEMPLATES
         // =============================================================================
 
         const Templates = {
+            // Generate skeleton loading cards
+            skeletonCards(count = 6) {
+                return Array(count).fill(0).map(() => `
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-lg">
+                        <div class="relative">
+                            <div class="bg-zinc-100">
+                                <div class="skeleton w-full h-52"></div>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-3">
+                                <div class="flex-1">
+                                    <div class="skeleton h-6 w-3/4 rounded mb-2"></div>
+                                    <div class="skeleton h-4 w-1/2 rounded"></div>
+                                </div>
+                            </div>
+                            <div class="border-t border-slate-100 pt-4">
+                                <div class="flex justify-between items-center mb-4">
+                                    <div>
+                                        <div class="skeleton h-3 w-16 rounded mb-1"></div>
+                                        <div class="skeleton h-8 w-24 rounded"></div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="skeleton h-3 w-20 rounded mb-1"></div>
+                                        <div class="skeleton h-6 w-16 rounded"></div>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2 mb-4">
+                                    <div class="skeleton h-4 w-24 rounded"></div>
+                                    <div class="skeleton h-4 w-24 rounded"></div>
+                                </div>
+                                <div class="skeleton h-12 w-full rounded-xl"></div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            },
+
             // Generate car card HTML
             carCard(car) {
                 const images = car.images?.length > 0 ? car.images : ['/images/placeholder-car.jpg'];
@@ -1009,16 +1160,14 @@
                     <div class="swiper-slide">
                         <img loading="lazy" data-src="${img}" alt="Car Image" 
                             class="w-full h-52 object-contain opacity-0"
-                            data-action="open-image-viewer" 
-                            data-images="${imagesJSON}" 
-                            data-index="${index}">
+                             onclick="ImageViewer.open(${imagesJSON}, ${index})">
                     </div>
                 `).join('');
 
                 return `
-                    <div class="bg-white rounded-3xl overflow-hidden shadow-lg border border-slate-100">
-                        <div class="relative border-b border-slate-200">
-                            <div class="image-slider-container ${images.length === 1 ? 'swiper-single' : ''}">
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-lg">
+                        <div class="relative">
+                            <div class="image-slider-container ${images.length === 1 ? 'swiper-single' : ''} bg-zinc-100">
                                 <div class="swiper">
                                     <div class="swiper-wrapper">
                                         ${imageSlides}
@@ -1035,9 +1184,9 @@
                         <div class="p-6">
                             <div class="flex justify-between items-start mb-3">
                                 <div>
-                                    <button data-action="view-details" data-car-id="${car.id}" class="text-xl font-bold text-slate-900 text-left cursor-pointer">
+                                    <h3 class="text-xl font-bold text-slate-900">
                                         ${Utils.escapeHtml(car.car?.name) || 'Unknown Car'}
-                                    </button>
+                                    </h3>
                                     <p class="text-slate-500 text-sm">${Utils.escapeHtml(car.details?.year) || 'N/A'} • ${Utils.escapeHtml(car.details?.exteriorColor) || ''}</p>
                                 </div>
                             </div>
@@ -1062,11 +1211,11 @@
                                         ${Utils.escapeHtml(car.details?.mileage) || 'N/A'} mi/yr
                                     </span>
                                 </div>
-                                <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${encodeURIComponent(car.car?.name || 'car')}"
-                                   target="_blank"
-                                   class="block w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition-colors text-center">
-                                    Apply Now
-                                </a>
+                                <button 
+                                    onclick="Display.viewCarDetailsByID('${car.id}')" 
+                                    class="block w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition-colors text-center">
+                                    View Details
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1080,47 +1229,36 @@
 
                 const imageSlides = images.map((img, index) => `
                     <div class="swiper-slide">
-                        <img loading="lazy" data-src="${img}" alt="Car Image" 
-                            class="w-full h-[150px] object-contain opacity-0"
-                            data-action="open-image-viewer" 
-                            data-images="${imagesJSON}" 
-                            data-index="${index}">
+                        <img src="${img}" alt="Car Image" 
+                            class="w-full h-60 object-contain"
+                            onclick="ImageViewer.open(${imagesJSON}, ${index})">
                     </div>
                 `).join('');
 
                 return `
-                    <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full animate-slideIn overflow-hidden">
-                        <div class="flex items-center justify-between px-6 pr-3 py-2 border-b">
-                            <div>
-                                <h2 class="text-md font-bold text-gray-800">${Utils.escapeHtml(car.car?.name)}</h2>
-                            </div>
-                            <button data-action="close-car-modal" class="p-2 px-4 text-gray-400 hover:text-charcoal-600 rounded-full hover:bg-gray-100 transition-colors">
-                                <i class="fas fa-times text-xl"></i>
-                            </button>
-                        </div>
-                    
-                        <div class="h-[70vh] overflow-y-auto custom-scroll modal-scroll-container">
-                            <div class="px-6 py-6">
-                                <div class="relative w-full p-6 rounded-t-lg overflow-hidden image-slider-container ${images.length === 1 ? 'swiper-single' : ''} bg-white">
-                                    <div class="swiper">
-                                        <div class="swiper-wrapper">
-                                            ${imageSlides}
-                                        </div>
-                                        <div class="swiper-pagination"></div>
-                                        <div class="swiper-button-prev"></div>
-                                        <div class="swiper-button-next"></div>
+                    <div class="w-full overflow-hidden">
+                        <div class="h-[60vh] overflow-y-auto custom-scroll modal-scroll-container">
+                            <div class="relative w-full overflow-hidden image-slider-container ${images.length === 1 ? 'swiper-single' : ''} bg-zinc-100">
+                                <div class="swiper">
+                                    <div class="swiper-wrapper">
+                                        ${imageSlides}
                                     </div>
+                                    <div class="swiper-pagination"></div>
+                                    <div class="swiper-button-prev"></div>
+                                    <div class="swiper-button-next"></div>
                                 </div>
-                            
+                            </div>
+
+                            <div class="px-6 py-6">
                                 <div class="mb-4 border-b">
                                     <div class="flex space-x-6">
-                                        <button class="modal-tab-button active py-2 px-1 text-sm font-semibold border-b-2 border-blue-600 text-blue-600" data-action="switch-tab" data-tab="specs">
+                                        <button class="modal-tab-button active py-2 px-1 text-sm font-semibold border-b-2 border-blue-600 text-blue-600" onclick="Display.switchModalTab('specs')">
                                             Specifications
                                         </button>
-                                        <button class="modal-tab-button py-2 px-1 text-sm font-semibold border-b-2 border-transparent text-gray-600" data-action="switch-tab" data-tab="features">
+                                        <button class="modal-tab-button py-2 px-1 text-sm font-semibold border-b-2 border-transparent text-gray-600" onclick="Display.switchModalTab('features')">
                                             Features
                                         </button>
-                                        <button class="modal-tab-button py-2 px-1 text-sm font-semibold border-b-2 border-transparent text-gray-600" data-action="switch-tab" data-tab="terms">
+                                        <button class="modal-tab-button py-2 px-1 text-sm font-semibold border-b-2 border-transparent text-gray-600" onclick="Display.switchModalTab('terms')">
                                             Lease Terms
                                         </button>
                                     </div>
@@ -1128,13 +1266,21 @@
                             
                                 <div id="modal-specs-tab" class="modal-tab-content">
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div class="flex justify-between py-1 border-b">
+                                        <div class="flex justify-between py-2 border-b">
+                                            <span class="text-sm text-gray-600">Year</span>
+                                            <span class="text-sm font-semibold">${Utils.escapeHtml(car.details?.year) || 'N/A'}</span>
+                                        </div>
+                                        <div class="flex justify-between py-2 border-b">
+                                            <span class="text-sm text-gray-600">Vehicle Type</span>
+                                            <span class="text-sm font-semibold">${Utils.escapeHtml(car.details?.vehicleType) || 'N/A'}</span>
+                                        </div>
+                                        <div class="flex justify-between py-2 border-b">
                                             <span class="text-sm text-gray-600">Drivetrain</span>
-                                            <span class="text-sm font-semibold">AWD</span>
+                                            <span class="text-sm font-semibold">${Utils.escapeHtml(car.details?.drivetrain) || 'N/A'}</span>
                                         </div>
                                         <div class="flex justify-between py-2 border-b">
                                             <span class="text-sm text-gray-600">Seating</span>
-                                            <span class="text-sm font-semibold">5 Passengers</span>
+                                            <span class="text-sm font-semibold">${Utils.escapeHtml(car.details?.seating) || 'N/A'} Passengers</span>
                                         </div>
                                         <div class="flex justify-between py-2 border-b">
                                             <span class="text-sm text-gray-600">Exterior Color</span>
@@ -1148,40 +1294,21 @@
                                 </div>
                             
                                 <div id="modal-features-tab" class="modal-tab-content hidden">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        <div class="text-sm flex items-center space-x-2">
-                                            <i class="fas fa-check-circle text-green-500"></i>
-                                            <span>Panoramic Moonroof</span>
+                                    ${car.details?.features ? `
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            ${car.details.features.split(',').map(feature => `
+                                                <div class="text-sm flex items-center space-x-2">
+                                                    <i class="fas fa-check-circle text-blue-500"></i>
+                                                    <span>${feature.trim()}</span>
+                                                </div>
+                                            `).join('')}
                                         </div>
-                                        <div class="text-sm flex items-center space-x-2">
-                                            <i class="fas fa-check-circle text-green-500"></i>
-                                            <span>Navigation System</span>
+                                    ` : `
+                                        <div class="text-center py-8 text-gray-500">
+                                            <i class="fas fa-info-circle text-2xl mb-2"></i>
+                                            <p>No features listed for this vehicle.</p>
                                         </div>
-                                        <div class="text-sm flex items-center space-x-2">
-                                            <i class="fas fa-check-circle text-green-500"></i>
-                                            <span>Heated Seats</span>
-                                        </div>
-                                        <div class="text-sm flex items-center space-x-2">
-                                            <i class="fas fa-check-circle text-green-500"></i>
-                                            <span>Apple CarPlay & Android Auto</span>
-                                        </div>
-                                        <div class="text-sm flex items-center space-x-2">
-                                            <i class="fas fa-check-circle text-green-500"></i>
-                                            <span>Adaptive Cruise Control</span>
-                                        </div>
-                                        <div class="text-sm flex items-center space-x-2">
-                                            <i class="fas fa-check-circle text-green-500"></i>
-                                            <span>Blind Spot Monitoring</span>
-                                        </div>
-                                        <div class="text-sm flex items-center space-x-2">
-                                            <i class="fas fa-check-circle text-green-500"></i>
-                                            <span>Premium Sound System</span>
-                                        </div>
-                                        <div class="text-sm flex items-center space-x-2">
-                                            <i class="fas fa-check-circle text-green-500"></i>
-                                            <span>LED Headlights</span>
-                                        </div>
-                                    </div>
+                                    `}
                                 </div>
                             
                                 <div id="modal-terms-tab" class="modal-tab-content hidden">
@@ -1211,6 +1338,15 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- Modal Footer -->
+                        <div class="sticky bottom-0 bg-white border-t px-6 py-4">
+                            <a href="https://wa.me/9175837073?text=I%20am%20interested%20in%20leasing%20the%20${encodeURIComponent(car.car?.name || 'car')}"
+                               target="_blank"
+                               class="block w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition-colors text-center">
+                                Apply Now
+                            </a>
+                        </div>
                     </div>
                 `;
             },
@@ -1221,7 +1357,7 @@
 
                 let html = `
                     <button class="pagination-btn" ${currentPage === 1 ? 'disabled' : ''} 
-                        data-action="go-to-page" data-page="${currentPage - 1}">
+                        onclick="Pagination.goToPage(${currentPage - 1})">
                         <i class="fas fa-chevron-left"></i>
                     </button>
                 `;
@@ -1233,7 +1369,7 @@
                     } else {
                         html += `
                             <button class="pagination-btn ${page === currentPage ? 'active' : ''}" 
-                                data-action="go-to-page" data-page="${page}">
+                                onclick="Pagination.goToPage(${page})">
                                 ${page}
                             </button>
                         `;
@@ -1242,7 +1378,7 @@
 
                 html += `
                     <button class="pagination-btn" ${currentPage === totalPages ? 'disabled' : ''} 
-                        data-action="go-to-page" data-page="${currentPage + 1}">
+                        onclick="Pagination.goToPage(${currentPage + 1})">
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 `;
@@ -1254,7 +1390,7 @@
             _getPageNumbers(current, total) {
                 const pages = [1];
 
-                if (total <= 7) {
+                if (total <= 6) {
                     for (let i = 2; i <= total; i++) pages.push(i);
                 } else if (current <= 3) {
                     for (let i = 2; i <= 4; i++) pages.push(i);
@@ -1276,9 +1412,7 @@
                     <div class="filter-pill inline-flex items-center gap-1 bg-gray-200 rounded-full px-2 py-1 text-xs">
                         <span>${Utils.escapeHtml(label)}</span>
                         <i class="fas fa-times cursor-pointer" 
-                            data-action="remove-filter" 
-                            data-type="${type}" 
-                            ${dataValue}></i>
+                            onclick="Filters.removeFilter('${type}', ${value ? `'${value}'` : 'null'})"></i>
                     </div>
                 `;
             },
@@ -1292,16 +1426,15 @@
                 const isSold = car.status === CONFIG.STATUS.SOLD;
 
                 return `
-                    <div data-action="select-suggestion" data-index="${index}" 
-                        class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors ${isSold ? 'opacity-60' : ''}">
+                    <div onclick="Search.selectSuggestion(${index})" 
+                        class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 transition-colors">
                         <div class="flex items-center gap-3">
                             <div class="relative">
-                                <img src="${image}" alt="Car" class="w-12 h-12 object-contain rounded ${isSold ? 'grayscale' : ''}">
-                                ${isSold ? '<div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 rounded"><span class="text-white text-[10px] font-bold">SOLD</span></div>' : ''}
+                                <img src="${image}" alt="Car" class="w-12 h-12 bg-zinc-100 object-contain rounded">
                             </div>
                             <div class="flex-1 min-w-0">
                                 <p class="text-sm font-medium text-gray-800 truncate">
-                                    ${name} ${isSold ? '<span class="text-red-500 text-xs ml-1">(Sold)</span>' : ''}
+                                    ${name}
                                 </p>
                                 <p class="text-xs text-gray-500">${color}</p>
                             </div>
@@ -1342,7 +1475,7 @@
                 
                     <!-- Main image -->
                     <div class="image-viewer-container">
-                        <img id="image-viewer-image" class="image-viewer-image" src="" alt="Dress Image" onclick="ImageViewer.toggleZoom()">
+                        <img id="image-viewer-image" class="image-viewer-image" src="" alt="Car Image" onclick="ImageViewer.toggleZoom()">
                     </div>
                 
                     <button class="image-viewer-nav next" onclick="ImageViewer.nextImage()">
@@ -1356,13 +1489,18 @@
                 `;
             },
 
-
             // Generate error message HTML
-            errorMessage(title, message) {
+            errorMessage(title, message, showViewAllButton = false) {
                 return `
                     <i class="fas fa-exclamation-triangle text-gray-300 text-4xl mb-4"></i>
-                    <h3 class="text-lg font-medium text-charcoal-800 mb-2">${Utils.escapeHtml(title)}</h3>
-                    <p class="text-charcoal-600">${Utils.escapeHtml(message)}</p>
+                    <h3 class="text-lg font-medium text-gray-800 mb-2">${Utils.escapeHtml(title)}</h3>
+                    <p class="text-gray-600">${Utils.escapeHtml(message)}</p>
+                    ${showViewAllButton ? `
+                        <button onclick="Filters.resetAll()"
+                            class="mt-4 px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900">
+                            View All Cars
+                        </button>
+                    ` : ''}
                 `;
             },
 
@@ -1370,81 +1508,27 @@
             filterCheckboxes(type, options) {
                 const allCheckbox = `
                     <div class="flex items-center space-x-2">
-                        <input type="checkbox" value="all" class="all-option" data-category="${type}">
+                        <input type="checkbox" value="all" class="all-option" data-category="${type}" onchange="Filters.handleAllCheckbox(this)">
                         <label class="text-sm text-gray-700 font-semibold">Uncheck All</label>
                     </div>
                 `;
 
                 const regularCheckboxes = options.map(option => `
                     <div class="flex items-center space-x-2">
-                        <input type="checkbox" value="${Utils.escapeAttr(option)}" class="option" data-category="${type}">
+                        <input type="checkbox" value="${Utils.escapeAttr(option)}" class="option" data-category="${type}" onchange="Filters.handleRegularCheckbox(this)">
                         <label class="text-sm text-gray-700">${Utils.escapeHtml(option)}</label>
                     </div>
                 `).join('');
 
                 return allCheckbox + regularCheckboxes;
-            }
-        };
-
-        // =============================================================================
-        // MAIN APPLICATION CONTROLLER
-        // =============================================================================
-
-        const App = {
-            // Initialize the application
-            async init() {
-                console.log('Initializing Car Application...');
-
-                // Initialize Firebase
-                Database.init();
-
-                // Cache DOM elements
-                DOM.init();
-
-                // Setup filter UI
-                UI.initializeFilterSections();
-
-                // Setup event handlers
-                EventHandlers.init();
-
-                // Load cars from Firebase
-                await Database.loadCars();
-
-                // Set default sort indicator
-                Sorting.setActiveSort(CONFIG.SORT.NEWEST);
-
-                // Display initial cars
-                this.refreshDisplay();
-
-                // Initialize WhatsApp chat
-                WhatsAppChat.init();
             },
 
-            // Refresh the display with current filters/sort/search
-            refreshDisplay() {
-                console.log('Refreshing display...');
-
-                let cars = [...State.allCars];
-
-                // Apply search filter
-                const searchTerm = DOM.get('search-bar')?.value.toLowerCase() || '';
-                if (searchTerm) {
-                    cars = cars.filter(car => {
-                        const searchableText = `${car.car?.name || ''}`.toLowerCase();
-                        return searchableText.includes(searchTerm);
-                    });
-                }
-
-                // Apply category filters
-                cars = Filters.applyAllFilters(cars);
-
-                // Apply sorting
-                cars = Sorting.applySorting(cars);
-
-                // Update state and display
-                State.displayedCars = cars;
-                Display.renderCars(cars);
-                UI.updateResultsCount(cars.length);
+            // Generate toast notification
+            toast(message) {
+                return `
+                    <i class="fas fa-check-circle"></i>
+                    <span>${Utils.escapeHtml(message)}</span>
+                `;
             }
         };
 
@@ -1454,7 +1538,6 @@
 
         const Database = {
             db: null,
-
             // Initialize Firebase
             init() {
                 firebase.initializeApp(CONFIG.FIREBASE);
@@ -1473,21 +1556,21 @@
 
             async loadCars() {
                 const container = DOM.get('car-cards-container');
-                const loading = DOM.get('loading-wrapper');
                 const noResults = DOM.get('no-match-message');
 
                 try {
-                    loading?.classList.remove(CONFIG.CLASSES.HIDDEN);
-                    container.innerHTML = '';
-                    noResults?.classList.add(CONFIG.CLASSES.HIDDEN);
+                    noResults.classList.add(CONFIG.CLASSES.HIDDEN);
+                    container.innerHTML = Templates.skeletonCards();
 
-                    const query = this.db.collection("cars").where("status", "==", "active").orderBy("timestamp", "desc");
+                    // Normal flow
+                    const query = this.db.collection("cars")
+                        .where("status", "in", [CONFIG.STATUS.ACTIVE])
+                        .orderBy("timestamp", "desc");
+
                     const querySnapshot = await query.get();
 
-                    loading?.classList.add(CONFIG.CLASSES.HIDDEN);
-
                     if (querySnapshot.empty) {
-                        noResults?.classList.remove(CONFIG.CLASSES.HIDDEN);
+                        noResults.classList.remove(CONFIG.CLASSES.HIDDEN);
                         UI.updateResultsCount(0);
                         return;
                     }
@@ -1497,18 +1580,15 @@
                         State.allCars.push({ id: doc.id, ...doc.data() });
                     });
 
-                    console.log(`Loaded ${State.allCars.length} cars`);
+                    console.log(`Loaded ${State.allCars.length} approved cars`);
 
                 } catch (error) {
                     console.error("Error loading cars:", error);
-                    loading?.classList.add(CONFIG.CLASSES.HIDDEN);
-                    if (noResults) {
-                        noResults.classList.remove(CONFIG.CLASSES.HIDDEN);
-                        noResults.innerHTML = Templates.errorMessage(
-                            'Error loading cars',
-                            'Please refresh the page or try again later'
-                        );
-                    }
+                    noResults.classList.remove(CONFIG.CLASSES.HIDDEN);
+                    noResults.innerHTML = Templates.errorMessage(
+                        'Error loading cars',
+                        'Please refresh the page or try again later'
+                    );
                 }
             }
         };
@@ -1518,7 +1598,41 @@
         // =============================================================================
 
         const Display = {
-            // Render cars to the grid
+            // Refresh the display with current filters/sort/search
+            refresh() {
+                console.log('Refreshing display...');
+
+                const container = DOM.get('car-cards-container');
+                const noResults = DOM.get('no-match-message');
+
+                // Show skeleton loading
+                noResults.classList.add(CONFIG.CLASSES.HIDDEN);
+                container.innerHTML = Templates.skeletonCards();
+
+                // Delay to show skeleton, then render actual content
+                setTimeout(() => {
+
+                    let cars = [...State.allCars];
+
+                    // Apply search filter
+                    const searchTerm = DOM.get('search-bar')?.value.toLowerCase() || '';
+                    if (searchTerm) {
+                        cars = cars.filter(car => {
+                            const searchableText = `${car.car?.name || ''}`.toLowerCase();
+                            return searchableText.includes(searchTerm);
+                        });
+                    }
+
+                    cars = Filters.applyAllFilters(cars);
+                    cars = Sorting.applySorting(cars);
+
+                    State.displayedCars = cars;
+                    this.renderCars(cars);
+                    UI.updateResultsCount(cars.length);
+                }, CONFIG.SKELETON_DELAY_MS);
+            },
+
+            //  Render cars to the grid
             renderCars(cars) {
                 const container = DOM.get('car-cards-container');
                 const noResults = DOM.get('no-match-message');
@@ -1526,12 +1640,12 @@
 
                 if (cars.length === 0) {
                     container.innerHTML = '';
-                    noResults?.classList.remove(CONFIG.CLASSES.HIDDEN);
-                    if (paginationContainer) paginationContainer.innerHTML = '';
+                    noResults.classList.remove(CONFIG.CLASSES.HIDDEN);
+                    paginationContainer.innerHTML = '';
                     return;
                 }
 
-                noResults?.classList.add(CONFIG.CLASSES.HIDDEN);
+                noResults.classList.add(CONFIG.CLASSES.HIDDEN);
 
                 // Update pagination state
                 const { currentPage, itemsPerPage } = State.pagination;
@@ -1543,10 +1657,8 @@
                 const paginatedCars = cars.slice(startIndex, startIndex + itemsPerPage);
 
                 // Render
-                container.innerHTML = paginatedCars.map(c => Templates.carCard(c)).join('');
-                if (paginationContainer) {
-                    paginationContainer.innerHTML = Templates.pagination(currentPage, State.pagination.totalPages);
-                }
+                container.innerHTML = paginatedCars.map(d => Templates.carCard(d)).join('');
+                paginationContainer.innerHTML = Templates.pagination(currentPage, State.pagination.totalPages);
 
                 // Lazy load images and initialize sliders
                 requestAnimationFrame(() => {
@@ -1558,46 +1670,49 @@
                 });
             },
 
-            // View car details in modal
+            // View car details by ID (for onclick handlers)
+            viewCarDetailsByID(id) {
+                const car = State.allCars.find(d => d.id === id) ||
+                    State.displayedCars.find(d => d.id === id);
+                if (car) this.viewCarDetails(car);
+            },
+
+
+            // View car details modal
             viewCarDetails(car) {
-                const modal = document.createElement('div');
-                modal.className = 'fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4';
-                modal.id = 'car-details-modal';
-                modal.innerHTML = Templates.carDetailsModal(car);
+                const modal = DOM.get('car-details-modal-overlay');
+                const modalTitle = DOM.get('car-modal-title');
+                const modalBody = DOM.get('car-modal');
 
-                document.body.appendChild(modal);
+                modalTitle.textContent = car.car?.name || 'Car Details';
+                modalBody.innerHTML = Templates.carDetailsModal(car);
+
+                // Initialize swiper in modal
+                const modalSlider = modalBody.querySelector('.image-slider-container');
+                if (modalSlider) {
+                    ImageSlider.initialize(modalSlider);
+                }
+
+                modal.classList.remove(CONFIG.CLASSES.INVISIBLE);
+                modal.style.opacity = '1';
                 Utils.preventBodyScroll();
-
-                // Initialize sliders after modal is added
-                setTimeout(() => {
-                    modal.querySelectorAll('img[data-src]').forEach(img => {
-                        img.src = img.dataset.src;
-                        img.onload = () => img.classList.add('opacity-100');
-                    });
-                    ImageSlider.initAll('#car-details-modal .image-slider-container');
-                }, 50);
-
-                // Close on background click
-                modal.addEventListener('click', (e) => {
-                    if (e.target === modal) {
-                        this.closeCarDetails();
-                    }
-                });
             },
 
             // Close car details modal
             closeCarDetails() {
-                const modal = document.getElementById('car-details-modal');
-                if (modal) {
-                    modal.remove();
+                const modal = DOM.get('car-details-modal-overlay');
+                modal.style.opacity = '0';
+
+                setTimeout(() => {
+                    modal.classList.add(CONFIG.CLASSES.INVISIBLE);
                     Utils.restoreBodyScroll();
-                }
+                }, CONFIG.MODAL_TRANSITION_MS);
             },
 
             // Switch modal tab
             switchModalTab(tabName) {
                 document.querySelectorAll('.modal-tab-content').forEach(tab => {
-                    tab.classList.add(CONFIG.CLASSES.HIDDEN);
+                    tab.classList.add('hidden');
                 });
 
                 document.querySelectorAll('.modal-tab-button').forEach(btn => {
@@ -1607,10 +1722,10 @@
 
                 const targetTab = document.getElementById(`modal-${tabName}-tab`);
                 if (targetTab) {
-                    targetTab.classList.remove(CONFIG.CLASSES.HIDDEN);
+                    targetTab.classList.remove('hidden');
                 }
 
-                const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+                const activeBtn = document.querySelector(`[onclick="Display.switchModalTab('${tabName}')"]`);
                 if (activeBtn) {
                     activeBtn.classList.add('active', 'border-blue-600', 'text-blue-600');
                     activeBtn.classList.remove('border-transparent', 'text-gray-600');
@@ -1623,6 +1738,7 @@
         // =============================================================================
 
         const Filters = {
+
             getCheckedValues(filterType) {
                 const section = document.getElementById(`section-${filterType}`);
                 if (!section) return [];
@@ -1645,13 +1761,17 @@
                 };
 
                 Pagination.resetToFirstPage();
-                App.refreshDisplay();
+                Display.refresh();
+
+                // Update filter pills
                 this.updateActiveFilterPills();
 
                 // Close sidebar on mobile
                 if (window.innerWidth < 1024) {
                     UI.closeFilterSidebar();
                 }
+
+                UrlSync.pushState();
             },
 
             applyAllFilters(cars) {
@@ -1673,25 +1793,35 @@
                     }
 
                     // Features filter
-                    if (activeFilters.features.length > 0 && !activeFilters.features.includes(car.details?.features)) {
-                        return false;
+                    if (activeFilters.features.length > 0) {
+                        const carFeatures = (car.details?.features || '').split(',').map(f => f.trim());
+                        const hasMatchingFeature = activeFilters.features.some(feature => carFeatures.includes(feature));
+                        if (!hasMatchingFeature) return false;
                     }
 
                     return true;
                 });
             },
 
-            // Reset all filters to defaults
-            resetFilters() {
-                console.log('Resetting all filters...');
+            // ONE function to reset everything
+            resetAll() {
+                console.log('Resetting all...');
 
+                // Reset filters
                 State.resetFilters();
+
+                // Reset sort to default
+                State.currentSort = CONFIG.SORT.NEWEST;
+                Sorting.setActiveSort(CONFIG.SORT.NEWEST);
+
+                // Clear search
+                DOM.get('search-bar').value = '';
+                Search.toggleClearButton();
 
                 // Reset UI
                 DOM.get('priceRange').value = CONFIG.MAX_PRICE;
                 this.updatePriceLabel();
 
-                // Uncheck all checkboxes
                 ['makes', 'colors', 'features'].forEach(type => {
                     const section = document.getElementById(`section-${type}`);
                     if (section) {
@@ -1699,12 +1829,20 @@
                     }
                 });
 
+                DOM.get('active-filters').innerHTML = '';
                 Pagination.resetToFirstPage();
-                App.refreshDisplay();
-                this.updateActiveFilterPills();
+
+                // Clear URL completely
+                const url = new URL(window.location);
+                Utils.clearFilterParams(url);
+                url.searchParams.delete('car');
+                window.history.pushState({}, '', url);
+
+                Display.refresh();
+
             },
 
-            // Remove a specific filter
+            // ONE function to remove a specific filter (including shared)
             removeFilter(type, value = null) {
                 if (type === 'price') {
                     State.activeFilters.price = CONFIG.MAX_PRICE;
@@ -1720,15 +1858,46 @@
                 }
 
                 Pagination.resetToFirstPage();
-                App.refreshDisplay();
+                Display.refresh();
                 this.updateActiveFilterPills();
+                UrlSync.pushState();
+            },
+
+            // ONE function to update pills (handles both shared and regular)
+            updateActiveFilterPills() {
+                const container = DOM.get('active-filters');
+                let html = '';
+                const { activeFilters } = State;
+
+                // Price pill
+                if (activeFilters.price < CONFIG.MAX_PRICE) {
+                    html += Templates.filterPill(`Up to $${activeFilters.price}`, 'price');
+                }
+
+                // Other filter pills
+                ['makes', 'colors', 'features',].forEach(type => {
+                    activeFilters[type].forEach(value => {
+                        html += Templates.filterPill(value, type, value);
+                    });
+                });
+
+                // Clear all button (if any pills exist)
+                if (html) {
+                    html += `
+                        <button onclick="Filters.resetAll()"
+                            class="text-xs text-gray-600 hover:underline font-medium ml-2">
+                            Clear All
+                        </button>
+                    `;
+                }
+
+                container.innerHTML = html;
             },
 
             // Update price label display
             updatePriceLabel() {
                 const value = DOM.get('priceRange').value;
-                const label = DOM.get('priceLabel');
-                if (label) label.textContent = value;
+                DOM.get('priceLabel').textContent = value;
             },
 
             // Sync UI checkboxes with active filters state
@@ -1774,39 +1943,6 @@
                 if (checkbox.checked && allCheckbox) {
                     allCheckbox.checked = false;
                 }
-            },
-
-            // Update active filter pills display
-            updateActiveFilterPills() {
-                const container = DOM.get('active-filters');
-                if (!container) return;
-
-                let html = '';
-                const { activeFilters } = State;
-
-                // Price pill
-                if (activeFilters.price < CONFIG.MAX_PRICE) {
-                    html += Templates.filterPill(`Up to $${activeFilters.price}`, 'price');
-                }
-
-                // Other filter pills
-                ['makes', 'colors', 'features'].forEach(type => {
-                    activeFilters[type].forEach(value => {
-                        html += Templates.filterPill(value, type, value);
-                    });
-                });
-
-                // Clear all button
-                if (html) {
-                    html += `
-                        <button data-action="reset-filters" 
-                            class="text-xs text-charcoal-600 hover:underline font-medium ml-2">
-                            Clear All
-                        </button>
-                    `;
-                }
-
-                container.innerHTML = html;
             }
         };
 
@@ -1818,7 +1954,8 @@
             // Set active sort indicator in UI
             setActiveSort(sortType) {
                 document.querySelectorAll('.sort-option').forEach(option => {
-                    option.classList.toggle(CONFIG.CLASSES.ACTIVE, option.dataset.sort === sortType);
+                    option.classList.toggle(CONFIG.CLASSES.ACTIVE,
+                        option.dataset.sort === sortType);
                 });
             },
 
@@ -1828,7 +1965,8 @@
                 State.currentSort = sortType;
                 this.setActiveSort(sortType);
                 Pagination.resetToFirstPage();
-                App.refreshDisplay();
+                Display.refresh();
+                UrlSync.pushState();
             },
 
             // Apply sorting to car array
@@ -1837,10 +1975,12 @@
 
                 switch (State.currentSort) {
                     case CONFIG.SORT.PRICE_LOW:
-                        sorted.sort((a, b) => (a.pricing?.price || 0) - (b.pricing?.price || 0));
+                        sorted.sort((a, b) =>
+                            (a.pricing?.price || 0) - (b.pricing?.price || 0));
                         break;
                     case CONFIG.SORT.PRICE_HIGH:
-                        sorted.sort((a, b) => (b.pricing?.price || 0) - (a.pricing?.price || 0));
+                        sorted.sort((a, b) =>
+                            (b.pricing?.price || 0) - (a.pricing?.price || 0));
                         break;
                     case CONFIG.SORT.NEWEST:
                         sorted.sort((a, b) => {
@@ -1876,10 +2016,10 @@
             _performSearch(searchTerm) {
                 this.updateSuggestions(searchTerm);
                 Pagination.resetToFirstPage();
-                App.refreshDisplay();
+                Display.refresh();
             },
 
-            // Handle search input
+            //   Handle search input
             onInput(event) {
                 const searchTerm = event.target.value.trim();
                 this.handleSearch(searchTerm);
@@ -1889,45 +2029,43 @@
                 }
             },
 
-            // Toggle clear button visibility
+            //   Toggle clear button visibility
             toggleClearButton() {
                 const searchBar = DOM.get('search-bar');
                 const clearBtn = DOM.get('search-clear-btn');
-                if (clearBtn) {
-                    clearBtn.classList.toggle(CONFIG.CLASSES.HIDDEN, searchBar.value.trim().length === 0);
-                }
+                clearBtn.classList.toggle(CONFIG.CLASSES.HIDDEN, searchBar.value.trim().length === 0);
             },
 
-            // Clear search
+            //   Clear search
             clearSearch() {
                 const searchBar = DOM.get('search-bar');
                 searchBar.value = '';
                 this.toggleClearButton();
                 this.hideSuggestions();
                 Pagination.resetToFirstPage();
-                App.refreshDisplay();
+                Display.refresh();
+                UrlSync.pushState();
                 searchBar.focus();
             },
 
-            // Update search suggestions
+            //   Update search suggestions
             updateSuggestions(searchTerm) {
                 const suggestionsDiv = DOM.get('search-suggestions');
-                if (!suggestionsDiv) return;
+                const suggestionsInner = DOM.get('search-suggestions-inner');
 
                 if (!searchTerm) {
                     this.hideSuggestions();
                     return;
                 }
 
-                // Filter cars
                 let carsToSearch = [...State.allCars];
-                if (!State.showSold) {
-                    carsToSearch = carsToSearch.filter(c => c.status !== CONFIG.STATUS.SOLD);
-                }
                 carsToSearch = Filters.applyAllFilters(carsToSearch);
 
                 const matches = carsToSearch.filter(car => {
-                    const searchableText = `${car.car?.name || ''}`.toLowerCase();
+                    const searchableText = `
+                            ${car.car?.name || ''}
+                        ` .toLowerCase();
+
                     return searchableText.includes(searchTerm.toLowerCase());
                 }).slice(0, CONFIG.MAX_SEARCH_SUGGESTIONS);
 
@@ -1937,11 +2075,15 @@
                 }
 
                 State.currentSearchMatches = matches;
-                suggestionsDiv.innerHTML = matches.map((car, i) => Templates.searchSuggestion(car, i)).join('');
+
+                suggestionsInner.innerHTML = matches
+                    .map((car, i) => Templates.searchSuggestion(car, i))
+                    .join('');
+
                 suggestionsDiv.classList.remove(CONFIG.CLASSES.HIDDEN);
             },
 
-            // Select a search suggestion
+            //   Select a search suggestion
             selectSuggestion(index) {
                 const car = State.currentSearchMatches[index];
                 if (!car) return;
@@ -1953,22 +2095,24 @@
 
                 this.hideSuggestions();
                 this.toggleClearButton();
+                UrlSync.pushState();
             },
 
-            // Show suggestions if search has content
+            //   Show suggestions if search has content
             showSuggestions() {
-                const searchTerm = DOM.get('search-bar')?.value.trim();
-                if (searchTerm && searchTerm.length >= 2) {
+                const searchTerm = DOM.get('search-bar').value.trim();
+                if (searchTerm.length >= 2) {
                     this.updateSuggestions(searchTerm);
                 }
             },
 
-            // Hide suggestions dropdown
+            //   Hide suggestions dropdown
             hideSuggestions() {
                 const suggestionsDiv = DOM.get('search-suggestions');
-                if (suggestionsDiv) {
-                    suggestionsDiv.classList.add(CONFIG.CLASSES.HIDDEN);
-                }
+                const suggestionsInner = DOM.get('search-suggestions-inner');
+
+                suggestionsInner.innerHTML = '';
+                suggestionsDiv.classList.add(CONFIG.CLASSES.HIDDEN);
             }
         };
 
@@ -2004,8 +2148,10 @@
             },
 
             // Initialize all sliders on page
-            initAll(selector = '.image-slider-container') {
-                document.querySelectorAll(selector).forEach(container => this.initialize(container));
+            initAll() {
+                document.querySelectorAll('.image-slider-container').forEach(
+                    container => this.initialize(container)
+                );
             }
         };
 
@@ -2377,7 +2523,6 @@
             }
         };
 
-
         // =============================================================================
         // PAGINATION MODULE
         // =============================================================================
@@ -2390,7 +2535,8 @@
 
                 State.pagination.currentPage = page;
                 Utils.scrollToTop();
-                Display.renderCars(State.displayedCars);
+                Display.refresh();
+                UrlSync.pushState();
             },
 
             // Reset to first page
@@ -2409,7 +2555,7 @@
                 const chat = DOM.get('whatsapp-chat');
                 const bubble = DOM.get('whatsapp-bubble');
                 const closeBtn = DOM.get('close-chat');
-                const carsContainer = DOM.get('cars-container');
+                const carsContainer = document.getElementById('cars-container');
 
                 if (!chat || !bubble || !closeBtn) return;
 
@@ -2558,10 +2704,8 @@
 
             // Update results count display
             updateResultsCount(count) {
-                const resultsCount = DOM.get('results-count');
-                const resultsCountDesktop = DOM.get('results-count-desktop');
-                if (resultsCount) resultsCount.textContent = count;
-                if (resultsCountDesktop) resultsCountDesktop.textContent = count;
+                DOM.get('results-count').textContent = count;
+                DOM.get('results-count-desktop').textContent = count;
             }
         };
 
@@ -2570,19 +2714,7 @@
         // =============================================================================
 
         const EventHandlers = {
-            // Initialize all event listeners
             init() {
-                // Main container delegation
-                document.addEventListener('click', this._handleClick.bind(this));
-
-                // Search input handling
-                const searchBar = DOM.get('search-bar');
-                if (searchBar) {
-                    searchBar.addEventListener('keyup', (e) => Search.onInput(e));
-                    searchBar.addEventListener('input', () => Search.toggleClearButton());
-                    searchBar.addEventListener('focus', () => Search.showSuggestions());
-                }
-
                 // Close suggestions when clicking outside
                 document.addEventListener('click', (e) => {
                     const searchBar = DOM.get('search-bar');
@@ -2593,191 +2725,63 @@
                     }
                 });
 
-                // Filter checkbox delegation
-                document.addEventListener('change', this._handleChange.bind(this));
-            },
-
-            // Handle click events via delegation
-            _handleClick(e) {
-                const target = e.target;
-                const actionEl = target.closest('[data-action]');
-
-                if (!actionEl) return;
-
-                const action = actionEl.dataset.action;
-
-                switch (action) {
-                    // Car card actions
-                    case 'view-details': {
-                        const carId = actionEl.dataset.carId;
-                        const car = State.displayedCars.find(c => c.id === carId);
-                        if (car) Display.viewCarDetails(car);
-                        break;
-                    }
-
-                    case 'open-image-viewer': {
-                        e.stopPropagation();
-                        const images = JSON.parse(actionEl.dataset.images.replace(/&quot;/g, '"'));
-                        const index = parseInt(actionEl.dataset.index);
-                        ImageViewer.open(images, index);
-                        break;
-                    }
-
-                    // Modal actions
-                    case 'close-car-modal':
-                        Display.closeCarDetails();
-                        break;
-
-                    case 'switch-tab': {
-                        const tabName = actionEl.dataset.tab;
-                        Display.switchModalTab(tabName);
-                        break;
-                    }
-
-                    // Filter actions
-                    case 'remove-filter': {
-                        const { type, value } = actionEl.dataset;
-                        Filters.removeFilter(type, value || null);
-                        break;
-                    }
-
-                    case 'reset-filters':
-                        Filters.resetFilters();
-                        break;
-
-                    // Pagination
-                    case 'go-to-page': {
-                        const page = parseInt(actionEl.dataset.page);
-                        Pagination.goToPage(page);
-                        break;
-                    }
-
-                    // Search
-                    case 'select-suggestion': {
-                        const index = parseInt(actionEl.dataset.index);
-                        Search.selectSuggestion(index);
-                        break;
-                    }
-
-                    // Image viewer
-                    case 'close-image-viewer':
-                        ImageViewer.close();
-                        break;
-
-                    case 'prev-image':
-                        ImageViewer.prevImage();
-                        break;
-
-                    case 'next-image':
-                        ImageViewer.nextImage();
-                        break;
-
-                    case 'zoom-in':
-                        ImageViewer.zoomIn();
-                        break;
-
-                    case 'zoom-out':
-                        ImageViewer.zoomOut();
-                        break;
-
-                    case 'reset-zoom':
-                        ImageViewer.resetZoom();
-                        break;
-
-                    case 'toggle-zoom':
-                        ImageViewer.toggleZoom();
-                        break;
+                // Modal background click to close
+                const carModal = DOM.get('car-details-modal-overlay');
+                if (carModal) {
+                    carModal.addEventListener('click', (e) => {
+                        if (e.target === carModal) {
+                            Display.closeCarDetails();
+                        }
+                    });
                 }
-            },
 
-            // Handle change events via delegation
-            _handleChange(e) {
-                const target = e.target;
-
-                // Filter checkboxes
-                if (target.classList.contains('all-option')) {
-                    Filters.handleAllCheckbox(target);
-                } else if (target.classList.contains('option')) {
-                    Filters.handleRegularCheckbox(target);
-                }
+                // Handle browser back/forward
+                window.addEventListener('popstate', () => {
+                    window.location.reload();
+                });
             }
         };
 
         // =============================================================================
-        // LEGACY API COMPATIBILITY
+        // MAIN APPLICATION CONTROLLER
         // =============================================================================
 
-        // Maintain backward compatibility with existing HTML onclick handlers
-        const CarApp = {
-            // Core
-            init: () => App.init(),
-            refreshDisplay: () => App.refreshDisplay(),
+        const App = {
+            // Initialize the application
+            async init() {
+                console.log('Initializing Car Application...');
 
-            // Data
-            data: State,
+                // Initialize Firebase
+                Database.init();
 
-            // Database
-            Database: {
-                loadCars: () => Database.loadCars()
+                // Cache DOM elements
+                DOM.init();
+
+                // Setup filter UI
+                UI.initializeFilterSections();
+
+                // Load state from URL and sync UI
+                UrlSync.loadFromUrl();
+                Filters.syncUIWithActiveFilters();
+                Sorting.setActiveSort(State.currentSort);
+                Search.toggleClearButton();
+                Filters.updateActiveFilterPills();
+
+                // Setup event handlers
+                EventHandlers.init();
+
+                // Load cars from Firebase
+                await Database.loadCars();
+
+                // Set default sort indicator
+                Sorting.setActiveSort(CONFIG.SORT.NEWEST);
+
+                // Display initial cars
+                Display.refresh();
+
+                // Initialize WhatsApp chat
+                WhatsAppChat.init();
             },
-
-            // Filters
-            Filters: {
-                applyFilters: () => Filters.applyFilters(),
-                resetFilters: () => Filters.resetFilters(),
-                removeFilter: (type, value) => Filters.removeFilter(type, value),
-                updatePriceLabel: () => Filters.updatePriceLabel(),
-                handleAllCheckbox: (cb) => Filters.handleAllCheckbox(cb),
-                handleRegularCheckbox: (cb) => Filters.handleRegularCheckbox(cb)
-            },
-
-            // Sorting
-            Sorting: {
-                sortCars: (type) => Sorting.sortCars(type)
-            },
-
-            // Display
-            Display: {
-                viewCarDetailsByID: (id) => {
-                    const car = State.displayedCars.find(c => c.id === id);
-                    if (car) Display.viewCarDetails(car);
-                },
-                closeCarDetailsModal: () => Display.closeCarDetails(),
-                switchModalTab: (tabName, event) => Display.switchModalTab(tabName)
-            },
-
-            // Image Viewer
-            ImageViewer: {
-                open: (images, index) => ImageViewer.open(images, index),
-                close: () => ImageViewer.close(),
-                nextImage: () => ImageViewer.nextImage(),
-                prevImage: () => ImageViewer.prevImage(),
-                zoomIn: () => ImageViewer.zoomIn(),
-                zoomOut: () => ImageViewer.zoomOut(),
-                resetZoom: () => ImageViewer.resetZoom(),
-                toggleZoom: () => ImageViewer.toggleZoom()
-            },
-
-            // Search
-            Search: {
-                handleSearch: (e) => Search.onInput(e),
-                toggleClearButton: () => Search.toggleClearButton(),
-                clearSearch: () => Search.clearSearch(),
-                showSuggestions: () => Search.showSuggestions()
-            },
-
-            // Pagination
-            Pagination: {
-                goToPage: (page) => Pagination.goToPage(page),
-                resetToFirstPage: () => Pagination.resetToFirstPage()
-            },
-
-            // UI
-            UI: {
-                toggleFilterSidebar: () => UI.toggleFilterSidebar(),
-                closeFilterSidebar: () => UI.closeFilterSidebar(),
-                toggleSection: (id) => UI.toggleSection(id)
-            }
         };
 
         // =============================================================================
@@ -2788,13 +2792,6 @@
             App.init();
         });
     </script>
-
-    <!-- Toggle View Button -->
-    <a href="/leasing-deals/index2.html"
-       class="fixed bottom-5 left-5 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2 z-50 transition-all duration-300">
-        <i class="fas fa-th-large"></i>
-        <span class="text-sm font-medium">Version 2</span>
-    </a>
 </body>
 
 </html>
