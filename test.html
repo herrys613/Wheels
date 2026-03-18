@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>InvenTrack</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
+<style>
+  :root {
+    --bg: #f4f5f9;
+    --surface: #ffffff;
+    --surface2: #f0f1f6;
+    --border: #e2e4ec;
+    --accent: #10b981;
+    --accent-dark: #059669;
+    --accent2: #6366f1;
+    --text: #111827;
+    --muted: #6b7280;
+    --danger: #ef4444;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100dvh;
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    overscroll-behavior: none;
+  }
+  .font-display { font-family: 'Syne', sans-serif; }
+  .mono { font-family: 'DM Mono', monospace; }
+
+  /* Badges */
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 2px 9px; border-radius: 999px; font-size: 11px;
+    font-family: 'DM Mono', monospace; font-weight: 500;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .badge-green  { background: rgba(16,185,129,0.1);  color: #059669; border: 1px solid rgba(16,185,129,0.25); }
+  .badge-yellow { background: rgba(245,158,11,0.1);  color: #d97706; border: 1px solid rgba(245,158,11,0.25); }
+  .badge-red    { background: rgba(239,68,68,0.1);   color: #dc2626; border: 1px solid rgba(239,68,68,0.25); }
+  .badge-live   { background: rgba(16,185,129,0.12); color: #059669; border: 1px solid rgba(16,185,129,0.2); font-size:10px; }
+
+  /* Inputs — font-size 16px prevents iOS zoom */
+  .inp {
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); border-radius: 10px; padding: 11px 14px;
+    font-size: 16px; font-family: 'Inter', sans-serif;
+    outline: none; width: 100%; transition: border 0.15s, box-shadow 0.15s;
+    -webkit-appearance: none;
+  }
+  .inp:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(16,185,129,0.12); background: #fff; }
+  .inp::placeholder { color: #9ca3af; }
+  .inp-sm { font-size: 14px; padding: 8px 12px; border-radius: 8px; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 11px 20px; border-radius: 10px; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.12s; border: none; outline: none;
+    font-family: 'Inter', sans-serif; -webkit-appearance: none; min-height: 44px;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:active { background: var(--accent-dark); transform: scale(0.97); }
+  .btn-ghost   { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+  .btn-ghost:active { background: #e5e7eb; }
+  .btn-danger  { background: rgba(239,68,68,0.09); color: #dc2626; border: 1px solid rgba(239,68,68,0.2); }
+  .btn-danger:active { background: rgba(239,68,68,0.18); }
+  .btn-cam     { background: var(--accent2); color: #fff; }
+  .btn-cam:active { background: #4f46e5; transform: scale(0.97); }
+  .btn-icon    { width:40px; height:40px; padding:0; border-radius:10px; background:var(--surface2); border:1px solid var(--border); color:var(--muted); min-height:40px; }
+
+  /* Mobile item card */
+  .inv-card {
+    background: #fff; border-radius: 14px; border: 1px solid var(--border);
+    padding: 14px 16px; cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: box-shadow 0.12s;
+  }
+  .inv-card:active { box-shadow: 0 0 0 2px rgba(16,185,129,0.3); }
+
+  /* Desktop table row */
+  .inv-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 90px 80px 150px;
+    align-items: center; gap: 12px;
+    padding: 13px 20px; border-bottom: 1px solid var(--border);
+    transition: background 0.12s; cursor: pointer;
+  }
+  .inv-row:hover { background: #f8f9fc; }
+  .inv-row:last-child { border-bottom: none; }
+
+  /* Stat cards */
+  .stat-card {
+    background: #fff; border-radius: 14px; border: 1px solid var(--border);
+    padding: 16px; position: relative; overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+  .stat-card.green::before  { background: var(--accent); }
+  .stat-card.purple::before { background: var(--accent2); }
+  .stat-card.amber::before  { background: #f59e0b; }
+  .stat-card.red::before    { background: var(--danger); }
+
+  /* Bottom nav — mobile only */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 40;
+    background: #fff; border-top: 1px solid var(--border);
+    display: flex; align-items: stretch;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  }
+  .nav-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    padding: 8px 4px; border-radius: 0; cursor: pointer;
+    font-size: 10px; font-weight: 600; color: var(--muted);
+    transition: color 0.12s; border: none; background: transparent;
+    font-family: 'Inter', sans-serif; min-height: 52px; justify-content: center;
+  }
+  .nav-btn svg { width: 20px; height: 20px; }
+  .nav-btn.active { color: var(--accent); }
+  .nav-btn:active { transform: scale(0.9); }
+
+  /* Sheets (slide-up on mobile, centered on desktop) */
+  .sheet-overlay {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(17,24,39,0.4); backdrop-filter: blur(3px);
+    opacity: 0; pointer-events: none; transition: opacity 0.22s;
+  }
+  .sheet-overlay.open { opacity: 1; pointer-events: all; }
+
+  .sheet-box {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 51;
+    background: #fff; border-radius: 20px 20px 0 0;
+    max-height: 92dvh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    transform: translateY(100%);
+    transition: transform 0.28s cubic-bezier(0.32,0.72,0,1);
+    box-shadow: 0 -8px 40px rgba(0,0,0,0.12);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .sheet-box.open { transform: translateY(0); }
+
+  .sheet-handle {
+    width: 36px; height: 4px; background: #e5e7eb;
+    border-radius: 99px; margin: 12px auto 0;
+  }
+  .sheet-head { padding: 16px 20px 0; display: flex; align-items: center; justify-content: space-between; }
+  .sheet-body { padding: 16px 20px; }
+
+  /* Qty buttons */
+  .qty-btn {
+    width: 34px; height: 34px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface2);
+    color: var(--text); cursor: pointer; font-size: 18px; font-weight: 400;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.1s; flex-shrink: 0;
+  }
+  .qty-btn:active { background: var(--accent); border-color: var(--accent); color: #fff; transform: scale(0.88); }
+
+  /* Toast — above bottom nav */
+  .toast {
+    position: fixed; z-index: 100;
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    left: 50%; transform: translateX(-50%) translateY(10px);
+    padding: 10px 20px; border-radius: 999px; font-size: 13px; font-weight: 500;
+    background: #1f2937; color: #fff; white-space: nowrap;
+    opacity: 0; transition: all 0.2s; pointer-events: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  /* Search */
+  .search-bar {
+    position: sticky; top: 60px; z-index: 20;
+    background: var(--bg); padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Filter pills */
+  .filter-pill {
+    padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    border: 1px solid var(--border); background: var(--surface2); color: var(--muted);
+    cursor: pointer; white-space: nowrap; transition: all 0.12s;
+    font-family: 'Inter', sans-serif; min-height: 32px;
+  }
+  .filter-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .filter-pill:active { transform: scale(0.94); }
+
+  /* Dropdown */
+  .dropdown-menu {
+    position: absolute; top: calc(100% + 8px); right: 0;
+    background: #fff; border: 1px solid var(--border); border-radius: 12px;
+    min-width: 170px; z-index: 99; overflow: hidden; display: none;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  }
+  .dropwrap.open .dropdown-menu { display: block; }
+  .dropdown-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; font-size: 14px; color: var(--text);
+    cursor: pointer; transition: background 0.1s;
+  }
+  .dropdown-item:hover { background: var(--surface2); }
+
+  /* Highlight */
+  .hl { background: rgba(16,185,129,0.18); border-radius: 2px; }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 99px; }
+
+  /* Camera */
+  #camFeed { border-radius: 12px; width: 100%; display: block; background: #000; min-height: 200px; }
+  #camCanvas { display: none; }
+  @keyframes scanline { 0%{top:12%} 100%{top:88%} }
+  .scan-line {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent2), transparent);
+    animation: scanline 1.6s ease-in-out infinite alternate;
+    box-shadow: 0 0 8px var(--accent2);
+  }
+  #barcodeTarget svg { max-width: 100%; }
+
+  /* Desktop overrides */
+  @media (min-width: 640px) {
+    body { padding-bottom: 0; }
+    .bottom-nav { display: none; }
+    .toast { bottom: 28px; }
+    .search-bar { top: 64px; padding: 12px 24px; }
+
+    .sheet-box {
+      position: static;
+      border-radius: 18px;
+      max-height: 88vh;
+      width: 100%; max-width: 480px;
+      transform: translateY(20px);
+      padding-bottom: 28px;
+    }
+    .sheet-box.open { transform: translateY(0); }
+    .sheet-overlay {
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sheet-handle { display: none; }
+    .desktop-actions { display: flex !important; }
+    .mobile-add-row { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+
+<!-- ═══ HEADER ═══ -->
+<header style="position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--border);padding:0 16px;height:60px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 4px rgba(0,0,0,0.04)">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+    </div>
+    <span class="font-display" style="font-size:18px;font-weight:800;letter-spacing:-0.02em">InvenTrack</span>
+    <span class="badge badge-live">LIVE</span>
+  </div>
+
+  <!-- Desktop actions -->
+  <div class="desktop-actions hidden" style="align-items:center;gap:8px">
+    <div style="position:relative">
+      <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--muted);pointer-events:none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input id="searchDesk" type="search" placeholder="Search…" class="inp inp-sm" style="width:200px;padding-left:32px">
+    </div>
+    <button class="btn btn-cam" style="padding:8px 14px;font-size:13px;min-height:38px" onclick="openCamera()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      Scan
+    </button>
+    <button class="btn btn-primary" style="padding:8px 14px;font-size:13px;min-height:38px" onclick="openAddModal()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      Add Item
+    </button>
+    <div class="dropwrap" id="exportDrop" style="position:relative">
+      <button class="btn btn-ghost" style="padding:8px 14px;font-size:13px;min-height:38px" onclick="toggleDropdown()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export
+      </button>
+      <div class="dropdown-menu">
+        <div class="dropdown-item" onclick="exportCSV()">📄 Export CSV</div>
+        <div class="dropdown-item" onclick="exportJSON()">📦 Export JSON</div>
+        <div class="dropdown-item" onclick="printInventory()">🖨️ Print</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile actions -->
+  <div style="display:flex;align-items:center;gap:8px" class="sm:hidden">
+    <button class="btn btn-icon" onclick="openCamera()" style="background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.2);color:var(--accent2)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    </button>
+    <button class="btn btn-primary" style="padding:9px 14px;font-size:13px;min-height:40px" onclick="openAddModal()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      Add
+    </button>
+  </div>
+</header>
+
+<!-- ═══ SEARCH ═══ -->
+<div class="search-bar">
+  <div style="position:relative">
+    <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--muted);pointer-events:none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input id="searchMob" type="search" placeholder="Search part number, name, category…" class="inp" style="padding-left:38px">
+  </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<main style="max-width:720px;margin:0 auto;padding:16px">
+
+  <!-- Stats -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+    <div class="stat-card green">
+      <p class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Total SKUs</p>
+      <p class="font-display" style="font-size:26px;font-weight:800;line-height:1" id="statSkus">0</p>
+    </div>
+    <div class="stat-card purple">
+      <p class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Total Units</p>
+      <p class="font-display" style="font-size:26px;font-weight:800;line-height:1" id="statUnits">0</p>
+    </div>
+    <div class="stat-card amber">
+      <p class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Low Stock</p>
+      <p class="font-display" style="font-size:26px;font-weight:800;line-height:1" id="statLow">0</p>
+    </div>
+    <div class="stat-card red">
+      <p class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Out of Stock</p>
+      <p class="font-display" style="font-size:26px;font-weight:800;line-height:1" id="statOut">0</p>
+    </div>
+  </div>
+
+  <!-- Filter + Sort -->
+  <div style="display:flex;align-items:center;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+    <button class="filter-pill active" onclick="setFilter('all',this)">All</button>
+    <button class="filter-pill"        onclick="setFilter('low',this)">Low Stock</button>
+    <button class="filter-pill"        onclick="setFilter('out',this)">Out of Stock</button>
+    <div style="flex:1;min-width:8px"></div>
+    <select id="sortSelect" class="inp inp-sm" onchange="renderList()" style="width:auto;min-width:106px;flex-shrink:0">
+      <option value="name">Name A–Z</option>
+      <option value="part">Part #</option>
+      <option value="qty-asc">Qty ↑</option>
+      <option value="qty-desc">Qty ↓</option>
+      <option value="recent">Recent</option>
+    </select>
+  </div>
+
+  <!-- Mobile export row -->
+  <div class="mobile-add-row" style="display:flex;gap:8px;margin-bottom:12px">
+    <button class="btn btn-ghost" style="flex:1;font-size:12px;min-height:38px;padding:8px" onclick="exportCSV()">📄 CSV</button>
+    <button class="btn btn-ghost" style="flex:1;font-size:12px;min-height:38px;padding:8px" onclick="exportJSON()">📦 JSON</button>
+    <button class="btn btn-ghost" style="flex:1;font-size:12px;min-height:38px;padding:8px" onclick="printInventory()">🖨️ Print</button>
+  </div>
+
+  <!-- Mobile card list -->
+  <div id="cardList" class="sm:hidden" style="display:flex;flex-direction:column;gap:10px"></div>
+
+  <!-- Desktop table -->
+  <div id="tableWrap" style="display:none;background:#fff;border-radius:16px;border:1px solid var(--border);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.05)">
+    <div class="inv-row" style="cursor:default;background:#fafbfc;border-bottom:1px solid var(--border)">
+      <span class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Part #</span>
+      <span class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Name</span>
+      <span class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Category</span>
+      <span class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Qty</span>
+      <span class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;text-align:right">Actions</span>
+    </div>
+    <div id="tableBody"></div>
+  </div>
+
+  <!-- Empty state -->
+  <div id="emptyState" style="display:none;padding:60px 20px;text-align:center">
+    <div style="width:64px;height:64px;border-radius:16px;background:var(--surface2);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--muted)"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+    </div>
+    <p class="font-display" style="font-size:18px;font-weight:800;margin-bottom:6px">No items found</p>
+    <p style="font-size:14px;color:var(--muted)">Add items manually or scan a barcode</p>
+  </div>
+
+  <p id="itemCount" style="font-size:12px;color:var(--muted);margin-top:12px"></p>
+</main>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="navHome" onclick="navTab('Home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Inventory
+  </button>
+  <button class="nav-btn" id="navScan" onclick="openCamera()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    Scan
+  </button>
+  <button class="nav-btn" id="navAdd" onclick="openAddModal()">
+    <div style="width:42px;height:42px;border-radius:13px;background:var(--accent);display:flex;align-items:center;justify-content:center">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+    </div>
+  </button>
+  <button class="nav-btn" id="navExport" onclick="exportCSV()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Export
+  </button>
+  <button class="nav-btn" id="navSettings" onclick="openSettings()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    Settings
+  </button>
+</nav>
+
+<!-- ═══ ADD/EDIT SHEET ═══ -->
+<div class="sheet-overlay" id="addOverlay"></div>
+<div class="sheet-box" id="addSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <h2 class="font-display" style="font-size:20px;font-weight:800" id="modalTitle">Add Item</h2>
+    <button class="btn btn-icon" onclick="closeSheet('addOverlay','addSheet')" style="min-height:36px;width:36px;height:36px;font-size:16px">✕</button>
+  </div>
+  <div class="sheet-body" style="display:flex;flex-direction:column;gap:14px">
+    <div>
+      <label class="mono" style="display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Part Number *</label>
+      <input id="fPartNum" class="inp mono" placeholder="e.g. PN-00421">
+    </div>
+    <div>
+      <label class="mono" style="display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Part Name *</label>
+      <input id="fPartName" class="inp" placeholder="e.g. M6 Hex Bolt">
+    </div>
+    <div>
+      <label class="mono" style="display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Category</label>
+      <input id="fCategory" class="inp" placeholder="e.g. Fasteners" list="catList">
+      <datalist id="catList"></datalist>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <label class="mono" style="display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Quantity *</label>
+        <input id="fQty" type="number" min="0" inputmode="numeric" class="inp" placeholder="0">
+      </div>
+      <div>
+        <label class="mono" style="display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Low Stock Alert</label>
+        <input id="fLowAlert" type="number" min="0" inputmode="numeric" class="inp" placeholder="5">
+      </div>
+    </div>
+    <div>
+      <label class="mono" style="display:block;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Notes</label>
+      <input id="fNotes" class="inp" placeholder="Optional notes…">
+    </div>
+    <div style="display:flex;gap:10px;padding-bottom:8px">
+      <button class="btn btn-ghost" style="flex:1" onclick="closeSheet('addOverlay','addSheet')">Cancel</button>
+      <button class="btn btn-primary" style="flex:1" id="saveBtn" onclick="saveItem()">Save Item</button>
+    </div>
+  </div>
+  <input type="hidden" id="editId">
+</div>
+
+<!-- ═══ DETAIL SHEET ═══ -->
+<div class="sheet-overlay" id="detailOverlay"></div>
+<div class="sheet-box" id="detailSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <h2 class="font-display" style="font-size:20px;font-weight:800;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:12px" id="detailTitle">Item Detail</h2>
+    <button class="btn btn-icon" onclick="closeSheet('detailOverlay','detailSheet')" style="min-height:36px;width:36px;height:36px;font-size:16px;flex-shrink:0">✕</button>
+  </div>
+  <div class="sheet-body">
+    <div id="detailBody"></div>
+    <div id="barcodeTarget" style="margin-top:16px;display:flex;justify-content:center;overflow-x:auto"></div>
+    <div style="display:flex;gap:10px;margin-top:20px;padding-bottom:8px">
+      <button class="btn btn-ghost" style="flex:1" onclick="closeSheet('detailOverlay','detailSheet')">Close</button>
+      <button class="btn btn-primary" style="flex:1" id="detailEditBtn">Edit Item</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CAMERA SHEET ═══ -->
+<div class="sheet-overlay" id="camOverlay"></div>
+<div class="sheet-box" id="camSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <h2 class="font-display" style="font-size:20px;font-weight:800">Scan Barcode</h2>
+    <button class="btn btn-icon" onclick="closeCamera()" style="min-height:36px;width:36px;height:36px;font-size:16px">✕</button>
+  </div>
+  <div class="sheet-body">
+    <div style="position:relative;border-radius:14px;overflow:hidden;background:#000;margin-bottom:14px">
+      <video id="camFeed" autoplay playsinline muted></video>
+      <div class="scan-line" id="scanLine" style="display:none;position:absolute;left:0;right:0"></div>
+      <div id="camPlaceholder" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#6b7280;min-height:200px">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <span style="font-size:14px">Tap Start Camera</span>
+      </div>
+    </div>
+    <canvas id="camCanvas"></canvas>
+    <div id="scanResult" style="display:none;border-radius:12px;padding:12px;margin-bottom:14px;background:var(--surface2);border:1px solid var(--border)">
+      <p class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Detected Barcode</p>
+      <p class="mono" style="font-size:14px;font-weight:500" id="scanResultText"></p>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Point camera at barcode or QR. Auto-detects every 2s on Chrome/Edge.</p>
+    <div style="display:flex;gap:10px;padding-bottom:8px">
+      <button class="btn btn-ghost" style="flex:1" onclick="closeCamera()">Cancel</button>
+      <button class="btn btn-cam" style="flex:1" id="startScanBtn" onclick="startCamera()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+        Start Camera
+      </button>
+      <button class="btn btn-primary" style="flex:1;display:none" id="captureBtn" onclick="captureFrame()">Capture</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DELETE SHEET ═══ -->
+<div class="sheet-overlay" id="delOverlay"></div>
+<div class="sheet-box" id="delSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-body" style="text-align:center;padding-top:24px">
+    <div style="width:56px;height:56px;border-radius:16px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 14px">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+    </div>
+    <p class="font-display" style="font-size:20px;font-weight:800;margin-bottom:6px">Delete Item?</p>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:20px">This cannot be undone.</p>
+    <div style="display:flex;gap:10px;padding-bottom:8px">
+      <button class="btn btn-ghost" style="flex:1" onclick="closeSheet('delOverlay','delSheet')">Cancel</button>
+      <button class="btn btn-danger" style="flex:1" id="confirmDeleteBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SETTINGS SHEET ═══ -->
+<div class="sheet-overlay" id="settingsOverlay"></div>
+<div class="sheet-box" id="settingsSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-head">
+    <h2 class="font-display" style="font-size:20px;font-weight:800">Settings</h2>
+    <button class="btn btn-icon" onclick="closeSheet('settingsOverlay','settingsSheet')" style="min-height:36px;width:36px;height:36px;font-size:16px">✕</button>
+  </div>
+  <div class="sheet-body" style="display:flex;flex-direction:column;gap:12px">
+    <div style="border-radius:14px;padding:16px;background:var(--surface2);border:1px solid var(--border)">
+      <p class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Data Export</p>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+        <button class="btn btn-ghost" style="justify-content:flex-start;font-size:13px" onclick="exportCSV();closeSheet('settingsOverlay','settingsSheet')">📄 Export CSV</button>
+        <button class="btn btn-ghost" style="justify-content:flex-start;font-size:13px" onclick="exportJSON();closeSheet('settingsOverlay','settingsSheet')">📦 Export JSON</button>
+        <button class="btn btn-ghost" style="justify-content:flex-start;font-size:13px" onclick="printInventory();closeSheet('settingsOverlay','settingsSheet')">🖨️ Print Report</button>
+      </div>
+    </div>
+    <div style="border-radius:14px;padding:16px;background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.15)">
+      <p class="mono" style="font-size:10px;color:#dc2626;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Danger Zone</p>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:10px">Permanently delete all inventory.</p>
+      <button class="btn btn-danger" style="width:100%" onclick="clearAll()">Clear All Inventory</button>
+    </div>
+    <div style="padding-bottom:8px"></div>
+  </div>
+</div>
+
+<script>
+// ─── STATE ─────────────────────────────────────────────────────────────────
+let inventory = JSON.parse(localStorage.getItem('inventrack_v3')||'null') ||
+                JSON.parse(localStorage.getItem('inventrack_v2')||'[]');
+let currentFilter='all', currentSearch='', pendingDeleteId=null;
+let cameraStream=null, scanInterval=null, editingId=null;
+
+const save = () => localStorage.setItem('inventrack_v3', JSON.stringify(inventory));
+
+// ─── MEDIA QUERY ──────────────────────────────────────────────────────────
+const isDesktop = () => window.innerWidth >= 640;
+function updateLayout() {
+  document.getElementById('cardList').style.display  = isDesktop() ? 'none' : 'flex';
+  document.getElementById('tableWrap').style.display = isDesktop() ? 'block' : 'none';
+}
+window.addEventListener('resize', updateLayout);
+
+// ─── STATS ────────────────────────────────────────────────────────────────
+function updateStats() {
+  const low = inventory.filter(i=>Number(i.qty)>0&&Number(i.qty)<=(Number(i.lowAlert)||5));
+  const out = inventory.filter(i=>Number(i.qty)===0);
+  document.getElementById('statSkus').textContent  = inventory.length;
+  document.getElementById('statUnits').textContent = inventory.reduce((a,i)=>a+Number(i.qty),0);
+  document.getElementById('statLow').textContent   = low.length;
+  document.getElementById('statOut').textContent   = out.length;
+}
+
+// ─── UTILS ────────────────────────────────────────────────────────────────
+const esc = t => String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function hl(text, q) {
+  if (!q) return esc(text);
+  return esc(text).replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark class="hl">$1</mark>');
+}
+function stockBadge(i) {
+  const q=Number(i.qty), a=Number(i.lowAlert)||5;
+  return q===0 ? `<span class="badge badge-red">Out of Stock</span>`
+       : q<=a  ? `<span class="badge badge-yellow">Low</span>`
+               : `<span class="badge badge-green">In Stock</span>`;
+}
+
+// ─── SORTED LIST ──────────────────────────────────────────────────────────
+function getSorted() {
+  let list=[...inventory];
+  if(currentFilter==='low') list=list.filter(i=>Number(i.qty)>0&&Number(i.qty)<=(Number(i.lowAlert)||5));
+  if(currentFilter==='out') list=list.filter(i=>Number(i.qty)===0);
+  if(currentSearch){
+    const q=currentSearch.toLowerCase();
+    list=list.filter(i=>(i.partNum||'').toLowerCase().includes(q)||(i.partName||'').toLowerCase().includes(q)||(i.category||'').toLowerCase().includes(q)||(i.notes||'').toLowerCase().includes(q));
+  }
+  const s=document.getElementById('sortSelect')?.value||'name';
+  if(s==='name')    list.sort((a,b)=>a.partName.localeCompare(b.partName));
+  if(s==='part')    list.sort((a,b)=>a.partNum.localeCompare(b.partNum));
+  if(s==='qty-asc') list.sort((a,b)=>Number(a.qty)-Number(b.qty));
+  if(s==='qty-desc')list.sort((a,b)=>Number(b.qty)-Number(a.qty));
+  if(s==='recent')  list.sort((a,b)=>b.addedAt-a.addedAt);
+  return list;
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────
+function renderList() {
+  const list=getSorted(), q=currentSearch;
+  const empty=document.getElementById('emptyState');
+  document.getElementById('itemCount').textContent = list.length ? `${list.length} item${list.length!==1?'s':''}` : '';
+  if(!list.length){ document.getElementById('cardList').innerHTML=''; document.getElementById('tableBody').innerHTML=''; empty.style.display='block'; updateStats(); return; }
+  empty.style.display='none';
+
+  // Cards
+  document.getElementById('cardList').innerHTML = list.map(item=>`
+    <div class="inv-card" onclick="openDetail('${item.id}')">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px">
+        <div style="flex:1;min-width:0">
+          <span class="mono" style="font-size:11px;font-weight:500;color:var(--accent)">${hl(item.partNum,q)}</span>
+          <p style="font-weight:600;font-size:16px;line-height:1.3;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${hl(item.partName,q)}</p>
+          ${item.category?`<p style="font-size:12px;color:var(--muted);margin-top:2px">${hl(item.category,q)}</p>`:''}
+        </div>
+        <div style="flex-shrink:0">${stockBadge(item)}</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:8px" onclick="event.stopPropagation()">
+          <button class="qty-btn" onclick="adjustQty('${item.id}',-1)">−</button>
+          <span class="mono" style="font-size:18px;font-weight:700;width:40px;text-align:center">${item.qty}</span>
+          <button class="qty-btn" onclick="adjustQty('${item.id}',1)">+</button>
+        </div>
+        <div style="display:flex;gap:6px" onclick="event.stopPropagation()">
+          <button class="btn btn-ghost" style="padding:7px 12px;font-size:12px;min-height:34px" onclick="openEdit('${item.id}')">Edit</button>
+          <button class="btn btn-danger" style="padding:7px 12px;font-size:12px;min-height:34px" onclick="confirmDelete('${item.id}')">Delete</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  // Table
+  document.getElementById('tableBody').innerHTML = list.map(item=>`
+    <div class="inv-row" onclick="openDetail('${item.id}')">
+      <span class="mono" style="font-size:11px;font-weight:500;color:var(--accent)">${hl(item.partNum,q)}</span>
+      <span style="font-size:13px;font-weight:500">${hl(item.partName,q)}</span>
+      <span style="font-size:12px;color:var(--muted)">${hl(item.category||'—',q)}</span>
+      <div style="display:flex;align-items:center;gap:4px" onclick="event.stopPropagation()">
+        <button class="qty-btn" style="width:26px;height:26px;font-size:16px" onclick="adjustQty('${item.id}',-1)">−</button>
+        <span class="mono" style="font-size:13px;font-weight:600;width:32px;text-align:center">${item.qty}</span>
+        <button class="qty-btn" style="width:26px;height:26px;font-size:16px" onclick="adjustQty('${item.id}',1)">+</button>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:flex-end;gap:6px" onclick="event.stopPropagation()">
+        ${stockBadge(item)}
+        <button class="btn btn-ghost" style="padding:5px 10px;font-size:11px;min-height:28px" onclick="openEdit('${item.id}')">Edit</button>
+        <button class="btn btn-danger" style="padding:5px 10px;font-size:11px;min-height:28px" onclick="confirmDelete('${item.id}')">Del</button>
+      </div>
+    </div>
+  `).join('');
+
+  updateStats();
+  updateCatList();
+}
+
+// ─── QTY ──────────────────────────────────────────────────────────────────
+function adjustQty(id, delta) {
+  const item=inventory.find(i=>i.id===id);
+  if(!item) return;
+  item.qty=Math.max(0,Number(item.qty)+delta);
+  save(); renderList();
+}
+
+// ─── ADD / EDIT ───────────────────────────────────────────────────────────
+function openAddModal() {
+  editingId=null;
+  document.getElementById('modalTitle').textContent='Add Item';
+  document.getElementById('saveBtn').textContent='Save Item';
+  ['fPartNum','fPartName','fCategory','fNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fQty').value='';
+  document.getElementById('fLowAlert').value='5';
+  openSheet('addOverlay','addSheet');
+  setTimeout(()=>document.getElementById('fPartNum').focus(),350);
+}
+function openEdit(id) {
+  const item=inventory.find(i=>i.id===id);
+  if(!item) return;
+  editingId=id;
+  document.getElementById('modalTitle').textContent='Edit Item';
+  document.getElementById('saveBtn').textContent='Update Item';
+  document.getElementById('fPartNum').value=item.partNum||'';
+  document.getElementById('fPartName').value=item.partName||'';
+  document.getElementById('fCategory').value=item.category||'';
+  document.getElementById('fQty').value=item.qty;
+  document.getElementById('fLowAlert').value=item.lowAlert||5;
+  document.getElementById('fNotes').value=item.notes||'';
+  closeSheet('detailOverlay','detailSheet');
+  openSheet('addOverlay','addSheet');
+}
+function saveItem() {
+  const partNum=document.getElementById('fPartNum').value.trim();
+  const partName=document.getElementById('fPartName').value.trim();
+  const qty=document.getElementById('fQty').value;
+  if(!partNum||!partName||qty===''){showToast('Fill in required fields','error');return;}
+  if(editingId){
+    const idx=inventory.findIndex(i=>i.id===editingId);
+    if(idx!==-1) inventory[idx]={...inventory[idx],partNum,partName,
+      category:document.getElementById('fCategory').value.trim(),
+      qty:Number(qty),lowAlert:Number(document.getElementById('fLowAlert').value)||5,
+      notes:document.getElementById('fNotes').value.trim()};
+    showToast('Item updated','success');
+  } else {
+    inventory.push({id:'inv_'+Date.now(),partNum,partName,
+      category:document.getElementById('fCategory').value.trim(),
+      qty:Number(qty),lowAlert:Number(document.getElementById('fLowAlert').value)||5,
+      notes:document.getElementById('fNotes').value.trim(),addedAt:Date.now()});
+    showToast('Item added','success');
+  }
+  save(); renderList(); closeSheet('addOverlay','addSheet');
+}
+
+// ─── DELETE ───────────────────────────────────────────────────────────────
+function confirmDelete(id){pendingDeleteId=id;openSheet('delOverlay','delSheet');}
+document.getElementById('confirmDeleteBtn').onclick=()=>{
+  inventory=inventory.filter(i=>i.id!==pendingDeleteId);
+  save();renderList();closeSheet('delOverlay','delSheet');showToast('Item deleted','error');
+};
+function clearAll(){
+  if(!confirm('Delete ALL inventory? Cannot be undone.'))return;
+  inventory=[];save();renderList();closeSheet('settingsOverlay','settingsSheet');
+  showToast('All inventory cleared','error');
+}
+
+// ─── DETAIL ───────────────────────────────────────────────────────────────
+function openDetail(id) {
+  const item=inventory.find(i=>i.id===id);
+  if(!item)return;
+  document.getElementById('detailTitle').textContent=item.partName;
+  document.getElementById('detailBody').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div style="border-radius:12px;padding:12px;background:var(--surface2);border:1px solid var(--border)">
+        <p class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Part #</p>
+        <p class="mono" style="font-size:13px;font-weight:500;color:var(--accent)">${esc(item.partNum)}</p>
+      </div>
+      <div style="border-radius:12px;padding:12px;background:var(--surface2);border:1px solid var(--border)">
+        <p class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Category</p>
+        <p style="font-size:13px;font-weight:500">${esc(item.category||'—')}</p>
+      </div>
+      <div style="border-radius:12px;padding:12px;background:var(--surface2);border:1px solid var(--border)">
+        <p class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Quantity</p>
+        <p class="font-display" style="font-size:28px;font-weight:800;line-height:1">${item.qty}</p>
+      </div>
+      <div style="border-radius:12px;padding:12px;background:var(--surface2);border:1px solid var(--border)">
+        <p class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Status</p>
+        ${stockBadge(item)}
+      </div>
+    </div>
+    ${item.notes?`<div style="border-radius:12px;padding:12px;background:var(--surface2);border:1px solid var(--border);margin-bottom:8px">
+      <p class="mono" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Notes</p>
+      <p style="font-size:13px">${esc(item.notes)}</p></div>`:''}
+    <p style="font-size:12px;color:var(--muted)">Added ${new Date(item.addedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</p>
+  `;
+  const target=document.getElementById('barcodeTarget');
+  target.innerHTML='<svg id="barcodesvg"></svg>';
+  try{JsBarcode('#barcodesvg',item.partNum,{format:'CODE128',width:2,height:44,displayValue:true,background:'transparent',lineColor:'#10b981',fontSize:10,font:'DM Mono',textMargin:3});}catch(e){target.innerHTML='';}
+  document.getElementById('detailEditBtn').onclick=()=>openEdit(id);
+  openSheet('detailOverlay','detailSheet');
+}
+
+// ─── FILTER ───────────────────────────────────────────────────────────────
+function setFilter(f,btn){
+  currentFilter=f;
+  document.querySelectorAll('.filter-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderList();
+}
+
+// ─── SEARCH ───────────────────────────────────────────────────────────────
+['searchMob','searchDesk'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('input',e=>{currentSearch=e.target.value.trim();renderList();});
+});
+
+// ─── CAMERA ───────────────────────────────────────────────────────────────
+function openCamera(){openSheet('camOverlay','camSheet');}
+async function startCamera(){
+  try{
+    cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:{ideal:1920}}});
+    const vid=document.getElementById('camFeed');
+    vid.srcObject=cameraStream;
+    document.getElementById('camPlaceholder').style.display='none';
+    document.getElementById('scanLine').style.display='block';
+    document.getElementById('startScanBtn').style.display='none';
+    document.getElementById('captureBtn').style.display='flex';
+    if('BarcodeDetector' in window){
+      const detector=new BarcodeDetector({formats:['code_128','ean_13','ean_8','qr_code','upc_a','upc_e','code_39','data_matrix']});
+      scanInterval=setInterval(async()=>{try{const bc=await detector.detect(vid);if(bc.length)handleScannedCode(bc[0].rawValue);}catch(e){}},1500);
+    }
+  }catch(e){showToast('Camera access denied','error');}
+}
+function captureFrame(){
+  const vid=document.getElementById('camFeed'),canvas=document.getElementById('camCanvas');
+  canvas.width=vid.videoWidth;canvas.height=vid.videoHeight;
+  canvas.getContext('2d').drawImage(vid,0,0);
+  showToast('Frame captured','success');
+}
+function handleScannedCode(val){
+  document.getElementById('scanResultText').textContent=val;
+  document.getElementById('scanResult').style.display='block';
+  const existing=inventory.find(i=>i.partNum===val);
+  if(existing){showToast(`Found: ${existing.partName}`,'success');setTimeout(()=>{closeCamera();openDetail(existing.id);},800);}
+  else{showToast(`Barcode: ${val}`,'success');setTimeout(()=>{closeCamera();openAddModal();document.getElementById('fPartNum').value=val;},700);}
+}
+function closeCamera(){
+  if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;}
+  if(scanInterval){clearInterval(scanInterval);scanInterval=null;}
+  const vid=document.getElementById('camFeed');vid.srcObject=null;
+  document.getElementById('camPlaceholder').style.display='flex';
+  document.getElementById('scanLine').style.display='none';
+  document.getElementById('startScanBtn').style.display='flex';
+  document.getElementById('captureBtn').style.display='none';
+  document.getElementById('scanResult').style.display='none';
+  closeSheet('camOverlay','camSheet');
+}
+
+// ─── EXPORT ───────────────────────────────────────────────────────────────
+function exportCSV(){
+  const rows=[['Part Number','Part Name','Category','Quantity','Low Alert','Notes','Added At']];
+  inventory.forEach(i=>rows.push([i.partNum,i.partName,i.category||'',i.qty,i.lowAlert||5,i.notes||'',new Date(i.addedAt).toLocaleDateString()]));
+  dl('inventory.csv','text/csv',rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n'));
+  showToast('CSV exported','success');
+}
+function exportJSON(){dl('inventory.json','application/json',JSON.stringify(inventory,null,2));showToast('JSON exported','success');}
+function printInventory(){
+  const w=window.open('','_blank');
+  w.document.write(`<html><head><title>InvenTrack</title><style>body{font-family:monospace;font-size:12px;padding:20px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccc;padding:6px 10px;text-align:left}th{background:#f5f5f5}</style></head><body>
+  <h2>InvenTrack — Inventory Report</h2><p>${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</p>
+  <table><tr><th>Part #</th><th>Name</th><th>Category</th><th>Qty</th><th>Status</th><th>Notes</th></tr>
+  ${inventory.map(i=>`<tr><td>${i.partNum}</td><td>${i.partName}</td><td>${i.category||''}</td><td>${i.qty}</td><td>${Number(i.qty)===0?'Out':Number(i.qty)<=(Number(i.lowAlert)||5)?'Low':'OK'}</td><td>${i.notes||''}</td></tr>`).join('')}
+  </table></body></html>`);
+  w.document.close();w.print();
+}
+function dl(filename,type,content){Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([content],{type})),download:filename}).click();}
+
+// ─── DATALIST ─────────────────────────────────────────────────────────────
+function updateCatList(){
+  const cats=[...new Set(inventory.map(i=>i.category).filter(Boolean))];
+  document.getElementById('catList').innerHTML=cats.map(c=>`<option value="${esc(c)}">`).join('');
+}
+
+// ─── SHEETS ───────────────────────────────────────────────────────────────
+function openSheet(ovId,boxId){
+  document.getElementById(ovId).classList.add('open');
+  document.getElementById(boxId).classList.add('open');
+}
+function closeSheet(ovId,boxId){
+  document.getElementById(ovId).classList.remove('open');
+  document.getElementById(boxId).classList.remove('open');
+}
+
+// Overlay click to close
+['addOverlay','detailOverlay','delOverlay','settingsOverlay'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id){const box=id.replace('Overlay','Sheet');closeSheet(id,box);}});
+});
+document.getElementById('camOverlay').addEventListener('click',e=>{if(e.target.id==='camOverlay')closeCamera();});
+
+// ─── DROPDOWN ─────────────────────────────────────────────────────────────
+function toggleDropdown(){document.getElementById('exportDrop').classList.toggle('open');}
+document.addEventListener('click',e=>{const d=document.getElementById('exportDrop');if(d&&!d.contains(e.target))d.classList.remove('open');});
+
+// ─── NAV ──────────────────────────────────────────────────────────────────
+function openSettings(){openSheet('settingsOverlay','settingsSheet');}
+function navTab(name){document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById('nav'+name)?.classList.add('active');}
+
+// ─── TOAST ────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=(type==='success'?'✓ ':'✕ ')+msg;
+  t.className=`toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.className='toast',2400);
+}
+
+// ─── KEYBOARD ─────────────────────────────────────────────────────────────
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    closeCamera();
+    ['addOverlay','detailOverlay','delOverlay','settingsOverlay'].forEach(id=>{
+      if(document.getElementById(id).classList.contains('open'))closeSheet(id,id.replace('Overlay','Sheet'));
+    });
+  }
+  if((e.ctrlKey||e.metaKey)&&e.key==='n'){e.preventDefault();openAddModal();}
+});
+
+// ─── SEED ─────────────────────────────────────────────────────────────────
+if(!inventory.length){
+  inventory=[
+    {id:'inv_1',partNum:'PN-00100',partName:'M6 Hex Bolt',category:'Fasteners',qty:250,lowAlert:20,notes:'Galvanized steel',addedAt:Date.now()-864e5*5},
+    {id:'inv_2',partNum:'PN-00201',partName:'6mm O-Ring',category:'Seals',qty:4,lowAlert:10,notes:'Nitrile rubber',addedAt:Date.now()-864e5*3},
+    {id:'inv_3',partNum:'PN-00315',partName:'12V Relay Module',category:'Electronics',qty:0,lowAlert:5,notes:'SPDT 10A',addedAt:Date.now()-864e5},
+    {id:'inv_4',partNum:'PN-00422',partName:'Aluminium Bracket 40x40',category:'Structural',qty:33,lowAlert:5,notes:'',addedAt:Date.now()-864e5*2},
+    {id:'inv_5',partNum:'PN-00511',partName:'M4 Spring Washer',category:'Fasteners',qty:7,lowAlert:15,notes:'A2 Stainless',addedAt:Date.now()},
+  ];
+  save();
+}
+
+updateLayout();
+renderList();
+</script>
+</body>
+</html>
