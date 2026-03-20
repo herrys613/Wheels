@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Openings — Job Board</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    :root {
+      --cream: #F5F0E8;
+      --ink: #1A1612;
+      --muted: #7A6F63;
+      --accent: #C8522A;
+      --card: #FDFAF4;
+      --border: #E2D9CC;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    h1,
+    h2,
+    .serif {
+      font-family: 'DM Serif Display', serif;
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--cream);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    html {
+      overflow-y: scroll;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: var(--cream);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .tab-btn {
+      transition: color .2s, border-color .2s;
+      border-bottom: 2px solid transparent;
+      padding-bottom: 2px;
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    input,
+    select,
+    textarea {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--ink);
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(200, 82, 42, .12);
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A6F63' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px !important;
+    }
+
+    .job-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: box-shadow .2s, border-color .2s;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .job-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 16px rgba(26, 22, 18, .08);
+    }
+
+    .job-card.open {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(200, 82, 42, .12);
+    }
+
+    .job-details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease, opacity .3s ease;
+      opacity: 0;
+    }
+
+    .job-details.open {
+      max-height: 700px;
+      opacity: 1;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .badge-ft {
+      background: #EAF3EC;
+      color: #2D6A35;
+    }
+
+    .badge-pt {
+      background: #FEF3E2;
+      color: #9A5B10;
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 12px 24px;
+      border: none;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      width: 100%;
+    }
+
+    .btn-accent:hover {
+      background: #b0421d;
+    }
+
+    .btn-accent:active {
+      transform: scale(.98);
+    }
+
+    .btn-accent:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .btn-ghost {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      transition: border-color .2s, color .2s;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-danger {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid #f0b4a4;
+      background: transparent;
+      color: #b0421d;
+      transition: background .2s;
+    }
+
+    .btn-danger:hover {
+      background: #fdf0ec;
+    }
+
+    .auth-pill {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      color: var(--muted);
+      transition: border-color .2s, color .2s;
+    }
+
+    .auth-pill:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .auth-pill.signed-in {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(26, 22, 18, .55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 380px;
+      transform: translateY(16px);
+      transition: transform .25s;
+    }
+
+    .modal-overlay.open .modal-box {
+      transform: translateY(0);
+    }
+
+    .detail-divider {
+      border-top: 1px solid var(--border);
+    }
+
+    .chevron {
+      transition: transform .3s;
+    }
+
+    .open .chevron {
+      transform: rotate(180deg);
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--ink);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: transform .3s;
+      z-index: 999;
+      white-space: nowrap;
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .state-msg {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    #tab-myposts {
+      display: none;
+    }
+
+    /* ── Custom Select ── */
+    .custom-select {
+      position: relative;
+    }
+
+    .cs-box {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--card);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color .2s, box-shadow .2s;
+      user-select: none;
+    }
+
+    .cs-box:focus,
+    .cs-box.open {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(200, 82, 42, .12);
+      outline: none;
+    }
+
+    .cs-box .cs-placeholder {
+      color: var(--muted);
+    }
+
+    .cs-box .cs-value {
+      color: var(--ink);
+    }
+
+    .cs-chevron {
+      flex-shrink: 0;
+      transition: transform .2s;
+      color: var(--muted);
+    }
+
+    .cs-chevron.open {
+      transform: rotate(180deg);
+    }
+
+    .cs-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(26, 22, 18, .12);
+      z-index: 300;
+      overflow: hidden;
+      display: none;
+    }
+
+    .cs-dropdown.open {
+      display: block;
+    }
+
+    .cs-options {
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .cs-option {
+      padding: 10px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--ink);
+      transition: background .15s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cs-option:hover {
+      background: rgba(200, 82, 42, .06);
+    }
+
+    .cs-option.selected {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .cs-check {
+      display: none;
+      color: var(--accent);
+    }
+
+    .cs-option.selected .cs-check {
+      display: block;
+    }
+
+    .custom-select>.cs-box {
+      transition: border-color .2s;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══════════════ HEADER ══════════════ -->
+  <header class="px-4 py-3">
+    <div class="max-w-lg mx-auto flex items-center justify-between gap-3">
+      <div class="flex-shrink-0">
+        <span class="serif text-xl" style="color:var(--ink)">Openings</span>
+      </div>
+      <div class="flex items-center gap-3 text-sm font-medium flex-wrap justify-end"
+        style="color:var(--muted); min-width:120px">
+        <button id="header-post-btn" onclick="requireAuth('post')"
+          class="text-xs font-semibold px-3 py-1.5 rounded-lg border"
+          style="border-color:var(--accent); color:#fff; background:var(--accent); cursor:pointer">
+          + Post
+        </button>
+        <button class="auth-pill" onclick="handleAuthBtn()" id="auth-btn-signin">Sign In</button>
+        <div class="relative hidden" id="auth-menu-wrap">
+          <button onclick="toggleProfileMenu()" id="profile-btn"
+            class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0"
+            style="background:transparent; color:var(--accent); border:2px solid var(--accent); cursor:pointer">
+            <span id="profile-initial">?</span>
+          </button>
+          <div id="profile-dropdown" class="absolute right-0 mt-2 rounded-xl overflow-hidden hidden"
+            style="background:var(--card); border:1px solid var(--border); min-width:140px; box-shadow:0 8px 24px rgba(26,22,18,.12); z-index:200">
+            <button onclick="goToMyPosts()"
+              class="w-full text-left px-4 py-3 text-sm hover:bg-opacity-50 transition-colors"
+              style="font-family:'DM Sans',sans-serif; color:var(--ink); background:transparent; border:none; cursor:pointer; border-bottom:1px solid var(--border)">
+              My Posts
+            </button>
+            <button onclick="handleSignOut()" class="w-full text-left px-4 py-3 text-sm transition-colors"
+              style="font-family:'DM Sans',sans-serif; color:#b0421d; background:transparent; border:none; cursor:pointer">
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ══════════════ BROWSE VIEW ══════════════ -->
+  <div id="view-browse" class="max-w-lg mx-auto px-4 pt-5 pb-10">
+    <div class="flex gap-2 mb-4">
+      <input id="search-input" type="text" placeholder="Search title or industry…" class="flex-1 px-3 py-2 text-sm"
+        oninput="filterJobs()" />
+      <select id="filter-type" class="px-3 py-2 text-sm" onchange="filterJobs()">
+        <option value="">All Types</option>
+        <option value="Full-time">Full-time</option>
+        <option value="Part-time">Part-time</option>
+      </select>
+    </div>
+    <p id="job-count" class="text-xs mb-3" style="color:var(--muted)"></p>
+    <div id="job-list"></div>
+  </div>
+
+
+  <!-- ══════════════ POST A JOB VIEW ══════════════ -->
+  <div id="view-post" class="max-w-lg mx-auto px-4 pt-5 pb-10 hidden">
+    <button onclick="showTab('browse')" class="flex items-center gap-1.5 text-xs font-medium mb-5"
+      style="color:var(--muted); background:none; border:none; cursor:pointer; padding:0">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M19 12H5M12 5l-7 7 7 7" />
+      </svg>
+      Back to jobs
+    </button>
+    <h2 class="serif text-2xl mb-1">Post an Opening</h2>
+    <p class="text-sm mb-6" style="color:var(--muted)">Fill in the details — it only takes a minute.</p>
+
+    <div class="flex flex-col gap-4">
+
+      <div>
+        <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Position
+          Title *</label>
+        <input id="f-title" type="text" placeholder="e.g. Senior Designer" class="w-full px-3 py-2 text-sm" />
+        <p class="error-msg hidden text-xs mt-1" id="f-title-error" style="color:#b0421d">Position title is required.
+        </p>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Industry
+          *</label>
+        <div class="custom-select w-full" id="f-industry-container" data-name="f-industry"
+          data-placeholder="Select industry…"
+          data-options='["Technology","Healthcare","Finance","Education","Retail","Hospitality","Construction","Legal","Media & Marketing","Non-Profit","Other"]'>
+        </div>
+        <p class="error-msg hidden text-xs mt-1" id="f-industry-error" style="color:#b0421d">Industry is required.</p>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Location
+          *</label>
+        <input id="f-location" type="text" placeholder="e.g. Brooklyn, NY / Remote" class="w-full px-3 py-2 text-sm" />
+        <p class="error-msg hidden text-xs mt-1" id="f-location-error" style="color:#b0421d">Location is required.</p>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Salary
+          Range</label>
+        <input id="f-salary" type="text" placeholder="e.g. $60,000 – $80,000 / yr" class="w-full px-3 py-2 text-sm" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Job Type
+          *</label>
+        <div class="custom-select w-full" id="f-jobtype-container" data-name="f-jobtype" data-placeholder="Select type…"
+          data-options='["Full-time","Part-time"]'>
+        </div>
+        <p class="error-msg hidden text-xs mt-1" id="f-jobtype-error" style="color:#b0421d">Job type is required.</p>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-xs font-semibold uppercase tracking-wide" style="color:var(--muted)">Experience
+            Required</label>
+          <button type="button" id="f-exp-toggle-btn" onclick="toggleExpField('f')"
+            class="w-10 h-5 rounded-full transition-colors duration-200 relative flex-shrink-0"
+            style="background:var(--border)" aria-pressed="false">
+            <span id="f-exp-toggle-dot"
+              class="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200"></span>
+          </button>
+        </div>
+        <div id="f-exp-field" class="hidden">
+          <div class="flex items-center gap-2">
+            <input id="f-exp-years" type="number" min="0" max="30" placeholder="e.g. 3" class="w-24 px-3 py-2 text-sm"
+              oninput="syncExpValue('f')" />
+            <span class="text-sm" style="color:var(--muted)">years minimum</span>
+          </div>
+        </div>
+        <input type="hidden" id="f-exp" />
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Job
+          Description *</label>
+        <textarea id="f-desc" rows="5" placeholder="Describe responsibilities, requirements, perks…"
+          class="w-full px-3 py-2 text-sm resize-none"></textarea>
+        <p class="error-msg hidden text-xs mt-1" id="f-desc-error" style="color:#b0421d">Job description is required.
+        </p>
+      </div>
+
+      <div class="p-4 rounded-xl space-y-3" style="background:var(--card); border:1px solid var(--border);">
+        <label class="block text-xs font-semibold uppercase tracking-wide" style="color:var(--muted)">Contact Methods
+          *</label>
+        <p class="text-xs" style="color:var(--muted)">Select how applicants can reach you</p>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="f-contact" value="Phone Call" onchange="toggleContactInput('f')"
+              class="w-4 h-4 rounded" style="accent-color:var(--accent)">
+            <span class="text-sm">Phone Call</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="f-contact" value="Text Message" onchange="toggleContactInput('f')"
+              class="w-4 h-4 rounded" style="accent-color:var(--accent)">
+            <span class="text-sm">Text Message</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="f-contact" value="WhatsApp" onchange="toggleContactInput('f')"
+              class="w-4 h-4 rounded" style="accent-color:var(--accent)">
+            <span class="text-sm">WhatsApp</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="f-contact" value="Email" onchange="toggleContactInput('f')"
+              class="w-4 h-4 rounded" style="accent-color:var(--accent)">
+            <span class="text-sm">Email</span>
+          </label>
+        </div>
+        <p class="error-msg hidden text-xs" id="f-contact-error" style="color:#b0421d">Select at least one contact
+          method.</p>
+        <div id="f-contact-phone" class="hidden space-y-1">
+          <input id="f-phone" type="tel" placeholder="Phone number" class="w-full px-3 py-2 text-sm" />
+          <p class="error-msg hidden text-xs" id="f-phone-error" style="color:#b0421d">Please enter a phone number.</p>
+        </div>
+        <div id="f-contact-email" class="hidden space-y-1">
+          <input id="f-email" type="email" placeholder="Email address" class="w-full px-3 py-2 text-sm" />
+          <p class="error-msg hidden text-xs" id="f-email-error" style="color:#b0421d">Please enter an email address.
+          </p>
+        </div>
+      </div>
+
+      <button class="btn-accent" id="submit-btn" onclick="submitJob()">Post Job</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════ MY POSTS VIEW ══════════════ -->
+  <div id="view-myposts" class="max-w-lg mx-auto px-4 pt-5 pb-10 hidden">
+    <button onclick="showTab('browse')" class="flex items-center gap-1.5 text-xs font-medium mb-5"
+      style="color:var(--muted); background:none; border:none; cursor:pointer; padding:0">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M19 12H5M12 5l-7 7 7 7" />
+      </svg>
+      Back to jobs
+    </button>
+    <h2 class="serif text-2xl mb-1">My Posts</h2>
+    <p class="text-sm mb-5" style="color:var(--muted)">Jobs you've posted — tap to expand, edit, or delete.</p>
+    <div id="my-job-list"></div>
+  </div>
+
+
+  <!-- ══════════════ AUTH MODAL ══════════════ -->
+  <div class="modal-overlay" id="auth-modal" onclick="handleOverlayClick(event,'auth-modal')">
+    <div class="modal-box">
+      <h2 class="serif text-xl mb-0.5" id="auth-modal-title">Sign In</h2>
+      <p class="text-xs mb-5" style="color:var(--muted)" id="auth-modal-sub">Access your job postings</p>
+      <div class="flex flex-col gap-3">
+        <input id="auth-email" type="email" placeholder="Email" class="w-full px-3 py-2 text-sm" />
+        <input id="auth-password" type="password" placeholder="Password (min 6 chars)"
+          class="w-full px-3 py-2 text-sm" />
+        <button class="btn-accent" id="auth-submit-btn">Sign In</button>
+      </div>
+      <p class="text-xs text-center mt-4" style="color:var(--muted)">
+        <span id="auth-toggle-text">No account?</span>
+        <button class="underline ml-1" onclick="toggleAuthMode()" id="auth-toggle-btn">Register</button>
+      </p>
+      <button class="block text-xs text-center w-full mt-3" style="color:var(--border)"
+        onclick="closeModal('auth-modal')">Cancel</button>
+    </div>
+  </div>
+
+
+  <!-- ══════════════ EDIT MODAL ══════════════ -->
+  <div class="modal-overlay" id="edit-modal" onclick="handleOverlayClick(event,'edit-modal')">
+    <div class="modal-box" style="max-width:440px; max-height:90vh; overflow-y:auto">
+      <h2 class="serif text-xl mb-4">Edit Job</h2>
+      <div class="flex flex-col gap-3">
+        <div>
+          <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Position
+            Title *</label>
+          <input id="e-title" type="text" class="w-full px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Industry
+            *</label>
+          <div class="custom-select w-full" id="e-industry-container" data-name="e-industry"
+            data-placeholder="Select industry…"
+            data-options='["Technology","Healthcare","Finance","Education","Retail","Hospitality","Construction","Legal","Media & Marketing","Non-Profit","Other"]'>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Location
+            *</label>
+          <input id="e-location" type="text" class="w-full px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Salary
+            Range</label>
+          <input id="e-salary" type="text" class="w-full px-3 py-2 text-sm" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Job Type
+            *</label>
+          <div class="custom-select w-full" id="e-jobtype-container" data-name="e-jobtype"
+            data-placeholder="Select type…" data-options='["Full-time","Part-time"]'>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-xs font-semibold uppercase tracking-wide" style="color:var(--muted)">Experience
+              Required</label>
+            <button type="button" id="e-exp-toggle-btn" onclick="toggleExpField('e')"
+              class="w-10 h-5 rounded-full transition-colors duration-200 relative flex-shrink-0"
+              style="background:var(--border)" aria-pressed="false">
+              <span id="e-exp-toggle-dot"
+                class="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200"></span>
+            </button>
+          </div>
+          <div id="e-exp-field" class="hidden">
+            <div class="flex items-center gap-2">
+              <input id="e-exp-years" type="number" min="0" max="30" placeholder="e.g. 3" class="w-24 px-3 py-2 text-sm"
+                oninput="syncExpValue('e')" />
+              <span class="text-sm" style="color:var(--muted)">years minimum</span>
+            </div>
+          </div>
+          <input type="hidden" id="e-exp" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Job
+            Description *</label>
+          <textarea id="e-desc" rows="5" class="w-full px-3 py-2 text-sm resize-none"></textarea>
+        </div>
+        <button class="btn-accent" id="edit-save-btn" onclick="saveEdit()">Save Changes</button>
+        <button class="btn-ghost" onclick="closeModal('edit-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════ DELETE CONFIRM MODAL ══════════════ -->
+  <div class="modal-overlay" id="delete-modal" onclick="handleOverlayClick(event,'delete-modal')">
+    <div class="modal-box" style="max-width:320px">
+      <h2 class="serif text-lg mb-2">Delete this job?</h2>
+      <p class="text-sm mb-6" style="color:var(--muted)">This action cannot be undone.</p>
+      <div class="flex gap-2">
+        <button class="btn-danger flex-1" id="delete-confirm-btn" onclick="confirmDelete()">Yes, delete</button>
+        <button class="btn-ghost flex-1" onclick="closeModal('delete-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+
+  <!-- ══════════════ FIREBASE IMPORTS ══════════════ -->
+  <script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+      signOut, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore, collection, addDoc, getDocs, doc,
+      updateDoc, deleteDoc, setDoc, query, orderBy, where, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+
+    // =============================================================================
+    // CONFIGURATION
+    // =============================================================================
+
+    const CONFIG = Object.freeze({
+      FIREBASE: {
+        apiKey: "AIzaSyBAfwID0N0S-cJLWiyasBCrk2rdTaaUpy8",
+        authDomain: "jobs-38646.firebaseapp.com",
+        projectId: "jobs-38646",
+        storageBucket: "jobs-38646.firebasestorage.app",
+        messagingSenderId: "1090223046153",
+        appId: "1:1090223046153:web:ac5ab42c4fce2a44bd82d8",
+        measurementId: "G-G6VCF9WJTS"
+      },
+      FORM: {
+        REQUIRED_FIELDS: ['f-title', 'f-industry', 'f-location', 'f-jobtype', 'f-desc'],
+        EDIT_REQUIRED_FIELDS: ['e-title', 'e-industry', 'e-location', 'e-jobtype', 'e-desc']
+      },
+      VIEWS: ['browse', 'post', 'myposts'],
+      AUTH_ERRORS: {
+        'auth/invalid-email': 'Invalid email address.',
+        'auth/user-not-found': 'No account with that email.',
+        'auth/wrong-password': 'Incorrect password.',
+        'auth/email-already-in-use': 'Email already registered.',
+        'auth/weak-password': 'Password must be at least 6 characters.',
+        'auth/invalid-credential': 'Incorrect email or password.'
+      }
+    });
+
+
+    // =============================================================================
+    // UTILITIES
+    // =============================================================================
+
+    const Utils = {
+      esc(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      },
+
+      formatDate(ts) {
+        if (!ts) return '';
+        const d = ts.toDate ? ts.toDate() : new Date(ts);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      },
+
+      friendlyAuthError(code) {
+        return CONFIG.AUTH_ERRORS[code] || 'Something went wrong — please try again.';
+      }
+    };
+
+
+    // =============================================================================
+    // DOM CACHE
+    // =============================================================================
+
+    const DOM = {
+      _cache: {},
+
+      get(id) {
+        if (!this._cache[id]) this._cache[id] = document.getElementById(id);
+        return this._cache[id];
+      }
+    };
+
+
+    // =============================================================================
+    // APPLICATION STATE
+    // =============================================================================
+
+    const State = {
+      currentUser: null,
+      allJobs: [],
+      myJobs: [],
+      editingJobId: null,
+      deletingJobId: null,
+      authMode: 'signin',   // 'signin' | 'register'
+      pendingTab: null,
+
+      reset() {
+        this.editingJobId = null;
+        this.deletingJobId = null;
+        this.pendingTab = null;
+      }
+    };
+
+
+    // =============================================================================
+    // HTML TEMPLATES
+    // =============================================================================
+
+    const Templates = {
+      jobCard(job, uid, isOwner) {
+        return `
+          <div class="job-card mb-2" id="card-${uid}" onclick="toggleCard('${uid}')">
+            <div class="flex justify-between items-center gap-3 p-4">
+              <div class="flex-1 min-w-0">
+                <p class="text-[10px] font-semibold uppercase tracking-widest mb-1" style="color:var(--accent)">${Utils.esc(job.industry || '—')}</p>
+                <p class="text-[15px] font-semibold leading-snug mb-1" style="color:var(--ink)">${Utils.esc(job.title)}</p>
+                <p class="text-[11px]" style="color:var(--muted)">
+                  ${Utils.esc(job.location || '—')}${job.experienceRequired ? ` · ${Utils.esc(job.experienceRequired)}` : ''}
+                </p>
+              </div>
+              <div class="text-right flex-shrink-0">
+                <p class="text-[13px] font-semibold" style="color:var(--ink)">${Utils.esc(job.salaryRange || '—')}</p>
+                <p class="text-[10px] font-semibold uppercase tracking-wide mt-0.5" style="color:${job.jobType === 'Full-time' ? '#2D6A35' : '#9A5B10'}">
+                  ${Utils.esc(job.jobType || '—')}
+                </p>
+                <p class="text-[10px] mt-1" style="color:var(--muted)">${Utils.formatDate(job.createdAt)}</p>
+              </div>
+            </div>
+            <div class="job-details" id="details-${uid}">
+              <div class="detail-divider mx-4"></div>
+              <div class="px-4 py-4">
+                <p class="text-xs font-semibold mb-2 uppercase tracking-wide" style="color:var(--muted)">Description</p>
+                <p class="text-sm leading-relaxed whitespace-pre-line">${Utils.esc(job.description || 'No description provided.')}</p>
+                <div class="flex items-start justify-between mt-4 gap-4">
+                  <div class="flex flex-col gap-2">
+                    ${(job.contactMethods || []).map(method => {
+                          const icons = {
+                            'Phone Call': `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.12 1.18 2 2 0 012.11 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>`,
+                            'Text Message': `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>`,
+                            'WhatsApp': `<svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.858L.057 23.428a.75.75 0 00.921.921l5.57-1.476A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.75 9.75 0 1121.75 12 9.761 9.761 0 0112 21.75z"/></svg>`,
+                            'Email': `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>`
+                          };
+                          const contact = method === 'Email' ? job.contactEmail : job.contactPhone;
+                          const href = method === 'Email' ? `mailto:${contact}` : method === 'WhatsApp' ? `https://wa.me/${contact?.replace(/\D/g, '')}` : `tel:${contact}`;
+                          return `
+                        <a href="${href}" onclick="event.stopPropagation()" class="flex items-center gap-1.5 text-xs" style="color:var(--accent)">
+                          ${icons[method] || ''}
+                          <span>${Utils.esc(contact || method)}</span>
+                        </a>`;
+                        }).join('')}
+                  </div>
+                  <p class="text-xs flex-shrink-0" style="color:var(--muted)">Job #${Utils.esc(job.id)}</p>
+                </div>
+                ${isOwner ? `
+                <div class="flex gap-2 mt-4" onclick="event.stopPropagation()">
+                  <button class="btn-ghost" onclick="openEditModal('${job.id}')">Edit</button>
+                  <button class="btn-danger" onclick="openDeleteModal('${job.id}')">Delete</button>
+                </div>` : ''}
+              </div>
+            </div>
+          </div>`;
+      },
+
+      emptyState(containerId) {
+        return containerId === 'my-job-list'
+          ? `<div class="state-msg">You haven't posted any jobs yet.</div>`
+          : `<div class="state-msg">No openings found.<br>Be the first to post one!</div>`;
+      },
+
+      loadingState(msg = 'Loading…') {
+        return `<div class="state-msg">${msg}</div>`;
+      }
+    };
+
+
+    // =============================================================================
+    // FIREBASE MODULE
+    // =============================================================================
+
+    const Firebase = {
+      app: null,
+      auth: null,
+      db: null,
+
+      init() {
+        this.app = initializeApp(CONFIG.FIREBASE);
+        this.auth = getAuth(this.app);
+        this.db = getFirestore(this.app);
+      },
+
+      async getJobs() {
+        const q = query(collection(this.db, 'jobs'), orderBy('createdAt', 'desc'));
+        const snap = await getDocs(q);
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      },
+
+      async getMyJobs(uid) {
+        const q = query(
+          collection(this.db, 'jobs'),
+          where('uid', '==', uid),
+          orderBy('createdAt', 'desc')
+        );
+        const snap = await getDocs(q);
+        return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      },
+
+      async addJob(data) {
+        const snap = await getDocs(collection(this.db, 'jobs'));
+        const ids = snap.docs.map(d => parseInt(d.id)).filter(n => !isNaN(n));
+        const nextId = String(Math.max(...ids) + 1);
+        await setDoc(doc(this.db, 'jobs', nextId), {
+          ...data,
+          uid: State.currentUser.uid,
+          createdAt: serverTimestamp()
+        });
+      },
+
+      async updateJob(jobId, data) {
+        await updateDoc(doc(this.db, 'jobs', jobId), data);
+      },
+
+      async deleteJob(jobId) {
+        await deleteDoc(doc(this.db, 'jobs', jobId));
+      },
+
+      async signIn(email, password) {
+        return await signInWithEmailAndPassword(this.auth, email, password);
+      },
+
+      async register(email, password) {
+        return await createUserWithEmailAndPassword(this.auth, email, password);
+      },
+
+      async signOut() {
+        return await signOut(this.auth);
+      },
+
+      onAuthChange(callback) {
+        onAuthStateChanged(this.auth, callback);
+      }
+    };
+
+
+    // =============================================================================
+    // JOBS MODULE
+    // =============================================================================
+
+    const Jobs = {
+      async load() {
+        DOM.get('job-list').innerHTML = Templates.loadingState('Loading jobs…');
+        try {
+          State.allJobs = await Firebase.getJobs();
+          Render.jobList(State.allJobs, 'job-list', false);
+        } catch (err) {
+          console.error(err);
+          DOM.get('job-list').innerHTML = `<div class="state-msg">Unable to load jobs.<br><small>${err.message}</small></div>`;
+        }
+      },
+
+      async loadMine() {
+        DOM.get('my-job-list').innerHTML = Templates.loadingState('Loading your posts…');
+        try {
+          State.myJobs = await Firebase.getMyJobs(State.currentUser.uid);
+          State.myJobs.forEach(mj => {
+            if (!State.allJobs.find(j => j.id === mj.id)) State.allJobs.push(mj);
+          });
+          Render.jobList(State.myJobs, 'my-job-list', true);
+        } catch (err) {
+          console.error(err);
+          DOM.get('my-job-list').innerHTML = `<div class="state-msg">Error loading your posts.<br><small>${err.message}</small></div>`;
+        }
+      },
+
+      filter() {
+        const q = DOM.get('search-input').value.toLowerCase().trim();
+        const type = DOM.get('filter-type').value;
+        const filtered = State.allJobs.filter(job => {
+          const matchText = !q ||
+            (job.title || '').toLowerCase().includes(q) ||
+            (job.industry || '').toLowerCase().includes(q);
+          const matchType = !type || job.jobType === type;
+          return matchText && matchType;
+        });
+        Render.jobList(filtered, 'job-list', false);
+      }
+    };
+
+
+    // =============================================================================
+    // FORM MODULE
+    // =============================================================================
+
+    const Form = {
+      collect(prefix) {
+        return {
+          title: document.getElementById(`${prefix}-title`).value.trim(),
+          industry: CustomSelect.getValue(`${prefix}-industry`),
+          location: document.getElementById(`${prefix}-location`).value.trim(),
+          salaryRange: document.getElementById(`${prefix}-salary`).value.trim(),
+          jobType: CustomSelect.getValue(`${prefix}-jobtype`),
+          experienceRequired: document.getElementById(`${prefix}-exp`).value,
+          description: document.getElementById(`${prefix}-desc`).value.trim(),
+          contactMethods: Array.from(document.querySelectorAll(`input[name="${prefix}-contact"]:checked`)).map(c => c.value),
+          contactPhone: document.getElementById(`${prefix}-phone`)?.value.trim() || '',
+          contactEmail: document.getElementById(`${prefix}-email`)?.value.trim() || '',
+        };
+      },
+
+      validate(data) {
+        const errors = [];
+
+        const check = (condition, id, fieldId) => {
+          const el = document.getElementById(id);
+          const field = fieldId ? document.getElementById(fieldId) : null;
+          const target = field?.classList.contains('custom-select')
+            ? field.querySelector('.cs-box')
+            : field;
+          if (condition) {
+            el?.classList.remove('hidden');
+            if (target) target.style.borderColor = '#b0421d';
+            errors.push(el);
+          } else {
+            el?.classList.add('hidden');
+            if (target) target.style.borderColor = '';
+          }
+        };
+
+        check(!data.title, 'f-title-error', 'f-title');
+        check(!data.industry, 'f-industry-error', 'f-industry-container');
+        check(!data.location, 'f-location-error', 'f-location');
+        check(!data.jobType, 'f-jobtype-error', 'f-jobtype-container');
+        check(!data.description, 'f-desc-error', 'f-desc');
+        check(!data.contactMethods || !data.contactMethods.length, 'f-contact-error', null);
+        check(
+          data.contactMethods && data.contactMethods.some(v => ['Phone Call', 'Text Message', 'WhatsApp'].includes(v)) && !data.contactPhone,
+          'f-phone-error', 'f-phone'
+        );
+        check(
+          data.contactMethods && data.contactMethods.includes('Email') && !data.contactEmail,
+          'f-email-error', 'f-email'
+        );
+
+        if (errors.length) {
+          errors[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+          return false;
+        }
+        return true;
+      },
+
+      clearPost() {
+        ['f-title', 'f-location', 'f-salary', 'f-desc'].forEach(id =>
+          document.getElementById(id).value = '');
+        ['f-industry', 'f-jobtype'].forEach(name => CustomSelect.reset(`f-${name}`));
+        document.getElementById('f-exp').value = '';
+        // Reset experience toggle
+        const btn = document.getElementById('f-exp-toggle-btn');
+        const dot = document.getElementById('f-exp-toggle-dot');
+        btn.setAttribute('aria-pressed', 'false');
+        btn.style.background = 'var(--border)';
+        dot.style.transform = 'translateX(0)';
+        document.getElementById('f-exp-field').classList.add('hidden');
+        if (document.getElementById('f-exp-years')) document.getElementById('f-exp-years').value = '';
+      },
+
+      async submit() {
+        const data = this.collect('f');
+        if (!this.validate(data)) return;
+
+        const btn = DOM.get('submit-btn');
+        UI.setLoading(btn, true, 'Posting…', 'Post Job');
+
+        try {
+          await Firebase.addJob(data);
+          this.clearPost();
+          UI.toast('Job posted successfully!');
+          Navigation.showTab('browse');
+          await Jobs.load();
+        } catch (err) {
+          console.error(err);
+          UI.toast('Error: ' + err.message);
+        } finally {
+          UI.setLoading(btn, false, 'Posting…', 'Post Job');
+        }
+      },
+
+      async saveEdit() {
+        const data = this.collect('e');
+        if (!this.validate(data)) return;
+
+        const btn = DOM.get('edit-save-btn');
+        UI.setLoading(btn, true, 'Saving…', 'Save Changes');
+
+        try {
+          await Firebase.updateJob(State.editingJobId, data);
+          UI.toast('Job updated!');
+          Modal.close('edit-modal');
+          State.editingJobId = null;
+          await Jobs.load();
+          await Jobs.loadMine();
+        } catch (err) {
+          console.error(err);
+          UI.toast('Error saving: ' + err.message);
+        } finally {
+          UI.setLoading(btn, false, 'Saving…', 'Save Changes');
+        }
+      },
+
+      async confirmDelete() {
+        const btn = DOM.get('delete-confirm-btn');
+        UI.setLoading(btn, true, 'Deleting…', 'Yes, delete');
+        try {
+          await Firebase.deleteJob(State.deletingJobId);
+          UI.toast('Job deleted.');
+          Modal.close('delete-modal');
+          State.deletingJobId = null;
+          await Jobs.load();
+          await Jobs.loadMine();
+        } catch (err) {
+          console.error(err);
+          UI.toast('Error: ' + err.message);
+        } finally {
+          UI.setLoading(btn, false, 'Deleting…', 'Yes, delete');
+        }
+      }
+    };
+
+
+    // =============================================================================
+    // AUTH MODULE
+    // =============================================================================
+
+    const Auth = {
+      async submit() {
+        const email = DOM.get('auth-email').value.trim();
+        const pass = DOM.get('auth-password').value;
+        if (!email || !pass) { UI.toast('Please enter email and password.'); return; }
+
+        const btn = DOM.get('auth-submit-btn');
+        UI.setLoading(btn, true, 'Please wait…', State.authMode === 'register' ? 'Register' : 'Sign In');
+
+        try {
+          if (State.authMode === 'register') {
+            await Firebase.register(email, pass);
+            UI.toast('Account created — welcome!');
+          } else {
+            await Firebase.signIn(email, pass);
+            UI.toast('Welcome back!');
+          }
+          Modal.close('auth-modal');
+          DOM.get('auth-email').value = '';
+          DOM.get('auth-password').value = '';
+        } catch (err) {
+          UI.toast(Utils.friendlyAuthError(err.code));
+        } finally {
+          UI.setLoading(btn, false, 'Please wait…', State.authMode === 'register' ? 'Register' : 'Sign In');
+        }
+      },
+
+      toggleMode() {
+        State.authMode = State.authMode === 'signin' ? 'register' : 'signin';
+        const reg = State.authMode === 'register';
+        DOM.get('auth-modal-title').textContent = reg ? 'Create Account' : 'Sign In';
+        DOM.get('auth-modal-sub').textContent = reg ? 'Join to post jobs' : 'Access your job postings';
+        DOM.get('auth-submit-btn').textContent = reg ? 'Register' : 'Sign In';
+        DOM.get('auth-toggle-text').textContent = reg ? 'Already have an account?' : 'No account?';
+        DOM.get('auth-toggle-btn').textContent = reg ? 'Sign In' : 'Register';
+      },
+
+      async signOut() {
+        Header.closeProfileMenu();
+        await Firebase.signOut();
+        UI.toast('Signed out.');
+        Navigation.showTab('browse');
+      },
+
+      onStateChange(user) {
+        State.currentUser = user;
+        Header.render();
+        DOM.get('tab-myposts').style.display = user ? 'inline' : 'none';
+        if (user && State.pendingTab) {
+          Navigation.showTab(State.pendingTab);
+          State.pendingTab = null;
+        }
+        if (State.allJobs.length) Render.jobList(State.allJobs, 'job-list', false);
+      }
+    };
+
+
+    // =============================================================================
+    // RENDER MODULE
+    // =============================================================================
+
+    const Render = {
+      jobList(jobs, containerId, forceOwnerActions) {
+        const listEl = DOM.get(containerId);
+        const countEl = DOM.get('job-count');
+
+        if (containerId === 'job-list') {
+          countEl.textContent = jobs.length
+            ? `${jobs.length} opening${jobs.length !== 1 ? 's' : ''} found`
+            : '';
+        }
+
+        if (!jobs.length) {
+          listEl.innerHTML = Templates.emptyState(containerId);
+          return;
+        }
+
+        listEl.innerHTML = jobs.map((job, i) => {
+          const uid = `${containerId}-${i}`;
+          const isOwner = forceOwnerActions;
+          return Templates.jobCard(job, uid, isOwner);
+        }).join('');
+      }
+    };
+
+
+    // =============================================================================
+    // MODAL MODULE
+    // =============================================================================
+
+    const Modal = {
+      open(id) { document.getElementById(id).classList.add('open'); },
+      close(id) { document.getElementById(id).classList.remove('open'); },
+
+      handleOverlayClick(e, id) {
+        if (e.target === document.getElementById(id)) this.close(id);
+      },
+
+      openEdit(jobId) {
+        const job = State.allJobs.find(j => j.id === jobId);
+        if (!job) return;
+        State.editingJobId = jobId;
+
+        document.getElementById('e-title').value = job.title || '';
+        document.getElementById('e-location').value = job.location || '';
+        document.getElementById('e-salary').value = job.salaryRange || '';
+        document.getElementById('e-desc').value = job.description || '';
+        CustomSelect.setValue('e-industry', job.industry || '');
+        CustomSelect.setValue('e-jobtype', job.jobType || '');
+        this._setExpToggle(job.experienceRequired || '');
+        this.open('edit-modal');
+      },
+
+      openDelete(jobId) {
+        State.deletingJobId = jobId;
+        this.open('delete-modal');
+      },
+
+      _setExpToggle(value) {
+        const hidden = document.getElementById('e-exp');
+        hidden.value = value;
+        if (value) {
+          const match = value.match(/(\d+)/);
+          const years = match ? match[1] : '';
+          const btn = document.getElementById('e-exp-toggle-btn');
+          const dot = document.getElementById('e-exp-toggle-dot');
+          const field = document.getElementById('e-exp-field');
+          btn.setAttribute('aria-pressed', 'true');
+          btn.style.background = 'var(--accent)';
+          dot.style.transform = 'translateX(20px)';
+          field.classList.remove('hidden');
+          document.getElementById('e-exp-years').value = years;
+        }
+      }
+    };
+
+
+    // =============================================================================
+    // NAVIGATION MODULE
+    // =============================================================================
+
+    const Navigation = {
+      showTab(tab) {
+        CONFIG.VIEWS.forEach(v => {
+          document.getElementById(`view-${v}`).classList.toggle('hidden', v !== tab);
+          const btn = document.getElementById(`tab-${v}`);
+          if (btn) btn.classList.toggle('active', v === tab);
+        });
+        if (tab === 'browse') Jobs.load();
+        if (tab === 'myposts') Jobs.loadMine();
+        DOM.get('header-post-btn').style.visibility = tab === 'post' ? 'hidden' : 'visible';
+      },
+
+      requireAuth(tab) {
+        if (!State.currentUser) {
+          State.pendingTab = tab;
+          Modal.open('auth-modal');
+        } else {
+          this.showTab(tab);
+        }
+      }
+    };
+
+
+    // =============================================================================
+    // HEADER MODULE
+    // =============================================================================
+
+    const Header = {
+      render() {
+        const signinBtn = DOM.get('auth-btn-signin');
+        const menuWrap = DOM.get('auth-menu-wrap');
+        const initial = DOM.get('profile-initial');
+
+        if (State.currentUser) {
+          signinBtn.classList.add('hidden');
+          menuWrap.classList.remove('hidden');
+          initial.textContent = (State.currentUser.email || '?')[0].toUpperCase();
+        } else {
+          signinBtn.classList.remove('hidden');
+          menuWrap.classList.add('hidden');
+          this.closeProfileMenu();
+        }
+      },
+
+      toggleProfileMenu() {
+        const dd = DOM.get('profile-dropdown');
+        const isHidden = dd.classList.contains('hidden');
+        dd.classList.toggle('hidden');
+        if (isHidden) {
+          setTimeout(() => document.addEventListener('click', Header._outsideClick), 0);
+        }
+      },
+
+      _outsideClick() {
+        DOM.get('profile-dropdown').classList.add('hidden');
+        document.removeEventListener('click', Header._outsideClick);
+      },
+
+      closeProfileMenu() {
+        DOM.get('profile-dropdown').classList.add('hidden');
+        document.removeEventListener('click', Header._outsideClick);
+      }
+    };
+
+
+    // =============================================================================
+    // UI MODULE
+    // =============================================================================
+
+    const UI = {
+      toggleContactInput(prefix) {
+        const checked = Array.from(document.querySelectorAll(`input[name="${prefix}-contact"]:checked`)).map(c => c.value);
+        const needsPhone = checked.some(v => ['Phone Call', 'Text Message', 'WhatsApp'].includes(v));
+        const needsEmail = checked.includes('Email');
+        document.getElementById(`${prefix}-contact-phone`).classList.toggle('hidden', !needsPhone);
+        document.getElementById(`${prefix}-contact-email`).classList.toggle('hidden', !needsEmail);
+      },
+
+      toast(msg) {
+        const t = DOM.get('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+      },
+
+      setLoading(btn, isLoading, loadingText, defaultText) {
+        btn.disabled = isLoading;
+        btn.textContent = isLoading ? loadingText : defaultText;
+      },
+
+      toggleExpField(prefix) {
+        const btn = document.getElementById(`${prefix}-exp-toggle-btn`);
+        const dot = document.getElementById(`${prefix}-exp-toggle-dot`);
+        const field = document.getElementById(`${prefix}-exp-field`);
+        const hidden = document.getElementById(`${prefix}-exp`);
+        const isOn = btn.getAttribute('aria-pressed') === 'true';
+
+        if (isOn) {
+          btn.setAttribute('aria-pressed', 'false');
+          btn.style.background = 'var(--border)';
+          dot.style.transform = 'translateX(0)';
+          field.classList.add('hidden');
+          hidden.value = '';
+          const yearsInput = document.getElementById(`${prefix}-exp-years`);
+          if (yearsInput) yearsInput.value = '';
+        } else {
+          btn.setAttribute('aria-pressed', 'true');
+          btn.style.background = 'var(--accent)';
+          dot.style.transform = 'translateX(20px)';
+          field.classList.remove('hidden');
+        }
+      },
+
+      syncExpValue(prefix) {
+        const years = document.getElementById(`${prefix}-exp-years`).value;
+        const hidden = document.getElementById(`${prefix}-exp`);
+        hidden.value = years ? `${years} yr${years == 1 ? '' : 's'} min` : '';
+      },
+
+      toggleCard(uid) {
+        const card = document.getElementById(`card-${uid}`);
+        const details = document.getElementById(`details-${uid}`);
+        const isOpen = card.classList.contains('open');
+
+        document.querySelectorAll('.job-card.open').forEach(c => c.classList.remove('open'));
+        document.querySelectorAll('.job-details.open').forEach(d => d.classList.remove('open'));
+
+        if (!isOpen) {
+          card.classList.add('open');
+          details.classList.add('open');
+        }
+      }
+    };
+
+
+
+    // =============================================================================
+    // CUSTOM SELECT MODULE
+    // =============================================================================
+
+    const CustomSelect = {
+      _openDropdown: null,
+
+      init() {
+        document.querySelectorAll('.custom-select').forEach(container => {
+          this._build(container);
+        });
+        document.addEventListener('click', () => this._closeAll());
+      },
+
+      _build(container) {
+        const placeholder = container.dataset.placeholder || 'Select…';
+        const options = JSON.parse(container.dataset.options || '[]');
+        const name = container.dataset.name;
+
+        container._value = '';
+
+        // Box
+        const box = document.createElement('div');
+        box.className = 'cs-box';
+        box.innerHTML = `
+          <span class="cs-placeholder">${placeholder}</span>
+          <svg class="cs-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        `;
+
+        // Dropdown
+        const dropdown = document.createElement('div');
+        dropdown.className = 'cs-dropdown';
+        const optsList = document.createElement('div');
+        optsList.className = 'cs-options';
+
+        options.forEach(opt => {
+          if (opt === 'Other') {
+            const el = document.createElement('div');
+            el.className = 'cs-option';
+            el.dataset.value = 'Other';
+            el.innerHTML = `<span>Other</span><svg class="cs-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>`;
+            el.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this._closeAll();
+              dropdown.querySelectorAll('.cs-option').forEach(el => el.classList.remove('selected'));
+              const currentBox = container._box || box;
+              const input = document.createElement('input');
+              input.type = 'text';
+              input.placeholder = 'Enter custom value…';
+              input.className = 'cs-box';
+              input.style.cursor = 'text';
+              currentBox.replaceWith(input);
+              input.focus();
+              input.addEventListener('blur', () => {
+                const val = input.value.trim();
+                container._value = val || '';
+                dropdown.querySelectorAll('.cs-option').forEach(o => o.classList.remove('selected'));
+                const newBox = document.createElement('div');
+                newBox.className = 'cs-box';
+                newBox.innerHTML = val
+                  ? `<span class="cs-value">${val}</span><svg class="cs-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>`
+                  : `<span class="cs-placeholder">${placeholder}</span><svg class="cs-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>`;
+                input.replaceWith(newBox);
+                container._box = newBox;
+                dropdown._currentBox = null;
+                newBox.addEventListener('click', (e) => { e.stopPropagation(); this._toggle(newBox, dropdown); });
+              });
+              input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); });
+            });
+            optsList.appendChild(el);
+          } else {
+            const el = document.createElement('div');
+            el.className = 'cs-option';
+            el.dataset.value = opt;
+            el.innerHTML = `<span>${opt}</span><svg class="cs-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>`;
+            el.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this._select(container, container._box || box, dropdown, opt);
+            });
+            optsList.appendChild(el);
+          }
+        });
+
+        dropdown.appendChild(optsList);
+        container.appendChild(box);
+        container.appendChild(dropdown);
+
+        box.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this._toggle(box, dropdown);
+        });
+      },
+
+      _toggle(box, dropdown) {
+        const isOpen = dropdown.classList.contains('open');
+        this._closeAll();
+        if (!isOpen) {
+          const activeBox = dropdown._currentBox || box;
+          dropdown.classList.add('open');
+          activeBox.classList.add('open');
+          activeBox.querySelector('.cs-chevron')?.classList.add('open');
+          this._openDropdown = { box: activeBox, dropdown };
+        }
+      },
+
+      _closeAll() {
+        if (this._openDropdown) {
+          this._openDropdown.dropdown.classList.remove('open');
+          this._openDropdown.box.classList.remove('open');
+          this._openDropdown.box.querySelector('.cs-chevron').classList.remove('open');
+          this._openDropdown = null;
+        }
+      },
+
+      _select(container, box, dropdown, value) {
+        container._value = value;
+        const activeBox = dropdown._currentBox || box;
+        activeBox.innerHTML = `
+    <span class="cs-value">${value}</span>
+    <svg class="cs-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  `;
+        dropdown.querySelectorAll('.cs-option').forEach(el => {
+          el.classList.remove('selected');
+          el.classList.toggle('selected', el.dataset.value === value);
+        });
+        dropdown._currentBox = null;
+        container._box = activeBox;
+        this._closeAll();
+      },
+
+      getValue(name) {
+        const container = document.querySelector(`.custom-select[data-name="${name}"]`);
+        return container ? container._value : '';
+      },
+
+      setValue(name, value) {
+        const container = document.querySelector(`.custom-select[data-name="${name}"]`);
+        if (!container || !value) return;
+        const box = container.querySelector('.cs-box');
+        const dropdown = container.querySelector('.cs-dropdown');
+        if (box && dropdown) this._select(container, box, dropdown, value);
+      },
+
+      reset(name) {
+        const container = document.querySelector(`.custom-select[data-name="${name}"]`);
+        if (!container) return;
+        const placeholder = container.dataset.placeholder || 'Select…';
+        container._value = '';
+        const box = container.querySelector('.cs-box');
+        if (box) {
+          box.innerHTML = `
+            <span class="cs-placeholder">${placeholder}</span>
+            <svg class="cs-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          `;
+        }
+        container.querySelectorAll('.cs-option').forEach(el => el.classList.remove('selected'));
+      }
+    };
+
+
+    // =============================================================================
+    // GLOBAL BINDINGS  (window.* so inline HTML handlers can reach them)
+    // =============================================================================
+
+    window.handleAuthBtn = () => Modal.open('auth-modal');
+    window.toggleAuthMode = () => Auth.toggleMode();
+    window.handleSignOut = () => Auth.signOut();
+    window.toggleProfileMenu = () => Header.toggleProfileMenu();
+    window.goToMyPosts = () => { Header.closeProfileMenu(); Navigation.showTab('myposts'); };
+    window.showTab = (tab) => Navigation.showTab(tab);
+    window.requireAuth = (tab) => Navigation.requireAuth(tab);
+    window.filterJobs = () => Jobs.filter();
+    window.toggleCard = (uid) => UI.toggleCard(uid);
+    window.toggleExpField = (prefix) => UI.toggleExpField(prefix);
+    window.syncExpValue = (prefix) => UI.syncExpValue(prefix);
+    window.submitJob = () => Form.submit();
+    window.saveEdit = () => Form.saveEdit();
+    window.openEditModal = (id) => Modal.openEdit(id);
+    window.openDeleteModal = (id) => Modal.openDelete(id);
+    window.confirmDelete = () => Form.confirmDelete();
+    window.openModal = (id) => Modal.open(id);
+    window.closeModal = (id) => Modal.close(id);
+    window.handleOverlayClick = (e, id) => Modal.handleOverlayClick(e, id);
+    window.toggleContactInput = (prefix) => UI.toggleContactInput(prefix);
+    window.showToast = (msg) => UI.toast(msg);
+
+
+    // =============================================================================
+    // AUTH SUBMIT LISTENER
+    // =============================================================================
+
+    DOM.get('auth-submit-btn').addEventListener('click', () => Auth.submit());
+
+
+    // =============================================================================
+    // BOOT
+    // =============================================================================
+
+    const App = {
+      init() {
+        Firebase.init();
+        Firebase.onAuthChange(user => Auth.onStateChange(user));
+        CustomSelect.init();
+        Jobs.load();
+      }
+    };
+
+    App.init();
+
+  </script>
+</body>
+
+</html>
