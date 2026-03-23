@@ -9,6 +9,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap"
     rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
     :root {
@@ -38,7 +39,7 @@
     }
 
     ::-webkit-scrollbar {
-      width: 5px;
+      width: 4px;
     }
 
     ::-webkit-scrollbar-track {
@@ -47,6 +48,23 @@
 
     ::-webkit-scrollbar-thumb {
       background: var(--border);
+      border-radius: 3px;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -400px 0;
+      }
+
+      100% {
+        background-position: 400px 0;
+      }
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, var(--border) 25%, var(--card) 50%, var(--border) 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.4s infinite;
       border-radius: 3px;
     }
 
@@ -120,15 +138,17 @@
     }
 
     .job-details {
-      max-height: 0;
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .35s ease;
+    }
+
+    .job-details>div {
       overflow: hidden;
-      transition: max-height .35s ease, opacity .3s ease;
-      opacity: 0;
     }
 
     .job-details.open {
-      max-height: 700px;
-      opacity: 1;
+      grid-template-rows: 1fr;
     }
 
     .badge {
@@ -513,7 +533,10 @@
       <div>
         <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Salary
           Range</label>
-        <input id="f-salary" type="text" placeholder="e.g. $60,000 – $80,000 / yr" class="w-full px-3 py-2 text-sm" />
+        <input id="f-salary" type="text" placeholder="e.g. $60K – $80K / yr" class="w-full px-3 py-2 text-sm"
+          oninput="if(this.value && !this.value.startsWith('$')) this.value = '$' + this.value; this.value = Utils.formatSalary(this.value)" />
+        <p class="error-msg hidden text-xs mt-1" id="f-salary-error" style="color:#b0421d">Please enter a valid salary
+          (e.g. $60K / yr).</p>
       </div>
 
       <div>
@@ -584,13 +607,15 @@
         <p class="error-msg hidden text-xs" id="f-contact-error" style="color:#b0421d">Select at least one contact
           method.</p>
         <div id="f-contact-phone" class="hidden space-y-1">
-          <input id="f-phone" type="tel" placeholder="Phone number" class="w-full px-3 py-2 text-sm" />
-          <p class="error-msg hidden text-xs" id="f-phone-error" style="color:#b0421d">Please enter a phone number.</p>
+          <input id="f-phone" type="tel" placeholder="123-456-7890" class="w-full px-3 py-2 text-sm"
+            oninput="this.value = Utils.formatPhone(this.value)" />
+          <p class="error-msg hidden text-xs" id="f-phone-error" style="color:#b0421d">Please enter a valid phone number
+            (123-456-7890).</p>
         </div>
         <div id="f-contact-email" class="hidden space-y-1">
           <input id="f-email" type="email" placeholder="Email address" class="w-full px-3 py-2 text-sm" />
-          <p class="error-msg hidden text-xs" id="f-email-error" style="color:#b0421d">Please enter an email address.
-          </p>
+          <p class="error-msg hidden text-xs" id="f-email-error" style="color:#b0421d">Please enter a valid email
+            address.</p>
         </div>
       </div>
 
@@ -601,13 +626,19 @@
 
   <!-- ══════════════ MY POSTS VIEW ══════════════ -->
   <div id="view-myposts" class="max-w-lg mx-auto px-4 pt-5 pb-10 hidden">
-    <button onclick="showTab('browse')" class="flex items-center gap-1.5 text-xs font-medium mb-5"
-      style="color:var(--muted); background:none; border:none; cursor:pointer; padding:0">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path d="M19 12H5M12 5l-7 7 7 7" />
-      </svg>
-      Back to jobs
-    </button>
+    <div class="flex items-center justify-between mb-5">
+      <button onclick="showTab('browse')" class="flex items-center gap-1.5 text-xs font-medium"
+        style="color:var(--muted); background:none; border:none; cursor:pointer; padding:0">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M19 12H5M12 5l-7 7 7 7" />
+        </svg>
+        Back to jobs
+      </button>
+      <button onclick="confirmDeleteAccount()" class="text-xs font-medium px-3 py-1.5 rounded-lg"
+        style="color:#b0421d; border:1px solid #f0b4a4; background:transparent; cursor:pointer">
+        Delete Account
+      </button>
+    </div>
     <h2 class="serif text-2xl mb-1">My Posts</h2>
     <p class="text-sm mb-5" style="color:var(--muted)">Jobs you've posted — tap to expand, edit, or delete.</p>
     <div id="my-job-list"></div>
@@ -636,6 +667,7 @@
 
 
   <!-- ══════════════ EDIT MODAL ══════════════ -->
+  <!-- ══════════════ EDIT MODAL ══════════════ -->
   <div class="modal-overlay" id="edit-modal" onclick="handleOverlayClick(event,'edit-modal')">
     <div class="modal-box" style="max-width:440px; max-height:90vh; overflow-y:auto">
       <h2 class="serif text-xl mb-4">Edit Job</h2>
@@ -644,6 +676,8 @@
           <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Position
             Title *</label>
           <input id="e-title" type="text" class="w-full px-3 py-2 text-sm" />
+          <p class="error-msg hidden text-xs mt-1" id="e-title-error" style="color:#b0421d">Position title is required.
+          </p>
         </div>
         <div>
           <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Industry
@@ -652,16 +686,21 @@
             data-placeholder="Select industry…"
             data-options='["Technology","Healthcare","Finance","Education","Retail","Hospitality","Construction","Legal","Media & Marketing","Non-Profit","Other"]'>
           </div>
+          <p class="error-msg hidden text-xs mt-1" id="e-industry-error" style="color:#b0421d">Industry is required.</p>
         </div>
         <div>
           <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Location
             *</label>
           <input id="e-location" type="text" class="w-full px-3 py-2 text-sm" />
+          <p class="error-msg hidden text-xs mt-1" id="e-location-error" style="color:#b0421d">Location is required.</p>
         </div>
         <div>
           <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Salary
             Range</label>
-          <input id="e-salary" type="text" class="w-full px-3 py-2 text-sm" />
+          <input id="e-salary" type="text" class="w-full px-3 py-2 text-sm"
+            oninput="if(this.value && !this.value.startsWith('$')) this.value = '$' + this.value; this.value = Utils.formatSalary(this.value)" />
+          <p class="error-msg hidden text-xs mt-1" id="e-salary-error" style="color:#b0421d">Please enter a valid salary
+            (e.g. $60K / yr).</p>
         </div>
         <div>
           <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Job Type
@@ -669,6 +708,7 @@
           <div class="custom-select w-full" id="e-jobtype-container" data-name="e-jobtype"
             data-placeholder="Select type…" data-options='["Full-time","Part-time"]'>
           </div>
+          <p class="error-msg hidden text-xs mt-1" id="e-jobtype-error" style="color:#b0421d">Job type is required.</p>
         </div>
         <div>
           <div class="flex items-center justify-between mb-2">
@@ -694,13 +734,54 @@
           <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Job
             Description *</label>
           <textarea id="e-desc" rows="5" class="w-full px-3 py-2 text-sm resize-none"></textarea>
+          <p class="error-msg hidden text-xs mt-1" id="e-desc-error" style="color:#b0421d">Job description is required.
+          </p>
+        </div>
+        <div class="p-4 rounded-xl space-y-3" style="border:1px solid var(--border);">
+          <label class="block text-xs font-semibold uppercase tracking-wide" style="color:var(--muted)">Contact Methods
+            *</label>
+          <p class="text-xs" style="color:var(--muted)">Select how applicants can reach you</p>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" name="e-contact" value="Phone Call" onchange="toggleContactInput('e')"
+                class="w-4 h-4 rounded" style="accent-color:var(--accent)">
+              <span class="text-sm">Phone Call</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" name="e-contact" value="Text Message" onchange="toggleContactInput('e')"
+                class="w-4 h-4 rounded" style="accent-color:var(--accent)">
+              <span class="text-sm">Text Message</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" name="e-contact" value="WhatsApp" onchange="toggleContactInput('e')"
+                class="w-4 h-4 rounded" style="accent-color:var(--accent)">
+              <span class="text-sm">WhatsApp</span>
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" name="e-contact" value="Email" onchange="toggleContactInput('e')"
+                class="w-4 h-4 rounded" style="accent-color:var(--accent)">
+              <span class="text-sm">Email</span>
+            </label>
+          </div>
+          <p class="error-msg hidden text-xs" id="e-contact-error" style="color:#b0421d">Select at least one contact
+            method.</p>
+          <div id="e-contact-phone" class="hidden space-y-1">
+            <input id="e-phone" type="tel" placeholder="123-456-7890" class="w-full px-3 py-2 text-sm"
+              oninput="this.value = Utils.formatPhone(this.value)" />
+            <p class="error-msg hidden text-xs" id="e-phone-error" style="color:#b0421d">Please enter a valid phone
+              number (123-456-7890).</p>
+          </div>
+          <div id="e-contact-email" class="hidden space-y-1">
+            <input id="e-email" type="email" placeholder="Email address" class="w-full px-3 py-2 text-sm" />
+            <p class="error-msg hidden text-xs" id="e-email-error" style="color:#b0421d">Please enter a valid email
+              address.</p>
+          </div>
         </div>
         <button class="btn-accent" id="edit-save-btn" onclick="saveEdit()">Save Changes</button>
         <button class="btn-ghost" onclick="closeModal('edit-modal')">Cancel</button>
       </div>
     </div>
   </div>
-
 
   <!-- ══════════════ DELETE CONFIRM MODAL ══════════════ -->
   <div class="modal-overlay" id="delete-modal" onclick="handleOverlayClick(event,'delete-modal')">
@@ -716,6 +797,19 @@
 
   <div id="toast"></div>
 
+  <!-- ══════════════ DELETE ACCOUNT MODAL ══════════════ -->
+  <div class="modal-overlay" id="delete-account-modal" onclick="handleOverlayClick(event,'delete-account-modal')">
+    <div class="modal-box" style="max-width:320px">
+      <h2 class="serif text-lg mb-2">Delete your account?</h2>
+      <p class="text-sm mb-6" style="color:var(--muted)">This will permanently delete your account and all your posts.
+        This action cannot be undone.</p>
+      <div class="flex gap-2">
+        <button class="btn-danger flex-1" id="delete-account-confirm-btn" onclick="deleteAccount()">Yes, delete</button>
+        <button class="btn-ghost flex-1" onclick="closeModal('delete-account-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
 
   <!-- ══════════════ FIREBASE IMPORTS ══════════════ -->
   <script type="module">
@@ -723,7 +817,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import {
       getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-      signOut, onAuthStateChanged
+      signOut, onAuthStateChanged, deleteUser
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import {
       getFirestore, collection, addDoc, getDocs, doc,
@@ -757,7 +851,18 @@
         'auth/email-already-in-use': 'Email already registered.',
         'auth/weak-password': 'Password must be at least 6 characters.',
         'auth/invalid-credential': 'Incorrect email or password.'
-      }
+      },
+      ABBREVIATIONS: ['NY', 'NJ', 'PA', 'CA', 'TX', 'FL', 'IL', 'MA', 'DC', 'CT', 'MD', 'VA', 'NC', 'SC', 'GA', 'MI', 'OH', 'WI', 'MN', 'CO', 'AZ', 'NV', 'WA', 'OR', 'USA', 'UK', 'EU', 'NJ', 'LA', 'NYC'],
+
+      PATTERNS: {
+        PHONE: /^\d{3}-\d{3}-\d{4}$/,
+        EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      },
+
+      TIMING: {
+        SKELETON_DELAY_MS: 500,
+        TOAST_DURATION_MS: 3000,
+      },
     });
 
 
@@ -781,6 +886,31 @@
 
       friendlyAuthError(code) {
         return CONFIG.AUTH_ERRORS[code] || 'Something went wrong — please try again.';
+      },
+
+      capitalizeWords(str) {
+        if (!str) return str;
+        return str.split(' ').map(word => {
+          const upper = word.toUpperCase();
+          if (CONFIG.ABBREVIATIONS.includes(upper)) return upper;
+          return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        }).join(' ');
+      },
+
+      capitalizeFirst(str) {
+        if (!str) return str;
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      },
+
+      formatSalary(str) {
+        return str.replace(/k/g, 'K');
+      },
+
+      formatPhone(str) {
+        const digits = str.replace(/\D/g, '').slice(0, 10);
+        if (digits.length <= 3) return digits;
+        if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+        return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
       }
     };
 
@@ -811,6 +941,8 @@
       deletingJobId: null,
       authMode: 'signin',   // 'signin' | 'register'
       pendingTab: null,
+      jobsPage: 1,
+      PAGE_SIZE: 3,
 
       reset() {
         this.editingJobId = null;
@@ -845,49 +977,86 @@
               </div>
             </div>
             <div class="job-details" id="details-${uid}">
-              <div class="detail-divider mx-4"></div>
-              <div class="px-4 py-4">
-                <p class="text-xs font-semibold mb-2 uppercase tracking-wide" style="color:var(--muted)">Description</p>
-                <p class="text-sm leading-relaxed whitespace-pre-line">${Utils.esc(job.description || 'No description provided.')}</p>
-                <div class="flex items-start justify-between mt-4 gap-4">
-                  <div class="flex flex-col gap-2">
-                    ${(job.contactMethods || []).map(method => {
-                          const icons = {
-                            'Phone Call': `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.12 1.18 2 2 0 012.11 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>`,
-                            'Text Message': `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>`,
-                            'WhatsApp': `<svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.858L.057 23.428a.75.75 0 00.921.921l5.57-1.476A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75A9.75 9.75 0 1121.75 12 9.761 9.761 0 0112 21.75z"/></svg>`,
-                            'Email': `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>`
-                          };
-                          const contact = method === 'Email' ? job.contactEmail : job.contactPhone;
-                          const href = method === 'Email' ? `mailto:${contact}` : method === 'WhatsApp' ? `https://wa.me/${contact?.replace(/\D/g, '')}` : `tel:${contact}`;
-                          return `
-                        <a href="${href}" onclick="event.stopPropagation()" class="flex items-center gap-1.5 text-xs" style="color:var(--accent)">
-                          ${icons[method] || ''}
-                          <span>${Utils.esc(contact || method)}</span>
-                        </a>`;
-                        }).join('')}
+              <div>
+                <div class="detail-divider mx-4"></div>
+                <div class="px-4 py-4">
+                  <p class="text-xs font-semibold mb-2 uppercase tracking-wide" style="color:var(--muted)">Description</p>
+                  <p class="text-sm leading-relaxed whitespace-pre-line">${Utils.esc(job.description || 'No description provided.')}</p>
+                  <div class="mt-4 flex items-start justify-between gap-4">
+                    <div class="flex flex-col gap-1">
+                      ${job.contactPhone ? `<p class="text-xs" style="color:var(--accent)">${Utils.esc(job.contactPhone)}</p>` : ''}
+                      ${job.contactEmail ? `<p class="text-xs" style="color:var(--accent)">${Utils.esc(job.contactEmail)}</p>` : ''}
+                      <div class="flex items-center gap-1 mt-1" onclick="event.stopPropagation()">
+                        ${(job.contactMethods || []).includes('WhatsApp') ? `
+                          <a href="https://wa.me/${job.contactPhone?.replace(/\D/g, '')}" target="_blank" style="color:var(--accent)" class="p-1">
+                            <svg viewBox="0 0 80.6 80.59" fill="currentColor" class="w-4 h-4">
+                              <path d="m32.8,0C14.71,0,0,14.71,0,32.79c0,6.99,2.17,13.63,6.28,19.27l-2.62,13.53,12.78-4.4c4.99,2.89,10.62,4.4,16.36,4.4,18.09,0,32.8-14.71,32.8-32.8S50.89,0,32.8,0Zm16.32,45.7c-.82.82-3.22,3.35-6.83,3.35s-12.21-2.94-16.79-7.52c-4.58-4.58-8.65-9.23-9.61-13.46-.96-4.23-.84-6.14.35-7.88,0,0,1.92-3.36,3.49-3.55,1.57-.2,3.59-.2,4.14.83.54,1.02,2.97,6.98,2.97,6.98,0,0,.42,1.03-.22,2.02-.64,1-2.08,2.44-2.08,2.44,0,0-.8,1.02,0,2.11.8,1.09,2.04,3.1,4.61,5.66,2.57,2.57,7.5,4.4,7.5,4.4,0,0,.71.1,1.15-.35.45-.45,2.89-3.49,2.89-3.49,0,0,.78-1.01,2.08-.42,1.3.6,6.92,3.4,6.92,3.4,0,0,.66.24.66,1.23s-.41,3.42-1.23,4.25Z"/>
+                            </svg>
+                          </a>` : ''}
+                        ${(job.contactMethods || []).includes('Phone Call') ? `
+                          <a href="tel:${job.contactPhone}" style="color:var(--accent)" class="p-1">
+                            <i class="fas fa-phone text-sm"></i>
+                          </a>` : ''}
+                        ${(job.contactMethods || []).includes('Text Message') ? `
+                          <a href="sms:${job.contactPhone}" style="color:var(--accent)" class="p-1">
+                            <i class="fas fa-sms text-sm"></i>
+                          </a>` : ''}
+                        ${(job.contactMethods || []).includes('Email') ? `
+                          <a href="mailto:${job.contactEmail}" style="color:var(--accent)" class="p-1">
+                            <i class="fas fa-envelope text-sm"></i>
+                          </a>` : ''}
+                      </div>
+                    </div>
+                    <p class="text-xs flex-shrink-0" style="color:var(--muted)">Job ID #${Utils.esc(job.id)}</p>
                   </div>
-                  <p class="text-xs flex-shrink-0" style="color:var(--muted)">Job #${Utils.esc(job.id)}</p>
+                  ${isOwner ? `
+                  <div class="flex gap-2 mt-4" onclick="event.stopPropagation()">
+                    <button class="btn-ghost" onclick="openEditModal('${job.id}')">Edit</button>
+                    <button class="btn-danger" onclick="openDeleteModal('${job.id}')">Delete</button>
+                  </div>` : ''}
                 </div>
-                ${isOwner ? `
-                <div class="flex gap-2 mt-4" onclick="event.stopPropagation()">
-                  <button class="btn-ghost" onclick="openEditModal('${job.id}')">Edit</button>
-                  <button class="btn-danger" onclick="openDeleteModal('${job.id}')">Delete</button>
-                </div>` : ''}
               </div>
             </div>
-          </div>`;
+         </div>
+        `;
+      },
+
+      skeletonCards(count = 5) {
+        return Array(count).fill(0).map(() => `
+    <div class="job-card mb-2 p-4">
+      <div class="flex justify-between items-start gap-3">
+        <div class="flex-1 space-y-2">
+          <div class="skeleton h-3 w-20"></div>
+          <div class="skeleton h-4 w-48"></div>
+          <div class="skeleton h-3 w-32"></div>
+        </div>
+        <div class="space-y-2 text-right">
+          <div class="skeleton h-4 w-24 ml-auto"></div>
+          <div class="skeleton h-3 w-16 ml-auto"></div>
+        </div>
+      </div>
+    </div>
+  `).join('');
       },
 
       emptyState(containerId) {
         return containerId === 'my-job-list'
           ? `<div class="state-msg">You haven't posted any jobs yet.</div>`
-          : `<div class="state-msg">No openings found.<br>Be the first to post one!</div>`;
+          : `<div class="state-msg">No openings found.<br>Be the first to post one!</div>
+        `;
       },
 
       loadingState(msg = 'Loading…') {
         return `<div class="state-msg">${msg}</div>`;
-      }
+      },
+
+      loadMoreBtn() {
+        return `<button id="load-more-btn" onclick="loadMoreJobs()"
+    class="w-full mt-4 py-3 text-sm font-medium rounded-lg"
+    style="border:1px solid var(--border); color:var(--muted); background:var(--card); cursor:pointer">
+    Load more
+  </button>`;
+      },
     };
 
 
@@ -965,7 +1134,9 @@
 
     const Jobs = {
       async load() {
-        DOM.get('job-list').innerHTML = Templates.loadingState('Loading jobs…');
+        State.jobsPage = 1;
+        DOM.get('job-list').innerHTML = Templates.skeletonCards(5);
+        await new Promise(r => setTimeout(r, CONFIG.TIMING.SKELETON_DELAY_MS));
         try {
           State.allJobs = await Firebase.getJobs();
           Render.jobList(State.allJobs, 'job-list', false);
@@ -976,7 +1147,8 @@
       },
 
       async loadMine() {
-        DOM.get('my-job-list').innerHTML = Templates.loadingState('Loading your posts…');
+        DOM.get('my-job-list').innerHTML = Templates.skeletonCards(3);
+        await new Promise(r => setTimeout(r, CONFIG.TIMING.SKELETON_DELAY_MS));
         try {
           State.myJobs = await Firebase.getMyJobs(State.currentUser.uid);
           State.myJobs.forEach(mj => {
@@ -990,6 +1162,7 @@
       },
 
       filter() {
+        State.jobsPage = 1;
         const q = DOM.get('search-input').value.toLowerCase().trim();
         const type = DOM.get('filter-type').value;
         const filtered = State.allJobs.filter(job => {
@@ -1011,28 +1184,26 @@
     const Form = {
       collect(prefix) {
         return {
-          title: document.getElementById(`${prefix}-title`).value.trim(),
-          industry: CustomSelect.getValue(`${prefix}-industry`),
-          location: document.getElementById(`${prefix}-location`).value.trim(),
+          title: Utils.capitalizeWords(document.getElementById(`${prefix}-title`).value.trim()),
+          industry: Utils.capitalizeWords(CustomSelect.getValue(`${prefix}-industry`)),
+          location: Utils.capitalizeWords(document.getElementById(`${prefix}-location`).value.trim()),
           salaryRange: document.getElementById(`${prefix}-salary`).value.trim(),
           jobType: CustomSelect.getValue(`${prefix}-jobtype`),
           experienceRequired: document.getElementById(`${prefix}-exp`).value,
-          description: document.getElementById(`${prefix}-desc`).value.trim(),
+          description: Utils.capitalizeFirst(document.getElementById(`${prefix}-desc`).value.trim()),
           contactMethods: Array.from(document.querySelectorAll(`input[name="${prefix}-contact"]:checked`)).map(c => c.value),
           contactPhone: document.getElementById(`${prefix}-phone`)?.value.trim() || '',
           contactEmail: document.getElementById(`${prefix}-email`)?.value.trim() || '',
         };
       },
 
-      validate(data) {
+      validate(data, prefix = 'f') {
         const errors = [];
-
         const check = (condition, id, fieldId) => {
           const el = document.getElementById(id);
           const field = fieldId ? document.getElementById(fieldId) : null;
           const target = field?.classList.contains('custom-select')
-            ? field.querySelector('.cs-box')
-            : field;
+            ? field.querySelector('.cs-box') : field;
           if (condition) {
             el?.classList.remove('hidden');
             if (target) target.style.borderColor = '#b0421d';
@@ -1043,19 +1214,20 @@
           }
         };
 
-        check(!data.title, 'f-title-error', 'f-title');
-        check(!data.industry, 'f-industry-error', 'f-industry-container');
-        check(!data.location, 'f-location-error', 'f-location');
-        check(!data.jobType, 'f-jobtype-error', 'f-jobtype-container');
-        check(!data.description, 'f-desc-error', 'f-desc');
-        check(!data.contactMethods || !data.contactMethods.length, 'f-contact-error', null);
+        check(!data.title, `${prefix}-title-error`, `${prefix}-title`);
+        check(!data.industry, `${prefix}-industry-error`, `${prefix}-industry-container`);
+        check(!data.location, `${prefix}-location-error`, `${prefix}-location`);
+        check(!data.salaryRange, `${prefix}-salary-error`, `${prefix}-salary`);
+        check(!data.jobType, `${prefix}-jobtype-error`, `${prefix}-jobtype-container`);
+        check(!data.description, `${prefix}-desc-error`, `${prefix}-desc`);
+        check(!data.contactMethods || !data.contactMethods.length, `${prefix}-contact-error`, null);
         check(
-          data.contactMethods && data.contactMethods.some(v => ['Phone Call', 'Text Message', 'WhatsApp'].includes(v)) && !data.contactPhone,
-          'f-phone-error', 'f-phone'
+          data.contactMethods && data.contactMethods.some(v => ['Phone Call', 'Text Message', 'WhatsApp'].includes(v)) && (!data.contactPhone || !CONFIG.PATTERNS.PHONE.test(data.contactPhone)),
+          `${prefix}-phone-error`, `${prefix}-phone`
         );
         check(
-          data.contactMethods && data.contactMethods.includes('Email') && !data.contactEmail,
-          'f-email-error', 'f-email'
+          data.contactMethods && data.contactMethods.includes('Email') && (!data.contactEmail || !CONFIG.PATTERNS.EMAIL.test(data.contactEmail)),
+          `${prefix}-email-error`, `${prefix}-email`
         );
 
         if (errors.length) {
@@ -1068,7 +1240,7 @@
       clearPost() {
         ['f-title', 'f-location', 'f-salary', 'f-desc'].forEach(id =>
           document.getElementById(id).value = '');
-        ['f-industry', 'f-jobtype'].forEach(name => CustomSelect.reset(`f-${name}`));
+        ['f-industry', 'f-jobtype'].forEach(name => CustomSelect.reset(name));
         document.getElementById('f-exp').value = '';
         // Reset experience toggle
         const btn = document.getElementById('f-exp-toggle-btn');
@@ -1082,7 +1254,7 @@
 
       async submit() {
         const data = this.collect('f');
-        if (!this.validate(data)) return;
+        if (!this.validate(data, 'f')) return;
 
         const btn = DOM.get('submit-btn');
         UI.setLoading(btn, true, 'Posting…', 'Post Job');
@@ -1103,7 +1275,7 @@
 
       async saveEdit() {
         const data = this.collect('e');
-        if (!this.validate(data)) return;
+        if (!this.validate(data, 'e')) return;
 
         const btn = DOM.get('edit-save-btn');
         UI.setLoading(btn, true, 'Saving…', 'Save Changes');
@@ -1200,7 +1372,29 @@
           State.pendingTab = null;
         }
         if (State.allJobs.length) Render.jobList(State.allJobs, 'job-list', false);
-      }
+      },
+
+      async deleteAccount() {
+        const btn = DOM.get('delete-account-confirm-btn');
+        UI.setLoading(btn, true, 'Deleting…', 'Yes, delete');
+        try {
+          const uid = State.currentUser.uid;
+          const jobs = await Firebase.getMyJobs(uid);
+          await Promise.all(jobs.map(job => Firebase.deleteJob(job.id)));
+          await deleteUser(State.currentUser);
+          Modal.close('delete-account-modal');
+          UI.toast('Account deleted.');
+          Navigation.showTab('browse');
+        } catch (err) {
+          if (err.code === 'auth/requires-recent-login') {
+            UI.toast('Please sign out and sign back in before deleting your account.');
+          } else {
+            UI.toast('Error: ' + err.message);
+          }
+        } finally {
+          UI.setLoading(btn, false, 'Deleting…', 'Yes, delete');
+        }
+      },
     };
 
 
@@ -1224,11 +1418,16 @@
           return;
         }
 
-        listEl.innerHTML = jobs.map((job, i) => {
+        const page = State.jobsPage;
+        const size = State.PAGE_SIZE;
+        const visible = jobs.slice(0, page * size);
+        const hasMore = visible.length < jobs.length;
+
+        listEl.innerHTML = visible.map((job, i) => {
           const uid = `${containerId}-${i}`;
           const isOwner = forceOwnerActions;
           return Templates.jobCard(job, uid, isOwner);
-        }).join('');
+        }).join('') + (hasMore ? Templates.loadMoreBtn() : '');
       }
     };
 
@@ -1260,9 +1459,28 @@
         this.open('edit-modal');
       },
 
-      openDelete(jobId) {
-        State.deletingJobId = jobId;
-        this.open('delete-modal');
+      openEdit(jobId) {
+        const job = State.allJobs.find(j => j.id === jobId);
+        if (!job) return;
+        State.editingJobId = jobId;
+
+        document.getElementById('e-title').value = job.title || '';
+        document.getElementById('e-location').value = job.location || '';
+        document.getElementById('e-salary').value = job.salaryRange || '';
+        document.getElementById('e-desc').value = job.description || '';
+        CustomSelect.setValue('e-industry', job.industry || '');
+        CustomSelect.setValue('e-jobtype', job.jobType || '');
+        this._setExpToggle(job.experienceRequired || '');
+
+        // Contact methods
+        document.querySelectorAll('input[name="e-contact"]').forEach(cb => {
+          cb.checked = (job.contactMethods || []).includes(cb.value);
+        });
+        UI.toggleContactInput('e');
+        document.getElementById('e-phone').value = job.contactPhone || '';
+        document.getElementById('e-email').value = job.contactEmail || '';
+
+        this.open('edit-modal');
       },
 
       _setExpToggle(value) {
@@ -1280,7 +1498,7 @@
           field.classList.remove('hidden');
           document.getElementById('e-exp-years').value = years;
         }
-      }
+      },
     };
 
 
@@ -1298,6 +1516,14 @@
         if (tab === 'browse') Jobs.load();
         if (tab === 'myposts') Jobs.loadMine();
         DOM.get('header-post-btn').style.visibility = tab === 'post' ? 'hidden' : 'visible';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        history.pushState({ tab }, '', tab === 'browse' ? '/' : `?tab=${tab}`);
+        if (tab === 'post') Form.clearPost();
+
+        if (tab === 'browse' || tab === 'myposts') {
+          document.querySelectorAll('.error-msg').forEach(el => el.classList.add('hidden'));
+          document.querySelectorAll('.cs-box, input, textarea').forEach(el => el.style.borderColor = '');
+        }
       },
 
       requireAuth(tab) {
@@ -1370,7 +1596,7 @@
         const t = DOM.get('toast');
         t.textContent = msg;
         t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 3000);
+        setTimeout(() => t.classList.remove('show'), CONFIG.TIMING.TOAST_DURATION_MS);
       },
 
       setLoading(btn, isLoading, loadingText, defaultText) {
@@ -1583,6 +1809,26 @@
       }
     };
 
+    // =============================================================================
+    // URL SYNC MODULE
+    // =============================================================================
+
+    const UrlSync = {
+      init() {
+        // Read tab from URL on load
+        const params = new URLSearchParams(window.location.search);
+        const tab = params.get('tab');
+        if (tab && CONFIG.VIEWS.includes(tab)) {
+          Navigation.showTab(tab);
+        }
+
+        // Handle browser back/forward
+        window.addEventListener('popstate', (e) => {
+          const tab = e.state?.tab || 'browse';
+          Navigation.showTab(tab);
+        });
+      }
+    };
 
     // =============================================================================
     // GLOBAL BINDINGS  (window.* so inline HTML handlers can reach them)
@@ -1609,6 +1855,21 @@
     window.handleOverlayClick = (e, id) => Modal.handleOverlayClick(e, id);
     window.toggleContactInput = (prefix) => UI.toggleContactInput(prefix);
     window.showToast = (msg) => UI.toast(msg);
+    window.Utils = Utils;
+    window.confirmDeleteAccount = () => Modal.open('delete-account-modal');
+    window.deleteAccount = () => Auth.deleteAccount();
+    window.loadMoreJobs = () => {
+      State.jobsPage++;
+      const q = DOM.get('search-input').value.toLowerCase().trim();
+      const raw = CustomSelect.getValue('filter-type');
+      const type = raw === 'All Types' ? '' : raw;
+      const filtered = State.allJobs.filter(job => {
+        const matchText = !q || (job.title || '').toLowerCase().includes(q) || (job.industry || '').toLowerCase().includes(q);
+        const matchType = !type || job.jobType === type;
+        return matchText && matchType;
+      });
+      Render.jobList(filtered, 'job-list', false);
+    };
 
 
     // =============================================================================
@@ -1627,6 +1888,7 @@
         Firebase.init();
         Firebase.onAuthChange(user => Auth.onStateChange(user));
         CustomSelect.init();
+        UrlSync.init();
         Jobs.load();
       }
     };
