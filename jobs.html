@@ -469,7 +469,7 @@
                         style="background:var(--card); border:1px solid var(--border); min-width:140px; box-shadow:0 8px 24px rgba(26,22,18,.12); z-index:200">
                         <button onclick="Header.closeProfileMenu(); Navigation.show('browse')"
                             class="w-full text-left px-4 py-3 text-sm hover:bg-opacity-50 transition-colors"
-                            style="font-family:'DM Sans',sans-serif; color:var(--ink); background:transparent; border:none; cursor:pointer; border-bottom:1px solid var(--border)">
+                            style="font-family:'DM Sans',sans-serif; color:var(--ink); background:transparent; border:none; cursor:pointer;">
                             Jobs
                         </button>
                         <button onclick="Header.closeProfileMenu(); Navigation.show('myposts')"
@@ -605,7 +605,7 @@
             <div>
                 <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Job
                     Description *</label>
-                <textarea id="desc" rows="5" placeholder="Describe responsibilities, requirements, perks…"
+                <textarea id="desc" rows="8" placeholder="Describe responsibilities, requirements, perks…"
                     class="w-full px-3 py-2 text-sm resize-none"></textarea>
                 <p class="error-msg hidden text-xs mt-1" id="desc-error" style="color:#b0421d">Job description is
                     required.</p>
@@ -656,7 +656,7 @@
             </div>
 
             <button class="btn-accent" id="submit-btn" onclick="Form.submit()">Post Job</button>
-            <button class="btn-ghost w-full" id="cancel-btn" onclick="history.back()">Cancel</button>
+            <button class="btn-ghost w-full" id="cancel-btn" onclick="history.back()" style="padding:12px 24px">Cancel</button>
         </div>
     </div>
 
@@ -771,7 +771,10 @@
             },
 
             // Timing
-            TOAST_DURATION_MS: 3000,
+            TIMING: {
+                SKELETON_DELAY_MS: 500,
+                TOAST_DURATION_MS: 3000,
+            },
 
             // CSS class names used throughout
             CLASSES: {
@@ -875,6 +878,8 @@
             filteredJobs: [],
             _editingJobId: null,
             _pendingDeleteId: null,
+            jobsPage: 1,
+            PAGE_SIZE: 5,
 
             isProtectedView() {
                 return CONFIG.PROTECTED_VIEWS.includes(this.currentView);
@@ -934,9 +939,9 @@
         // =============================================================================
 
         const Templates = {
-            jobCard(job, showActions = false) {
+            jobCard(job, showActions = false, prefix = '') {
                 return `
-            <div class="job-card mb-2" id="card-${job.id}" onclick="UI.toggleCard('${job.id}')">
+        <div class="job-card mb-2" id="card-${prefix}${job.id}" onclick="UI.toggleCard('${prefix}${job.id}')">
                 <div class="flex justify-between items-center gap-3 p-4">
                     <div class="flex-1 min-w-0">
                         <p class="text-[10px] font-semibold uppercase tracking-widest mb-1" style="color:var(--accent)">
@@ -962,7 +967,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="job-details" id="details-${job.id}">
+                <div class="job-details" id="details-${prefix}${job.id}">
                     <div>
                         <div class="detail-divider mx-4"></div>
                         <div class="px-4 py-4">
@@ -1009,6 +1014,14 @@
                     </div>
                 `).join('');
             },
+
+            loadMoreBtn: () => `
+                <button id="load-more-btn" onclick="Jobs.loadMore()"
+                    class="w-full mt-4 py-3 text-sm font-medium rounded-lg"
+                    style="border:1px solid var(--border); color:var(--muted); background:var(--card); cursor:pointer">
+                    Load more
+                </button>
+            `,
 
             emptyState: (msg) => `<div class="state-msg">${msg}</div>`,
             loadingState: () => `<div class="state-msg">Loading…</div>`,
@@ -1156,6 +1169,29 @@
                     UrlSync.replace({ view: 'browse' });
                     Modal.open('auth-modal');
                 }
+            },
+
+            async deleteAccount() {
+                if (!State.currentUser) return;
+                try {
+                    // Delete all user's jobs first
+                    const snapshot = await Database.getMyJobs(State.currentUser.uid);
+                    const batch = Database.db.batch();
+                    snapshot.docs.forEach(doc => batch.delete(doc.ref));
+                    await batch.commit();
+
+                    State.signingOut = true;
+                    await State.currentUser.delete();
+                    UI.toast('Account deleted.');
+                    Modal.close('delete-account-modal');
+                    Navigation.show('browse');
+                } catch (error) {
+                    if (error.code === 'auth/requires-recent-login') {
+                        UI.toast('Please sign out, sign back in, then try again.');
+                    } else {
+                        UI.toast('Error: ' + error.message);
+                    }
+                }
             }
         };
 
@@ -1235,6 +1271,7 @@
                 DOM.get(`view-${view}`)?.classList.remove(CONFIG.CLASSES.HIDDEN);
 
                 State.currentView = view;
+                window.scrollTo(0, 0);
                 if (updateUrl) UrlSync.push({ view });
 
                 DOM.get('header-post-btn').classList.toggle(CONFIG.CLASSES.HIDDEN, view === 'post');
@@ -1258,7 +1295,10 @@
                 list.innerHTML = Templates.skeletonCards(8);
 
                 try {
-                    const snapshot = await Database.getAllJobs();
+                    const [snapshot] = await Promise.all([
+                        Database.getAllJobs(),
+                        new Promise(r => setTimeout(r, CONFIG.TIMING.SKELETON_DELAY_MS))
+                    ]);
 
                     if (snapshot.empty) {
                         count.textContent = '';
@@ -1283,13 +1323,16 @@
                 list.innerHTML = Templates.skeletonCards(8);
 
                 try {
-                    const snapshot = await Database.getMyJobs(State.currentUser.uid);
+                    const [snapshot] = await Promise.all([
+                        Database.getMyJobs(State.currentUser.uid),
+                        new Promise(r => setTimeout(r, CONFIG.TIMING.SKELETON_DELAY_MS))
+                    ]);
                     if (snapshot.empty) {
                         list.innerHTML = Templates.emptyState("You haven't posted any jobs yet.");
                         return;
                     }
                     State.myJobs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    list.innerHTML = State.myJobs.map(job => Templates.jobCard(job, true)).join('');
+                    list.innerHTML = State.myJobs.map(job => Templates.jobCard(job, true, 'my-')).join('');
                 } catch (error) {
                     list.innerHTML = Templates.errorState(error.message);
                 }
@@ -1316,6 +1359,11 @@
                     UI.resetButton(button, 'Yes, delete');
                 }
             },
+
+            loadMore() {
+                State.jobsPage++;
+                Search._render();
+            },
         };
 
         // =============================================================================
@@ -1324,6 +1372,7 @@
 
         const Search = {
             filter() {
+                State.jobsPage = 1;
                 Search.toggleClearButton();
                 const query = DOM.get('search-input').value.toLowerCase().trim();
                 const type = DOM.get('filter-type').value;
@@ -1336,6 +1385,10 @@
                     return matchText && matchType;
                 });
 
+                Search._render();
+            },
+
+            _render() {
                 const list = DOM.get('job-list');
                 const count = DOM.get('job-count');
 
@@ -1345,8 +1398,13 @@
                     return;
                 }
 
-                count.textContent = `${Search.filteredJobs.length} opening${Search.filteredJobs.length !== 1 ? 's' : ''} found`;
-                list.innerHTML = Search.filteredJobs.map(job => Templates.jobCard(job, false)).join('');
+                const total = Search.filteredJobs.length;
+                const visible = Search.filteredJobs.slice(0, State.jobsPage * State.PAGE_SIZE);
+                const hasMore = visible.length < total;
+
+                count.textContent = `${total} opening${total !== 1 ? 's' : ''} found`;
+                list.innerHTML = visible.map(job => Templates.jobCard(job, false)).join('');
+                if (hasMore) list.innerHTML += Templates.loadMoreBtn();
             },
 
             toggleClearButton() {
@@ -1722,7 +1780,7 @@
                 const toastEl = DOM.get('toast');
                 toastEl.textContent = message;
                 toastEl.classList.add('show');
-                setTimeout(() => toastEl.classList.remove('show'), CONFIG.TOAST_DURATION_MS);
+                setTimeout(() => toastEl.classList.remove('show'), CONFIG.TIMING.TOAST_DURATION_MS);
             },
 
             setButtonLoading(button, loadingText) {
