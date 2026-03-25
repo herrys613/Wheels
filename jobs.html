@@ -2,1021 +2,1049 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Openings — Job Board</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap"
-        rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <style>
-        :root {
-            --cream: #F5F0E8;
-            --ink: #1A1612;
-            --muted: #7A6F63;
-            --accent: #C8522A;
-            --card: #FDFAF4;
-            --border: #E2D9CC;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--cream);
-            color: var(--ink);
-            min-height: 100vh;
-            visibility: hidden;
-        }
-
-        h1,
-        h2,
-        .serif {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--cream);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 3px;
-        }
-
-        @keyframes shimmer {
-            0% {
-                background-position: -400px 0;
-            }
-
-            100% {
-                background-position: 400px 0;
-            }
-        }
-
-        .skeleton {
-            background: linear-gradient(90deg, var(--border) 25%, var(--card) 50%, var(--border) 75%);
-            background-size: 800px 100%;
-            animation: shimmer 1.4s infinite;
-            border-radius: 3px;
-        }
-
-        html {
-            overflow-y: scroll;
-        }
-
-        header {
-            border-bottom: 1px solid var(--border);
-            background: var(--cream);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-
-        .tab-btn {
-            transition: color .2s, border-color .2s;
-            border-bottom: 2px solid transparent;
-            padding-bottom: 2px;
-        }
-
-        .tab-btn.active {
-            color: var(--accent);
-            border-color: var(--accent);
-        }
-
-        input,
-        select,
-        textarea {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            color: var(--ink);
-            transition: border-color .2s, box-shadow .2s;
-            outline: none;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(200, 82, 42, .12);
-        }
-
-        select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A6F63' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            padding-right: 30px !important;
-        }
-
-        .job-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            transition: box-shadow .2s, border-color .2s;
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .job-card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 4px 16px rgba(26, 22, 18, .08);
-        }
-
-        .job-card.open {
-            border-color: var(--accent);
-            box-shadow: 0 4px 20px rgba(200, 82, 42, .12);
-        }
-
-        .job-details {
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows .35s ease;
-        }
-
-        .job-details>div {
-            overflow: hidden;
-        }
-
-        .job-details.open {
-            grid-template-rows: 1fr;
-        }
-
-        .badge {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: .04em;
-            text-transform: uppercase;
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-
-        .badge-ft {
-            background: #EAF3EC;
-            color: #2D6A35;
-        }
-
-        .badge-pt {
-            background: #FEF3E2;
-            color: #9A5B10;
-        }
-
-        .post-form-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 24px;
-        }
-
-        .btn-accent {
-            background: var(--accent);
-            color: #fff;
-            font-family: 'DM Sans', sans-serif;
-            font-weight: 600;
-            border-radius: 8px;
-            padding: 12px 24px;
-            border: none;
-            cursor: pointer;
-            transition: background .2s, transform .1s;
-            width: 100%;
-        }
-
-        .btn-accent:hover {
-            background: #b0421d;
-        }
-
-        .btn-accent:active {
-            transform: scale(.98);
-        }
-
-        .btn-accent:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        .btn-ghost {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 13px;
-            font-weight: 500;
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--muted);
-            transition: border-color .2s, color .2s;
-        }
-
-        .btn-ghost:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .btn-danger {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 13px;
-            font-weight: 500;
-            padding: 6px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            border: 1px solid #f0b4a4;
-            background: transparent;
-            color: #b0421d;
-            transition: background .2s;
-        }
-
-        .btn-danger:hover {
-            background: #fdf0ec;
-        }
-
-        .auth-pill {
-            font-size: 12px;
-            font-weight: 500;
-            padding: 5px 12px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            background: transparent;
-            cursor: pointer;
-            color: var(--muted);
-            transition: border-color .2s, color .2s;
-        }
-
-        .auth-pill:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .auth-pill.signed-in {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            background: rgba(26, 22, 18, .55);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity .25s;
-        }
-
-        .modal-overlay.open {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .modal-box {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 28px 24px;
-            width: 100%;
-            max-width: 380px;
-            transform: translateY(16px);
-            transition: transform .25s;
-        }
-
-        .modal-overlay.open .modal-box {
-            transform: translateY(0);
-        }
-
-        .detail-divider {
-            border-top: 1px solid var(--border);
-        }
-
-        .chevron {
-            transition: transform .3s;
-        }
-
-        .open .chevron {
-            transform: rotate(180deg);
-        }
-
-        #toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(80px);
-            background: var(--ink);
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: transform .3s;
-            z-index: 999;
-            white-space: nowrap;
-        }
-
-        #toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .state-msg {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--muted);
-            line-height: 1.7;
-        }
-
-        #tab-myposts {
-            display: none;
-        }
-
-        /* ── Custom Select ── */
-        .custom-select {
-            position: relative;
-        }
-
-        .cs-box {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: var(--card);
-            color: var(--ink);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: border-color .2s, box-shadow .2s;
-            user-select: none;
-        }
-
-        .cs-box:focus,
-        .cs-box.open {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(200, 82, 42, .12);
-            outline: none;
-        }
-
-        .cs-box .cs-placeholder {
-            color: var(--muted);
-        }
-
-        .cs-box .cs-value {
-            color: var(--ink);
-        }
-
-        .cs-chevron {
-            flex-shrink: 0;
-            transition: transform .2s;
-            color: var(--muted);
-        }
-
-        .cs-chevron.open {
-            transform: rotate(180deg);
-        }
-
-        .cs-dropdown {
-            position: absolute;
-            top: calc(100% + 4px);
-            left: 0;
-            right: 0;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(26, 22, 18, .12);
-            z-index: 300;
-            overflow: hidden;
-            display: none;
-        }
-
-        .cs-dropdown.open {
-            display: block;
-        }
-
-        .cs-options {
-            max-height: 220px;
-            overflow-y: auto;
-        }
-
-        .cs-option {
-            padding: 10px 14px;
-            font-size: 14px;
-            cursor: pointer;
-            color: var(--ink);
-            transition: background .15s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .cs-option:hover {
-            background: rgba(200, 82, 42, .06);
-        }
-
-        .cs-option.selected {
-            color: var(--accent);
-            font-weight: 500;
-        }
-
-        .cs-check {
-            display: none;
-            color: var(--accent);
-        }
-
-        .cs-option.selected .cs-check {
-            display: block;
-        }
-
-        .custom-select>.cs-box {
-            transition: border-color .2s;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Openings — Job Board</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* =============================================================================
+           Base Styles
+        ============================================================================= */
+    :root {
+      --cream: #F5F0E8;
+      --ink: #1A1612;
+      --muted: #7A6F63;
+      --accent: #C8522A;
+      --card: #FDFAF4;
+      --border: #E2D9CC;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      visibility: hidden;
+    }
+
+    h1,
+    h2,
+    .serif {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    html {
+      overflow-y: scroll;
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--cream);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 3px;
+    }
+
+    /* =============================================================================
+           Animations / Loading States
+        ============================================================================= */
+    @keyframes shimmer {
+      0% {
+        background-position: -400px 0;
+      }
+
+      100% {
+        background-position: 400px 0;
+      }
+    }
+
+    .skeleton {
+      background: linear-gradient(90deg, var(--border) 25%, var(--card) 50%, var(--border) 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 3px;
+    }
+
+    /* =============================================================================
+           Header
+        ============================================================================= */
+    header {
+      border-bottom: 1px solid var(--border);
+      background: var(--cream);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .auth-pill {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      color: var(--muted);
+      transition: border-color .2s, color .2s;
+    }
+
+    .auth-pill:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .auth-pill.signed-in {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* =============================================================================
+           Form Inputs
+        ============================================================================= */
+    input,
+    select,
+    textarea {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--ink);
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(200, 82, 42, .12);
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237A6F63' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px !important;
+    }
+
+    /* =============================================================================
+           Job Cards
+        ============================================================================= */
+    .job-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: box-shadow .2s, border-color .2s;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .job-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 16px rgba(26, 22, 18, .08);
+    }
+
+    .job-card.open {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(200, 82, 42, .12);
+    }
+
+    .job-details {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .35s ease;
+    }
+
+    .job-details>div {
+      overflow: hidden;
+    }
+
+    .job-details.open {
+      grid-template-rows: 1fr;
+    }
+
+    .detail-divider {
+      border-top: 1px solid var(--border);
+    }
+
+    /* =============================================================================
+           Buttons
+        ============================================================================= */
+    .btn-accent {
+      background: var(--accent);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 12px 24px;
+      border: none;
+      cursor: pointer;
+      transition: background .2s, transform .1s;
+      width: 100%;
+    }
+
+    .btn-accent:hover {
+      background: #b0421d;
+    }
+
+    .btn-accent:active {
+      transform: scale(.98);
+    }
+
+    .btn-accent:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .btn-ghost {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      transition: border-color .2s, color .2s;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-danger {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid #f0b4a4;
+      background: transparent;
+      color: #b0421d;
+      transition: background .2s;
+    }
+
+    .btn-danger:hover {
+      background: #fdf0ec;
+    }
+
+    /* =============================================================================
+           Post Form
+        ============================================================================= */
+    .post-form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+    }
+
+    /* =============================================================================
+           Modals
+        ============================================================================= */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(26, 22, 18, .55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 380px;
+      transform: translateY(16px);
+      transition: transform .25s;
+    }
+
+    .modal-overlay.open .modal-box {
+      transform: translateY(0);
+    }
+
+    /* =============================================================================
+           Toast
+        ============================================================================= */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--ink);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: transform .3s;
+      z-index: 999;
+      white-space: nowrap;
+    }
+
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* =============================================================================
+           Empty / State Messages
+        ============================================================================= */
+    .state-msg {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* =============================================================================
+           Custom Select
+        ============================================================================= */
+    .custom-select {
+      position: relative;
+    }
+
+    .cs-box {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--card);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: border-color .2s, box-shadow .2s;
+      user-select: none;
+    }
+
+    .cs-box:focus,
+    .cs-box.open {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(200, 82, 42, .12);
+      outline: none;
+    }
+
+    .cs-box .cs-placeholder {
+      color: var(--muted);
+    }
+
+    .cs-box .cs-value {
+      color: var(--ink);
+    }
+
+    .cs-chevron {
+      flex-shrink: 0;
+      transition: transform .2s;
+      color: var(--muted);
+    }
+
+    .cs-chevron.open {
+      transform: rotate(180deg);
+    }
+
+    .cs-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(26, 22, 18, .12);
+      z-index: 300;
+      overflow: hidden;
+      display: none;
+    }
+
+    .cs-dropdown.open {
+      display: block;
+    }
+
+    .cs-options {
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .cs-option {
+      padding: 10px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--ink);
+      transition: background .15s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cs-option:hover {
+      background: rgba(200, 82, 42, .06);
+    }
+
+    .cs-option.selected {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .cs-check {
+      display: none;
+      color: var(--accent);
+    }
+
+    .cs-option.selected .cs-check {
+      display: block;
+    }
+  </style>
 </head>
 
 <body>
 
-    <!-- ══════════════ HEADER ══════════════ -->
-    <header class="px-4 py-3">
-        <div class="max-w-lg mx-auto flex items-center justify-between gap-3">
-            <div class="flex-shrink-0">
-                <span class="serif text-xl" style="color:var(--ink)">Openings</span>
-            </div>
-            <div class="flex items-center gap-3 text-sm font-medium flex-wrap justify-end"
-                style="color:var(--muted); min-width:120px">
-                <button id="header-post-btn" onclick="Auth.requireAuth('post')"
-                    class="text-xs font-semibold px-3 py-1.5 rounded-lg border"
-                    style="border-color:var(--accent); color:#fff; background:var(--accent); cursor:pointer">
-                    + Post
-                </button>
-                <button class="auth-pill" onclick="Modal.open('auth-modal')" id="auth-btn-signin">Sign In</button>
-                <div class="relative hidden" id="auth-menu-wrap">
-                    <button onclick="Header.toggleProfileMenu()" id="profile-btn"
-                        class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0"
-                        style="background:transparent; color:var(--accent); border:2px solid var(--accent); cursor:pointer">
-                        <span id="profile-initial">?</span>
-                    </button>
-                    <div id="profile-dropdown" class="absolute right-0 mt-2 rounded-xl overflow-hidden hidden"
-                        style="background:var(--card); border:1px solid var(--border); min-width:140px; box-shadow:0 8px 24px rgba(26,22,18,.12); z-index:200">
-                        <button onclick="Header.closeProfileMenu(); Navigation.show('browse')"
-                            class="w-full text-left px-4 py-3 text-sm hover:bg-opacity-50 transition-colors"
-                            style="font-family:'DM Sans',sans-serif; color:var(--ink); background:transparent; border:none; cursor:pointer;">
-                            Jobs
-                        </button>
-                        <button onclick="Header.closeProfileMenu(); Navigation.show('myposts')"
-                            class="w-full text-left px-4 py-3 text-sm hover:bg-opacity-50 transition-colors"
-                            style="font-family:'DM Sans',sans-serif; color:var(--ink); background:transparent; border:none; cursor:pointer; border-bottom:1px solid var(--border)">
-                            My Posts
-                        </button>
-                        <button onclick="Header.closeProfileMenu(); Auth.signOut()"
-                            class="w-full text-left px-4 py-3 text-sm transition-colors"
-                            style="font-family:'DM Sans',sans-serif; color:#b0421d; background:transparent; border:none; cursor:pointer">
-                            Sign Out
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-
-    <!-- ══════════════ BROWSE VIEW ══════════════ -->
-    <div id="view-browse" class="max-w-lg mx-auto px-4 pt-5 pb-10 hidden">
-        <div class="flex gap-2 mb-4">
-            <div class="relative flex-1">
-                <input id="search-input" type="text" placeholder="Search title or industry…"
-                    class="w-full px-3 py-2 pr-8 text-sm" oninput="Search.filter()" />
-                <button id="search-clear-btn" onclick="Search.clearSearch()"
-                    class="hidden absolute inset-y-0 right-0 pr-3 items-center" style="color:var(--muted)">
-                    <i class="fas fa-times text-xs"></i>
-                </button>
-            </div>
-            <select id="filter-type" class="px-3 py-2 text-sm" onchange="Search.filter()">
-                <option value="">All Types</option>
-                <option value="Full-time">Full-time</option>
-                <option value="Part-time">Part-time</option>
-            </select>
-        </div>
-        <p id="job-count" class="text-xs mb-3" style="color:var(--muted); min-height:1rem"></p>
-        <div id="job-list"></div>
-    </div>
-
-
-    <!-- ══════════════ POST A JOB VIEW ══════════════ -->
-    <div id="view-post" class="max-w-lg mx-auto px-4 pt-5 pb-10 hidden">
-        <button onclick="history.back()" class="flex items-center gap-1.5 text-xs font-medium mb-5"
-            style="color:var(--muted); background:none; border:none; cursor:pointer; padding:0">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M19 12H5M12 5l-7 7 7 7" />
-            </svg>
-            Back
+  <!-- ══════════════ HEADER ══════════════ -->
+  <header class="px-4 py-3">
+    <div class="max-w-lg mx-auto flex items-center justify-between gap-3">
+      <div class="flex-shrink-0">
+        <span class="serif text-xl" style="color:var(--ink)">Openings</span>
+      </div>
+      <div class="flex items-center gap-3 text-sm font-medium flex-wrap justify-end"
+        style="color:var(--muted); min-width:120px">
+        <button id="header-post-btn" onclick="Auth.requireAuth('post')"
+          class="text-xs font-semibold px-3 py-1.5 rounded-lg border"
+          style="border-color:var(--accent); color:#fff; background:var(--accent); cursor:pointer">
+          + Post
         </button>
-        <h2 class="serif text-2xl mb-1" id="post-view-title">Post an Opening</h2>
-        <p class="text-sm mb-6" style="color:var(--muted)">Fill in the details — it only takes a minute.</p>
-
-        <div class="flex flex-col gap-4 post-form-card">
-
-            <div>
-                <label class="block text-xs font-semibold mb-1 uppercase tracking-wide"
-                    style="color:var(--muted)">Position
-                    Title *</label>
-                <input id="title" type="text" placeholder="e.g. Senior Designer" class="w-full px-3 py-2 text-sm" />
-                <p class="error-msg hidden text-xs mt-1" id="title-error" style="color:#b0421d">Position title is
-                    required.</p>
-            </div>
-
-            <div>
-                <label class="block text-xs font-semibold mb-1 uppercase tracking-wide"
-                    style="color:var(--muted)">Industry
-                    *</label>
-                <div class="custom-select w-full" id="industry-container" data-name="industry"
-                    data-placeholder="Select industry…"
-                    data-options='["Technology","Healthcare","Finance","Education","Retail","Hospitality","Construction","Legal","Media & Marketing","Non-Profit","Other"]'>
-                </div>
-                <p class="error-msg hidden text-xs mt-1" id="industry-error" style="color:#b0421d">Industry is required.
-                </p>
-            </div>
-
-            <div>
-                <label class="block text-xs font-semibold mb-1 uppercase tracking-wide"
-                    style="color:var(--muted)">Location
-                    *</label>
-                <input id="location" type="text" placeholder="e.g. Brooklyn, NY / Remote"
-                    class="w-full px-3 py-2 text-sm" />
-                <p class="error-msg hidden text-xs mt-1" id="location-error" style="color:#b0421d">Location is required.
-                </p>
-            </div>
-
-            <div>
-                <label class="block text-xs font-semibold mb-1 uppercase tracking-wide"
-                    style="color:var(--muted)">Salary
-                    Range</label>
-                <input id="salary" type="text" placeholder="e.g. $60K – $80K / yr" class="w-full px-3 py-2 text-sm"
-                    oninput="if(this.value && !this.value.startsWith('$')) this.value = '$' + this.value; this.value = Utils.formatSalary(this.value)" />
-                <p class="error-msg hidden text-xs mt-1" id="salary-error" style="color:#b0421d">Please enter a valid
-                    salary
-                    (e.g. $60K / yr).</p>
-            </div>
-
-            <div>
-                <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Job
-                    Type
-                    *</label>
-                <div class="custom-select w-full" id="jobtype-container" data-name="jobtype"
-                    data-placeholder="Select type…" data-options='["Full-time","Part-time"]'>
-                </div>
-                <p class="error-msg hidden text-xs mt-1" id="jobtype-error" style="color:#b0421d">Job type is required.
-                </p>
-            </div>
-
-            <div class="py-1">
-                <div class="flex items-center justify-between mb-2">
-                    <label class="text-xs font-semibold uppercase tracking-wide" style="color:var(--muted)">Experience
-                        Required</label>
-                    <button type="button" id="exp-toggle-btn" onclick="UI.toggleExpField()"
-                        class="w-10 h-5 rounded-full transition-colors duration-200 relative flex-shrink-0"
-                        style="background:var(--border)" aria-pressed="false">
-                        <span id="exp-toggle-dot"
-                            class="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200"></span>
-                    </button>
-                </div>
-                <div id="exp-field" class="hidden">
-                    <div class="flex items-center gap-2">
-                        <input id="exp-years" type="number" min="0" max="30" placeholder="e.g. 3"
-                            class="w-24 px-3 py-2 text-sm" oninput="UI.syncExpValue()" />
-                        <span class="text-sm" style="color:var(--muted)">years minimum</span>
-                    </div>
-                </div>
-                <input type="hidden" id="exp" />
-                <p class="error-msg hidden text-xs mt-1" id="exp-error" style="color:#b0421d">Please enter the number of
-                    years
-                    required.</p>
-            </div>
-
-            <div>
-                <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Job
-                    Description *</label>
-                <textarea id="desc" rows="8" placeholder="Describe responsibilities, requirements, perks…"
-                    class="w-full px-3 py-2 text-sm resize-none"></textarea>
-                <p class="error-msg hidden text-xs mt-1" id="desc-error" style="color:#b0421d">Job description is
-                    required.</p>
-            </div>
-
-            <div class="p-4 rounded-xl space-y-3" style="background:var(--card); border:1px solid var(--border);">
-                <label class="block text-xs font-semibold uppercase tracking-wide" style="color:var(--muted)">Contact
-                    Methods
-                    *</label>
-                <p class="text-xs" style="color:var(--muted)">Select how applicants can reach you</p>
-                <div class="grid grid-cols-2 gap-3">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" name="contact" value="Phone Call" onchange="UI.toggleContactInput()"
-                            class="w-4 h-4 rounded" style="accent-color:var(--accent)">
-                        <span class="text-sm">Phone Call</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" name="contact" value="Text Message" onchange="UI.toggleContactInput()"
-                            class="w-4 h-4 rounded" style="accent-color:var(--accent)">
-                        <span class="text-sm">Text Message</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" name="contact" value="WhatsApp" onchange="UI.toggleContactInput()"
-                            class="w-4 h-4 rounded" style="accent-color:var(--accent)">
-                        <span class="text-sm">WhatsApp</span>
-                    </label>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" name="contact" value="Email" onchange="UI.toggleContactInput()"
-                            class="w-4 h-4 rounded" style="accent-color:var(--accent)">
-                        <span class="text-sm">Email</span>
-                    </label>
-                </div>
-                <p class="error-msg hidden text-xs" id="contact-error" style="color:#b0421d">Select at least one contact
-                    method.</p>
-                <div id="contact-phone" class="hidden space-y-1">
-                    <input id="phone" type="tel" placeholder="123-456-7890" class="w-full px-3 py-2 text-sm"
-                        oninput="this.value = Utils.formatPhone(this.value)" />
-                    <p class="error-msg hidden text-xs" id="phone-error" style="color:#b0421d">Please enter a valid
-                        phone number
-                        (123-456-7890).</p>
-                </div>
-                <div id="contact-email" class="hidden space-y-1">
-                    <input id="email" type="email" placeholder="Email address" class="w-full px-3 py-2 text-sm" />
-                    <p class="error-msg hidden text-xs" id="email-error" style="color:#b0421d">Please enter a valid
-                        email
-                        address.</p>
-                </div>
-            </div>
-
-            <button class="btn-accent" id="submit-btn" onclick="Form.submit()">Post Job</button>
-            <button class="btn-ghost w-full" id="cancel-btn" onclick="history.back()"
-                style="padding:12px 24px">Cancel</button>
-        </div>
-    </div>
-
-
-    <!-- ══════════════ MY POSTS VIEW ══════════════ -->
-    <div id="view-myposts" class="max-w-lg mx-auto px-4 pt-5 pb-10 hidden">
-        <div class="flex items-center justify-between mb-1">
-            <h2 class="serif text-2xl">My Posts</h2>
-            <button onclick="Modal.open('delete-account-modal')" class="text-xs font-medium px-3 py-1.5 rounded-lg"
-                style="color:#b0421d; border:1px solid #f0b4a4; background:transparent; cursor:pointer">
-                Delete Account
+        <button class="auth-pill" onclick="Modal.open('auth-modal')" id="auth-btn-signin">Sign In</button>
+        <div class="relative hidden" id="auth-menu-wrap">
+          <button onclick="Header.toggleProfileMenu()" id="profile-btn"
+            class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0"
+            style="background:transparent; color:var(--accent); border:2px solid var(--accent); cursor:pointer">
+            <span id="profile-initial">?</span>
+          </button>
+          <div id="profile-dropdown" class="absolute right-0 mt-2 rounded-xl overflow-hidden hidden"
+            style="background:var(--card); border:1px solid var(--border); min-width:140px; box-shadow:0 8px 24px rgba(26,22,18,.12); z-index:200">
+            <button onclick="Header.closeProfileMenu(); Navigation.show('browse')"
+              class="w-full text-left px-4 py-3 text-sm hover:bg-opacity-50 transition-colors"
+              style="font-family:'DM Sans',sans-serif; color:var(--ink); background:transparent; border:none; cursor:pointer;">
+              Jobs
             </button>
+            <button onclick="Header.closeProfileMenu(); Navigation.show('myposts')"
+              class="w-full text-left px-4 py-3 text-sm hover:bg-opacity-50 transition-colors"
+              style="font-family:'DM Sans',sans-serif; color:var(--ink); background:transparent; border:none; cursor:pointer; border-bottom:1px solid var(--border)">
+              My Posts
+            </button>
+            <button onclick="Header.closeProfileMenu(); Auth.signOut()"
+              class="w-full text-left px-4 py-3 text-sm transition-colors"
+              style="font-family:'DM Sans',sans-serif; color:#b0421d; background:transparent; border:none; cursor:pointer">
+              Sign Out
+            </button>
+          </div>
         </div>
-        <p class="text-sm mb-1" style="color:var(--muted)" id="myposts-greeting"></p>
-        <p class="text-sm mb-5" style="color:var(--muted)">Jobs you've posted — tap to expand, edit, or delete.</p>
-        <div id="my-job-list"></div>
+      </div>
+    </div>
+  </header>
 
+
+  <!-- ══════════════ BROWSE VIEW ══════════════ -->
+  <div id="view-browse" class="max-w-lg mx-auto px-4 pt-5 pb-10 hidden">
+    <div class="flex gap-2 mb-3">
+      <div class="relative flex-1">
+        <input id="search-input" type="text" placeholder="Search title or industry…"
+          class="w-full px-3 py-2 pr-8 text-sm" oninput="Search.filter()" />
+        <button id="search-clear-btn" onclick="Search.clear()"
+          class="hidden absolute inset-y-0 right-0 pr-3 items-center" style="color:var(--muted)">
+          <i class="fas fa-times text-xs"></i>
+        </button>
+      </div>
     </div>
 
-
-    <!-- ══════════════ AUTH MODAL ══════════════ -->
-    <div class="modal-overlay" id="auth-modal" onclick="if(event.target===this) Modal.close('auth-modal')">
-        <div class="modal-box">
-            <h2 class="serif text-xl mb-0.5" id="auth-modal-title">Sign In</h2>
-            <p class="text-xs mb-5" style="color:var(--muted)" id="auth-modal-sub">Access your job postings</p>
-            <div class="flex flex-col gap-3">
-                <input id="auth-email" type="email" placeholder="Email" class="w-full px-3 py-2 text-sm" />
-                <input id="auth-password" type="password" placeholder="Password (min 6 chars)"
-                    class="w-full px-3 py-2 text-sm" />
-                <button class="btn-accent" id="auth-submit-btn">Sign In</button>
-            </div>
-            <p class="text-xs text-center mt-4" style="color:var(--muted)">
-                <span id="auth-toggle-text">No account?</span>
-                <button class="underline ml-1" onclick="Modal.toggleAuthMode()" id="auth-toggle-btn">Register</button>
-            </p>
-            <button class="block text-xs text-center w-full mt-3" style="color:var(--border)"
-                onclick="Modal.close('auth-modal')">Cancel</button>
-        </div>
+    <!-- Horizontally scrollable filter pills -->
+    <div class="relative mb-3">
+      <div class="flex gap-2 pb-1" id="filter-pills-bar"
+        style="overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none;">
+        <style>
+          #filter-pills-bar::-webkit-scrollbar {
+            display: none
+          }
+        </style>
+        <!-- Pills injected by Search.init() -->
+        <button id="pill-clear-all" onclick="Search.clearAllFilters()"
+          class="hidden flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap"
+          style="border:1px solid rgba(200,82,42,.3); color:var(--accent); background:rgba(200,82,42,.06); cursor:pointer">
+          Clear all
+        </button>
+      </div>
+      <!-- Dropdowns injected by Search.init() -->
+      <div id="pill-dropdowns"></div>
     </div>
 
-    <!-- ══════════════ DELETE CONFIRM MODAL ══════════════ -->
-    <div class="modal-overlay" id="delete-modal" onclick="if(event.target===this) Modal.close('delete-modal')">
-        <div class="modal-box" style="max-width:320px">
-            <h2 class="serif text-lg mb-2">Delete this job?</h2>
-            <p class="text-sm mb-6" style="color:var(--muted)">This action cannot be undone.</p>
-            <div class="flex gap-2">
-                <button class="btn-danger flex-1" id="delete-confirm-btn" onclick="Jobs.confirmDelete()">Yes,
-                    delete</button>
-                <button class="btn-ghost flex-1" onclick="Modal.close('delete-modal')">Cancel</button>
-            </div>
+    <p id="job-count" class="text-xs mb-3" style="color:var(--muted); min-height:1rem"></p>
+    <div id="job-list"></div>
+  </div>
+
+
+  <!-- ══════════════ POST A JOB VIEW ══════════════ -->
+  <div id="view-post" class="max-w-lg mx-auto px-4 pt-5 pb-10 hidden">
+    <button onclick="history.back()" class="flex items-center gap-1.5 text-xs font-medium mb-5"
+      style="color:var(--muted); background:none; border:none; cursor:pointer; padding:0">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M19 12H5M12 5l-7 7 7 7" />
+      </svg>
+      Back
+    </button>
+    <h2 class="serif text-2xl mb-1" id="post-view-title">Post an Opening</h2>
+    <p class="text-sm mb-6" style="color:var(--muted)">Fill in the details — it only takes a minute.</p>
+
+    <div class="flex flex-col gap-4 post-form-card">
+
+      <div>
+        <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Position
+          Title *</label>
+        <input id="title" type="text" placeholder="e.g. Senior Designer" class="w-full px-3 py-2 text-sm" />
+        <p class="error-msg hidden text-xs mt-1" id="title-error" style="color:#b0421d">Position title is required.</p>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Industry
+          *</label>
+        <div class="custom-select w-full" id="industry-container" data-name="industry"
+          data-placeholder="Select industry…"
+          data-options='["Technology","Healthcare","Finance","Education","Retail","Hospitality","Construction","Legal","Media & Marketing","Non-Profit","Other"]'>
         </div>
-    </div>
+        <p class="error-msg hidden text-xs mt-1" id="industry-error" style="color:#b0421d">Industry is required.</p>
+      </div>
 
-    <div id="toast"></div>
+      <div>
+        <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Location
+          *</label>
+        <input id="location" type="text" placeholder="e.g. Brooklyn, NY / Remote" class="w-full px-3 py-2 text-sm" />
+        <p class="error-msg hidden text-xs mt-1" id="location-error" style="color:#b0421d">Location is required.</p>
+      </div>
 
-    <!-- ══════════════ DELETE ACCOUNT MODAL ══════════════ -->
-    <div class="modal-overlay" id="delete-account-modal"
-        onclick="if(event.target===this) Modal.close('delete-account-modal')">
-        <div class="modal-box" style="max-width:320px">
-            <h2 class="serif text-lg mb-2 flex items-center gap-2">
-                <i class="fas fa-trash-alt" style="color:#b0421d; font-size:16px"></i>
-                Delete your account?
-            </h2>
-            <p class="text-sm mb-6" style="color:var(--muted)">This will permanently delete your account and all your
-                posts.
-                This action cannot be undone.</p>
-            <div class="flex gap-2">
-                <button class="btn-danger flex-1" id="delete-account-confirm-btn" onclick="Auth.deleteAccount()">Yes,
-                    delete</button>
-                <button class="btn-ghost flex-1" onclick="Modal.close('delete-account-modal')">Cancel</button>
-            </div>
+      <div>
+        <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Salary
+          Range</label>
+        <input id="salary" type="text" placeholder="e.g. $60K – $80K / yr" class="w-full px-3 py-2 text-sm"
+          oninput="if(this.value && !this.value.startsWith('$')) this.value = '$' + this.value; this.value = Utils.formatSalary(this.value)" />
+        <p class="error-msg hidden text-xs mt-1" id="salary-error" style="color:#b0421d">Please enter a valid salary
+          (e.g. $60K / yr).</p>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Job Type
+          *</label>
+        <div class="custom-select w-full" id="jobtype-container" data-name="jobtype" data-placeholder="Select type…"
+          data-options='["Full-time","Part-time"]'>
         </div>
+        <p class="error-msg hidden text-xs mt-1" id="jobtype-error" style="color:#b0421d">Job type is required.</p>
+      </div>
+
+      <div class="py-1">
+        <div class="flex items-center justify-between mb-2">
+          <label class="text-xs font-semibold uppercase tracking-wide" style="color:var(--muted)">Experience
+            Required</label>
+          <button type="button" id="exp-toggle-btn" onclick="UI.toggleExpField()"
+            class="w-10 h-5 rounded-full transition-colors duration-200 relative flex-shrink-0"
+            style="background:var(--border)" aria-pressed="false">
+            <span id="exp-toggle-dot"
+              class="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform duration-200"></span>
+          </button>
+        </div>
+        <div id="exp-field" class="hidden">
+          <div class="flex items-center gap-2">
+            <input id="exp-years" type="number" min="0" max="30" placeholder="e.g. 3" class="w-24 px-3 py-2 text-sm"
+              oninput="UI.syncExpValue()" />
+            <span class="text-sm" style="color:var(--muted)">years minimum</span>
+          </div>
+        </div>
+        <input type="hidden" id="exp" />
+        <p class="error-msg hidden text-xs mt-1" id="exp-error" style="color:#b0421d">Please enter the number of years
+          required.</p>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Job
+          Description *</label>
+        <textarea id="desc" rows="8" placeholder="Describe responsibilities, requirements, perks…"
+          class="w-full px-3 py-2 text-sm resize-none"></textarea>
+        <p class="error-msg hidden text-xs mt-1" id="desc-error" style="color:#b0421d">Job description is required.</p>
+      </div>
+
+      <div class="p-4 rounded-xl space-y-3" style="background:var(--card); border:1px solid var(--border);">
+        <label class="block text-xs font-semibold uppercase tracking-wide" style="color:var(--muted)">Contact Methods
+          *</label>
+        <p class="text-xs" style="color:var(--muted)">Select how applicants can reach you</p>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="contact" value="Phone Call" onchange="UI.toggleContactInput()"
+              class="w-4 h-4 rounded" style="accent-color:var(--accent)">
+            <span class="text-sm">Phone Call</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="contact" value="Text Message" onchange="UI.toggleContactInput()"
+              class="w-4 h-4 rounded" style="accent-color:var(--accent)">
+            <span class="text-sm">Text Message</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="contact" value="WhatsApp" onchange="UI.toggleContactInput()"
+              class="w-4 h-4 rounded" style="accent-color:var(--accent)">
+            <span class="text-sm">WhatsApp</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="contact" value="Email" onchange="UI.toggleContactInput()"
+              class="w-4 h-4 rounded" style="accent-color:var(--accent)">
+            <span class="text-sm">Email</span>
+          </label>
+        </div>
+        <p class="error-msg hidden text-xs" id="contact-error" style="color:#b0421d">Select at least one contact method.
+        </p>
+        <div id="contact-phone" class="hidden space-y-1">
+          <input id="phone" type="tel" placeholder="123-456-7890" class="w-full px-3 py-2 text-sm"
+            oninput="this.value = Utils.formatPhone(this.value)" />
+          <p class="error-msg hidden text-xs" id="phone-error" style="color:#b0421d">Please enter a valid phone number
+            (123-456-7890).</p>
+        </div>
+        <div id="contact-email" class="hidden space-y-1">
+          <input id="email" type="email" placeholder="Email address" class="w-full px-3 py-2 text-sm" />
+          <p class="error-msg hidden text-xs" id="email-error" style="color:#b0421d">Please enter a valid email address.
+          </p>
+        </div>
+      </div>
+
+      <button class="btn-accent" id="submit-btn" onclick="Form.submit()">Post Job</button>
+      <button class="btn-ghost w-full" id="cancel-btn" onclick="history.back()"
+        style="padding:12px 24px">Cancel</button>
     </div>
+  </div>
 
 
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script>
-        // =============================================================================
-        // CONFIGURATION
-        // =============================================================================
-
-        const CONFIG = Object.freeze({
-            // Firebase
-            FIREBASE: {
-                apiKey: "AIzaSyBAfwID0N0S-cJLWiyasBCrk2rdTaaUpy8",
-                authDomain: "jobs-38646.firebaseapp.com",
-                projectId: "jobs-38646",
-                storageBucket: "jobs-38646.firebasestorage.app",
-                messagingSenderId: "1090223046153",
-                appId: "1:1090223046153:web:ac5ab42c4fce2a44bd82d8"
-            },
-
-            // Views that require the user to be signed in
-            PROTECTED_VIEWS: ['post', 'myposts'],
-
-            // Auth error messages keyed by Firebase error code
-            AUTH_ERRORS: {
-                'auth/invalid-email': 'Invalid email address.',
-                'auth/user-not-found': 'No account with that email.',
-                'auth/wrong-password': 'Incorrect password.',
-                'auth/email-already-in-use': 'Email already registered.',
-                'auth/weak-password': 'Password must be at least 6 characters.',
-                'auth/invalid-credential': 'Incorrect email or password.'
-            },
-
-            // Validation patterns
-            PATTERNS: {
-                PHONE: /^\d{3}-\d{3}-\d{4}$/,
-                EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-            },
-
-            // Timing
-            TIMING: {
-                SKELETON_DELAY_MS: 500,
-                TOAST_DURATION_MS: 3000,
-            },
-
-            // CSS class names used throughout
-            CLASSES: {
-                HIDDEN: 'hidden',
-                OPEN: 'open'
-            }
-        });
+  <!-- ══════════════ MY POSTS VIEW ══════════════ -->
+  <div id="view-myposts" class="max-w-lg mx-auto px-4 pt-5 pb-10 hidden">
+    <div class="flex items-center justify-between mb-1">
+      <h2 class="serif text-2xl">My Posts</h2>
+      <button onclick="Modal.open('delete-account-modal')" class="text-xs font-medium px-3 py-1.5 rounded-lg"
+        style="color:#b0421d; border:1px solid #f0b4a4; background:transparent; cursor:pointer">
+        Delete Account
+      </button>
+    </div>
+    <p class="text-sm mb-1" style="color:var(--muted)" id="myposts-greeting"></p>
+    <p class="text-sm mb-5" style="color:var(--muted)">Jobs you've posted — tap to expand, edit, or delete.</p>
+    <div id="my-job-list"></div>
+  </div>
 
 
-        // =============================================================================
-        // UTILITIES
-        // =============================================================================
+  <!-- ══════════════ AUTH MODAL ══════════════ -->
+  <div class="modal-overlay" id="auth-modal" onclick="if(event.target===this) Modal.close('auth-modal')">
+    <div class="modal-box">
+      <h2 class="serif text-xl mb-0.5" id="auth-modal-title">Sign In</h2>
+      <p class="text-xs mb-5" style="color:var(--muted)" id="auth-modal-sub">Access your job postings</p>
+      <div class="flex flex-col gap-3">
+        <input id="auth-email" type="email" placeholder="Email" class="w-full px-3 py-2 text-sm" />
+        <input id="auth-password" type="password" placeholder="Password (min 6 chars)"
+          class="w-full px-3 py-2 text-sm" />
+        <button class="btn-accent" id="auth-submit-btn">Sign In</button>
+      </div>
+      <p class="text-xs text-center mt-4" style="color:var(--muted)">
+        <span id="auth-toggle-text">No account?</span>
+        <button class="underline ml-1" onclick="Modal.toggleAuthMode()" id="auth-toggle-btn">Register</button>
+      </p>
+      <button class="block text-xs text-center w-full mt-3" style="color:var(--border)"
+        onclick="Modal.close('auth-modal')">Cancel</button>
+    </div>
+  </div>
 
-        const Utils = {
-            // Normalize lowercase k to uppercase K in salary strings
-            formatSalary(str) {
-                return str.replace(/k/g, 'K');
-            },
+  <!-- ══════════════ DELETE JOB MODAL ══════════════ -->
+  <div class="modal-overlay" id="delete-modal" onclick="if(event.target===this) Modal.close('delete-modal')">
+    <div class="modal-box" style="max-width:320px">
+      <h2 class="serif text-lg mb-2">Delete this job?</h2>
+      <p class="text-sm mb-6" style="color:var(--muted)">This action cannot be undone.</p>
+      <div class="flex gap-2">
+        <button class="btn-danger flex-1" id="delete-confirm-btn" onclick="Jobs.confirmDelete()">Yes, delete</button>
+        <button class="btn-ghost flex-1" onclick="Modal.close('delete-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
 
-            // Format raw digit string into 123-456-7890 pattern
-            formatPhone(str) {
-                const digits = str.replace(/\D/g, '').slice(0, 10);
-                if (digits.length <= 3) return digits;
-                if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
-                return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
-            },
+  <!-- ══════════════ DELETE ACCOUNT MODAL ══════════════ -->
+  <div class="modal-overlay" id="delete-account-modal"
+    onclick="if(event.target===this) Modal.close('delete-account-modal')">
+    <div class="modal-box" style="max-width:320px">
+      <h2 class="serif text-lg mb-2 flex items-center gap-2">
+        <i class="fas fa-trash-alt" style="color:#b0421d; font-size:16px"></i>
+        Delete your account?
+      </h2>
+      <p class="text-sm mb-6" style="color:var(--muted)">This will permanently delete your account and all your posts.
+        This action cannot be undone.</p>
+      <div class="flex gap-2">
+        <button class="btn-danger flex-1" id="delete-account-confirm-btn" onclick="Auth.deleteAccount()">Yes,
+          delete</button>
+        <button class="btn-ghost flex-1" onclick="Modal.close('delete-account-modal')">Cancel</button>
+      </div>
+    </div>
+  </div>
 
-            formatDate(timestamp) {
-                if (!timestamp) return '';
-                const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            },
+  <div id="toast"></div>
 
-            // Read a single URL search param by key
-            getUrlParam(key) {
-                return new URLSearchParams(window.location.search).get(key);
-            },
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script>
 
-            // Capitalize each word, preserving known state/country abbreviations
-            capitalizeWords(str) {
-                const ABBR = ['NY', 'NJ', 'PA', 'CA', 'TX', 'FL', 'NYC', 'USA', 'UK', 'EU'];
-                if (!str) return str;
-                return str.split(' ').map(word =>
-                    ABBR.includes(word.toUpperCase())
-                        ? word.toUpperCase()
-                        : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                ).join(' ');
-            },
+    // =============================================================================
+    // CONFIGURATION
+    // =============================================================================
 
-            esc(str) {
-                if (!str) return '';
-                return String(str)
-                    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-            },
+    const CONFIG = Object.freeze({
+      // Firebase
+      FIREBASE: {
+        apiKey: "AIzaSyBAfwID0N0S-cJLWiyasBCrk2rdTaaUpy8",
+        authDomain: "jobs-38646.firebaseapp.com",
+        projectId: "jobs-38646",
+        storageBucket: "jobs-38646.firebasestorage.app",
+        messagingSenderId: "1090223046153",
+        appId: "1:1090223046153:web:ac5ab42c4fce2a44bd82d8"
+      },
+
+      // Views
+      ALL_VIEWS: ['browse', 'post', 'myposts'],
+      PROTECTED_VIEWS: ['post', 'myposts'],
+
+      // Pagination
+      PAGE_SIZE: 20,
+
+      // Timing
+      TIMING: {
+        SKELETON_DELAY_MS: 500,
+        TOAST_DURATION_MS: 3000
+      },
+
+      // Validation patterns
+      PATTERNS: {
+        PHONE: /^\d{3}-\d{3}-\d{4}$/,
+        EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      },
+
+      // Contact methods that require a phone number
+      PHONE_CONTACT_METHODS: ['Phone Call', 'Text Message', 'WhatsApp'],
+
+      // Auth error messages keyed by Firebase error code
+      AUTH_ERRORS: {
+        'auth/invalid-email': 'Invalid email address.',
+        'auth/user-not-found': 'No account with that email.',
+        'auth/wrong-password': 'Incorrect password.',
+        'auth/email-already-in-use': 'Email already registered.',
+        'auth/weak-password': 'Password must be at least 6 characters.',
+        'auth/invalid-credential': 'Incorrect email or password.'
+      },
+
+      // CSS class names
+      CLASSES: {
+        HIDDEN: 'hidden',
+        OPEN: 'open'
+      },
+
+      // Industry options for the custom select
+      INDUSTRY_OPTIONS: [
+        'Technology', 'Healthcare', 'Finance', 'Education', 'Retail',
+        'Hospitality', 'Construction', 'Legal', 'Media & Marketing', 'Non-Profit', 'Other'
+      ],
+
+      // Job type options for the custom select
+      JOB_TYPE_OPTIONS: ['Full-time', 'Part-time'],
+
+      // Known location abbreviations to preserve when capitalizing
+      LOCATION_ABBR: ['NY', 'NJ', 'PA', 'CA', 'TX', 'FL', 'NYC', 'USA', 'UK', 'EU'],
+
+      PILL_FILTERS: {
+        industry: {
+          label: 'Industry',
+          options: ['Technology', 'Healthcare', 'Finance', 'Education', 'Retail',
+            'Hospitality', 'Construction', 'Legal', 'Media & Marketing', 'Non-Profit', 'Other']
+        },
+        location: {
+          label: 'Location',
+          options: ['Boro Park NY', 'Crown Heights NY', 'Deal NJ', 'Far Rockaway NY', 'Flatbush NY',
+            'Jackson NJ', 'Lakewood NJ', 'Lawrence NY', 'Long Island NY', 'Monroe NY', 'Monsey NY',
+            'Upstate NY', 'Williamsburg NY', 'Montreal - CA', 'Toronto - CA', 'London - UK',
+            'Manchester - UK', 'Antwerp - EU', 'Belgium - EU', 'Israel']
+        },
+        type: {
+          label: 'Job Type',
+          options: ['Full-time', 'Part-time']
+        }
+      },
+    });
+
+
+    // =============================================================================
+    // UTILITIES
+    // =============================================================================
+
+    const Utils = {
+      // Normalize lowercase k to uppercase K in salary strings
+      formatSalary(str) {
+        return str.replace(/k/g, 'K');
+      },
+
+      // Format raw digit string into 123-456-7890 pattern
+      formatPhone(str) {
+        const digits = str.replace(/\D/g, '').slice(0, 10);
+        if (digits.length <= 3) return digits;
+        if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+        return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
+      },
+
+      // Format a Firestore timestamp or date string to readable date
+      formatDate(timestamp) {
+        if (!timestamp) return '';
+        const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      },
+
+      // Capitalize each word, preserving known abbreviations from CONFIG
+      capitalizeWords(str) {
+        if (!str) return str;
+        return str.split(' ').map(word =>
+          CONFIG.LOCATION_ABBR.includes(word.toUpperCase())
+            ? word.toUpperCase()
+            : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        ).join(' ');
+      },
+
+      // Escape HTML special characters
+      esc(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+    };
+
+
+    // =============================================================================
+    // DOM CACHE
+    // =============================================================================
+
+    const DOM = {
+      _cache: {},
+
+      get(id) {
+        if (!this._cache[id]) this._cache[id] = document.getElementById(id);
+        return this._cache[id];
+      },
+
+      init() {
+        [
+          // Auth
+          'auth-btn-signin', 'auth-menu-wrap', 'profile-initial', 'profile-dropdown',
+          'auth-email', 'auth-password', 'auth-submit-btn',
+          'auth-modal-title', 'auth-modal-sub', 'auth-toggle-text', 'auth-toggle-btn',
+          // Views
+          'view-browse', 'view-post', 'view-myposts',
+          // Browse
+          'header-post-btn', 'search-input', 'search-clear-btn',
+          'job-list', 'job-count',
+          // My Posts
+          'my-job-list', 'myposts-greeting',
+          // Post Form
+          'post-view-title', 'title', 'location', 'salary', 'desc',
+          'exp-toggle-btn', 'exp-toggle-dot', 'exp-field', 'exp', 'exp-years',
+          'contact-phone', 'contact-email', 'phone', 'email', 'submit-btn',
+          // Misc
+          'toast', 'delete-confirm-btn'
+        ].forEach(id => this.get(id));
+      }
+    };
+
+
+    // =============================================================================
+    // APPLICATION STATE
+    // =============================================================================
+
+    const State = {
+      // Auth
+      currentUser: null,
+      authReady: false,
+      signingOut: false,
+
+      // Navigation
+      currentView: 'browse',
+
+      // Jobs data
+      allJobs: [],
+      myJobs: [],
+
+      // Pagination
+      jobsPage: 1,
+
+      // Pending operations
+      _editingJobId: null,
+      _pendingDeleteId: null,
+
+      // Check if current view requires auth
+      isProtectedView() {
+        return CONFIG.PROTECTED_VIEWS.includes(this.currentView);
+      }
+    };
+
+
+    // =============================================================================
+    // URL SYNC
+    // =============================================================================
+
+    const UrlSync = {
+      // Read all relevant URL params at once
+      read() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+          view: params.get('view') || 'browse',
+          auth: params.get('auth') || null,
+          edit: params.get('edit') || null
         };
+      },
+
+      // Push a new history entry
+      push(params) {
+        window.history.pushState({}, '', this._buildUrl(params));
+      },
+
+      // Replace current history entry
+      replace(params) {
+        window.history.replaceState({}, '', this._buildUrl(params));
+      },
+
+      _buildUrl(params) {
+        const url = new URL(window.location);
+
+        if ('view' in params) {
+          params.view === 'browse'
+            ? url.searchParams.delete('view')
+            : url.searchParams.set('view', params.view);
+        }
+        if ('auth' in params) {
+          params.auth === null
+            ? url.searchParams.delete('auth')
+            : url.searchParams.set('auth', params.auth);
+        }
+        if ('edit' in params) {
+          params.edit === null
+            ? url.searchParams.delete('edit')
+            : url.searchParams.set('edit', params.edit);
+        }
+
+        return url;
+      }
+    };
 
 
-        // =============================================================================
-        // DOM CACHE
-        // =============================================================================
+    // =============================================================================
+    // TEMPLATES
+    // =============================================================================
 
-        const DOM = {
-            _cache: {},
-
-            get(id) {
-                if (!this._cache[id]) this._cache[id] = document.getElementById(id);
-                return this._cache[id];
-            },
-
-            init() {
-                [
-                    // Auth
-                    'auth-btn-signin', 'auth-menu-wrap', 'profile-initial', 'profile-dropdown',
-                    'auth-email', 'auth-password', 'auth-submit-btn',
-                    'auth-modal-title', 'auth-modal-sub', 'auth-toggle-text', 'auth-toggle-btn',
-                    'view-browse', 'view-post', 'view-myposts',
-                    'header-post-btn', 'search-input', 'filter-type', 'search-clear-btn',
-                    'job-list', 'job-count', 'my-job-list', 'myposts-greeting',
-                    'title', 'location', 'salary', 'desc',
-                    'exp-toggle-btn', 'exp-toggle-dot', 'exp-field', 'exp', 'exp-years',
-                    'contact-phone', 'contact-email', 'phone', 'email', 'submit-btn',
-                    'toast', 'delete-confirm-btn',
-                ].forEach(id => this.get(id));
-            }
-        };
-
-
-        // =============================================================================
-        // APPLICATION STATE
-        // =============================================================================
-
-        const State = {
-            currentUser: null,
-            currentView: 'browse',
-            authReady: false,    // true after Firebase resolves the first auth check
-            signingOut: false,
-            allJobs: [],    // prevents auth guard from firing on intentional sign-out
-            myJobs: [],
-            filteredJobs: [],
-            _editingJobId: null,
-            _pendingDeleteId: null,
-            jobsPage: 1,
-            PAGE_SIZE: 5,
-
-            isProtectedView() {
-                return CONFIG.PROTECTED_VIEWS.includes(this.currentView);
-            }
-        };
-
-
-        // =============================================================================
-        // URL SYNC
-        // =============================================================================
-
-        const UrlSync = {
-            // Read all URL state at once
-            read() {
-                const params = new URLSearchParams(window.location.search);
-                return {
-                    view: params.get('view') || 'browse',
-                    auth: params.get('auth') || null,
-                    edit: params.get('edit') || null,
-                };
-            },
-
-            // Push a new history entry — pass only the params you want to change
-            push(params) {
-                window.history.pushState({}, '', this._buildUrl(params));
-            },
-
-            // Replace current history entry — pass only the params you want to change
-            replace(params) {
-                window.history.replaceState({}, '', this._buildUrl(params));
-            },
-
-            _buildUrl(params) {
-                const url = new URL(window.location);
-                if ('view' in params) {
-                    params.view === 'browse'
-                        ? url.searchParams.delete('view')
-                        : url.searchParams.set('view', params.view);
-                }
-                if ('auth' in params) {
-                    params.auth === null
-                        ? url.searchParams.delete('auth')
-                        : url.searchParams.set('auth', params.auth);
-                }
-                if ('edit' in params) {
-                    params.edit === null
-                        ? url.searchParams.delete('edit')
-                        : url.searchParams.set('edit', params.edit);
-                }
-                return url;
-            }
-        };
-
-
-        // =============================================================================
-        // TEMPLATES
-        // =============================================================================
-
-        const Templates = {
-            jobCard(job, showActions = false, prefix = '') {
-                return `
-        <div class="job-card mb-2" id="card-${prefix}${job.id}" onclick="UI.toggleCard('${prefix}${job.id}')">
-                <div class="flex justify-between items-center gap-3 p-4">
-                    <div class="flex-1 min-w-0">
-                        <p class="text-[10px] font-semibold uppercase tracking-widest mb-1" style="color:var(--accent)">
-                            ${Utils.esc(job.industry || '—')}
-                        </p>
-                        <p class="text-[15px] font-semibold leading-snug mb-1" style="color:var(--ink)">
-                            ${Utils.esc(job.title || '—')}
-                        </p>
-                        <p class="text-[11px]" style="color:var(--muted)">
-                            ${Utils.esc(job.location || '—')}${job.experienceRequired ? ` · ${Utils.esc(job.experienceRequired)}` : ''}
-                        </p>
-                    </div>
-                    <div class="text-right flex-shrink-0">
-                        <p class="text-[13px] font-semibold" style="color:var(--ink)">
-                            ${Utils.esc(job.salaryRange || '—')}
-                        </p>
-                        <p class="text-[10px] font-semibold uppercase tracking-wide mt-0.5"
-                            style="color:${job.jobType === 'Full-time' ? '#2D6A35' : '#9A5B10'}">
-                            ${Utils.esc(job.jobType || '—')}
-                        </p>
-                        <p class="text-[10px] mt-1" style="color:var(--muted)">
-                            ${Utils.formatDate(job.createdAt)}
-                        </p>
-                    </div>
-                </div>
-                <div class="job-details" id="details-${prefix}${job.id}">
-                    <div>
-                        <div class="detail-divider mx-4"></div>
-                        <div class="px-4 py-4">
-                            <p class="text-xs font-semibold mb-2 uppercase tracking-wide" style="color:var(--muted)">
-                                Description
-                            </p>
-                            <p class="text-sm leading-relaxed whitespace-pre-line">${Utils.esc(job.description || 'No description provided.')}</p>
-                            <div class="mt-4 flex items-start justify-between gap-4">
-                                <div class="flex flex-col gap-1">
-                                    ${job.contactPhone ? `<p class="text-xs" style="color:var(--accent)">${Utils.esc(job.contactPhone)}</p>` : ''}
-                                    ${job.contactEmail ? `<p class="text-xs" style="color:var(--accent)">${Utils.esc(job.contactEmail)}</p>` : ''}
-                                    <div class="flex items-center gap-2 mt-1" onclick="event.stopPropagation()">
-                                        ${(job.contactMethods || []).includes('WhatsApp') ? `
-                                          <a href="https://wa.me/${(job.contactPhone || '').replace(/\\D/g, '')}" target="_blank" style="color:var(--accent)" class="p-1">
-                                            <svg viewBox="0 0 80.6 80.59" fill="currentColor" class="w-4 h-4">
-                                              <path d="m32.8,0C14.71,0,0,14.71,0,32.79c0,6.99,2.17,13.63,6.28,19.27l-2.62,13.53,12.78-4.4c4.99,2.89,10.62,4.4,16.36,4.4,18.09,0,32.8-14.71,32.8-32.8S50.89,0,32.8,0Zm16.32,45.7c-.82.82-3.22,3.35-6.83,3.35s-12.21-2.94-16.79-7.52c-4.58-4.58-8.65-9.23-9.61-13.46-.96-4.23-.84-6.14.35-7.88,0,0,1.92-3.36,3.49-3.55,1.57-.2,3.59-.2,4.14.83.54,1.02,2.97,6.98,2.97,6.98,0,0,.42,1.03-.22,2.02-.64,1-2.08,2.44-2.08,2.44,0,0-.8,1.02,0,2.11.8,1.09,2.04,3.1,4.61,5.66,2.57,2.57,7.5,4.4,7.5,4.4,0,0,.71.1,1.15-.35.45-.45,2.89-3.49,2.89-3.49,0,0,.78-1.01,2.08-.42,1.3.6,6.92,3.4,6.92,3.4,0,0,.66.24.66,1.23s-.41,3.42-1.23,4.25Z"/>
-                                            </svg>
-                                          </a>` : ''}
-                                        ${(job.contactMethods || []).includes('Phone Call') ? `
-                                          <a href="tel:${Utils.esc(job.contactPhone || '')}" style="color:var(--accent)" class="p-1">
-                                            <i class="fas fa-phone text-sm"></i>
-                                          </a>` : ''}
-                                        ${(job.contactMethods || []).includes('Text Message') ? `
-                                          <a href="sms:${Utils.esc(job.contactPhone || '')}" style="color:var(--accent)" class="p-1">
-                                            <i class="fas fa-sms text-sm"></i>
-                                          </a>` : ''}
-                                        ${(job.contactMethods || []).includes('Email') ? `
-                                          <a href="mailto:${Utils.esc(job.contactEmail || '')}" style="color:var(--accent)" class="p-1">
-                                            <i class="fas fa-envelope text-sm"></i>
-                                          </a>` : ''}
-                                    </div>
-                                </div>
-                                <p class="text-xs flex-shrink-0" style="color:var(--muted)">
-                                    Job ID #${Utils.esc(job.id)}
+    const Templates = {
+      jobCard(job, showActions = false, prefix = '') {
+        return `
+                    <div class="job-card mb-2" id="card-${prefix}${job.id}" onclick="UI.toggleCard('${prefix}${job.id}')">
+                        <div class="flex justify-between items-center gap-3 p-4">
+                            <div class="flex-1 min-w-0">
+                                <p class="text-[10px] font-semibold uppercase tracking-widest mb-1" style="color:var(--accent)">
+                                    ${Utils.esc(job.industry || '—')}
+                                </p>
+                                <p class="text-[15px] font-semibold leading-snug mb-1" style="color:var(--ink)">
+                                    ${Utils.esc(job.title || '—')}
+                                </p>
+                                <p class="text-[11px]" style="color:var(--muted)">
+                                    ${Utils.esc(job.location || '—')}${job.experienceRequired ? ` · ${Utils.esc(job.experienceRequired)}` : ''}
                                 </p>
                             </div>
-                            ${showActions ? `
-                            <div class="flex gap-2 mt-4" onclick="event.stopPropagation()">
-                                <button class="btn-ghost" onclick="Form.loadEdit('${job.id}')">Edit</button>
-                                <button class="btn-danger" onclick="Jobs.deleteJob('${job.id}')">Delete</button>
-                            </div>` : ''}
+                            <div class="text-right flex-shrink-0">
+                                <p class="text-[13px] font-semibold" style="color:var(--ink)">
+                                    ${Utils.esc(job.salaryRange || '—')}
+                                </p>
+                                <p class="text-[10px] font-semibold uppercase tracking-wide mt-0.5"
+                                    style="color:${job.jobType === 'Full-time' ? '#2D6A35' : '#9A5B10'}">
+                                    ${Utils.esc(job.jobType || '—')}
+                                </p>
+                                <p class="text-[10px] mt-1" style="color:var(--muted)">
+                                    ${Utils.formatDate(job.createdAt)}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>`;
-            },
+                        <div class="job-details" id="details-${prefix}${job.id}">
+                            <div>
+                                <div class="detail-divider mx-4"></div>
+                                <div class="px-4 py-4">
+                                    <p class="text-xs font-semibold mb-2 uppercase tracking-wide" style="color:var(--muted)">Description</p>
+                                    <p class="text-sm leading-relaxed whitespace-pre-line">${Utils.esc(job.description || 'No description provided.')}</p>
+                                    <div class="mt-4 flex items-start justify-between gap-4">
+                                        <div class="flex flex-col gap-1">
+                                            ${job.contactPhone ? `<p class="text-xs" style="color:var(--accent)">${Utils.esc(job.contactPhone)}</p>` : ''}
+                                            ${job.contactEmail ? `<p class="text-xs" style="color:var(--accent)">${Utils.esc(job.contactEmail)}</p>` : ''}
+                                            <div class="flex items-center gap-2 mt-1" onclick="event.stopPropagation()">
+                                                ${(job.contactMethods || []).includes('WhatsApp') ? `
+                                                    <a href="https://wa.me/${(job.contactPhone || '').replace(/\\D/g, '')}" target="_blank" style="color:var(--accent)" class="p-1">
+                                                        <svg viewBox="0 0 80.6 80.59" fill="currentColor" class="w-4 h-4">
+                                                            <path d="m32.8,0C14.71,0,0,14.71,0,32.79c0,6.99,2.17,13.63,6.28,19.27l-2.62,13.53,12.78-4.4c4.99,2.89,10.62,4.4,16.36,4.4,18.09,0,32.8-14.71,32.8-32.8S50.89,0,32.8,0Zm16.32,45.7c-.82.82-3.22,3.35-6.83,3.35s-12.21-2.94-16.79-7.52c-4.58-4.58-8.65-9.23-9.61-13.46-.96-4.23-.84-6.14.35-7.88,0,0,1.92-3.36,3.49-3.55,1.57-.2,3.59-.2,4.14.83.54,1.02,2.97,6.98,2.97,6.98,0,0,.42,1.03-.22,2.02-.64,1-2.08,2.44-2.08,2.44,0,0-.8,1.02,0,2.11.8,1.09,2.04,3.1,4.61,5.66,2.57,2.57,7.5,4.4,7.5,4.4,0,0,.71.1,1.15-.35.45-.45,2.89-3.49,2.89-3.49,0,0,.78-1.01,2.08-.42,1.3.6,6.92,3.4,6.92,3.4,0,0,.66.24.66,1.23s-.41,3.42-1.23,4.25Z"/>
+                                                        </svg>
+                                                    </a>` : ''}
+                                                ${(job.contactMethods || []).includes('Phone Call') ? `
+                                                    <a href="tel:${Utils.esc(job.contactPhone || '')}" style="color:var(--accent)" class="p-1">
+                                                        <i class="fas fa-phone text-sm"></i>
+                                                    </a>` : ''}
+                                                ${(job.contactMethods || []).includes('Text Message') ? `
+                                                    <a href="sms:${Utils.esc(job.contactPhone || '')}" style="color:var(--accent)" class="p-1">
+                                                        <i class="fas fa-sms text-sm"></i>
+                                                    </a>` : ''}
+                                                ${(job.contactMethods || []).includes('Email') ? `
+                                                    <a href="mailto:${Utils.esc(job.contactEmail || '')}" style="color:var(--accent)" class="p-1">
+                                                        <i class="fas fa-envelope text-sm"></i>
+                                                    </a>` : ''}
+                                            </div>
+                                        </div>
+                                        <p class="text-xs flex-shrink-0" style="color:var(--muted)">Job ID #${Utils.esc(job.id)}</p>
+                                    </div>
+                                    ${showActions ? `
+                                        <div class="flex gap-2 mt-4" onclick="event.stopPropagation()">
+                                            <button class="btn-ghost" onclick="Form.loadEdit('${job.id}')">Edit</button>
+                                            <button class="btn-danger" onclick="Jobs.deleteJob('${job.id}')">Delete</button>
+                                        </div>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+      },
 
-            skeletonCards(count = 8) {
-                return Array(count).fill(0).map(() => `
+      skeletonCards(count = 8) {
+        return Array(count).fill(0).map(() => `
                     <div class="job-card mb-2 p-4">
                         <div class="flex justify-between items-start gap-3">
                             <div class="flex-1 space-y-2">
@@ -1031,858 +1059,993 @@
                         </div>
                     </div>
                 `).join('');
-            },
-
-            loadMoreBtn: () => `
-                <button id="load-more-btn" onclick="Jobs.loadMore()"
-                    class="w-full mt-4 py-3 text-sm font-medium rounded-lg"
-                    style="border:1px solid var(--border); color:var(--muted); background:var(--card); cursor:pointer">
-                    Load more
-                </button>
-            `,
-
-            emptyState: (msg) => `<div class="state-msg">${msg}</div>`,
-            loadingState: () => `<div class="state-msg">Loading…</div>`,
-            errorState: (msg) => `<div class="state-msg">Error loading posts.<br><small>${msg}</small></div>`
-        };
-
-
-        // =============================================================================
-        // DATABASE
-        // =============================================================================
-
-        const Database = {
-            db: null,
-
-            init() {
-                firebase.initializeApp(CONFIG.FIREBASE);
-                this.db = firebase.firestore();
-            },
-
-            async getAllJobs() {
-                return this.db
-                    .collection('jobs')
-                    .orderBy('createdAt', 'desc')
-                    .get();
-            },
-
-            async getMyJobs(uid) {
-                return this.db
-                    .collection('jobs')
-                    .where('uid', '==', uid)
-                    .orderBy('createdAt', 'desc')
-                    .get();
-            },
-
-            async addJob(data, uid) {
-                // Use sequential numeric IDs matching existing data
-                const snapshot = await this.db.collection('jobs').get();
-                const ids = snapshot.docs.map(d => parseInt(d.id)).filter(n => !isNaN(n));
-                const nextId = String(ids.length ? Math.max(...ids) + 1 : 1);
-                return this.db.collection('jobs').doc(nextId).set({
-                    ...data,
-                    uid,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            },
-
-            async updateJob(jobId, data) {
-                return this.db.collection('jobs').doc(jobId).update(data);
-            },
-
-            async deleteJob(jobId) {
-                return this.db.collection('jobs').doc(jobId).delete();
-            }
-        };
-
-
-        // =============================================================================
-        // AUTH
-        // =============================================================================
-
-        const Auth = {
-            _firebaseAuth: null,
-
-            init(firebaseAuth) {
-                this._firebaseAuth = firebaseAuth;
-                DOM.get('auth-submit-btn').addEventListener('click', () => Auth.submit());
-                this._firebaseAuth.onAuthStateChanged(user => Auth._onStateChange(user));
-            },
-
-            async submit() {
-                const email = DOM.get('auth-email').value.trim();
-                const password = DOM.get('auth-password').value;
-                if (!email || !password) { UI.toast('Please enter email and password.'); return; }
-
-                const button = DOM.get('auth-submit-btn');
-                const isRegister = Modal._authMode === 'register';
-                UI.setButtonLoading(button, 'Please wait…');
-
-                try {
-                    isRegister
-                        ? await this._firebaseAuth.createUserWithEmailAndPassword(email, password)
-                        : await this._firebaseAuth.signInWithEmailAndPassword(email, password);
-                    UI.toast(isRegister ? 'Account created — welcome!' : 'Welcome back!');
-                    Modal.close('auth-modal');
-                    DOM.get('auth-email').value = '';
-                    DOM.get('auth-password').value = '';
-                } catch (error) {
-                    UI.toast(CONFIG.AUTH_ERRORS[error.code] || 'Something went wrong.');
-                } finally {
-                    UI.resetButton(button, isRegister ? 'Register' : 'Sign In');
-                }
-            },
-
-            async signOut() {
-                State.signingOut = true;
-                await this._firebaseAuth.signOut();
-                UI.toast('Signed out.');
-                Navigation.show('browse');
-            },
-
-            requireAuth(view) {
-                State.currentUser ? Navigation.show(view) : Modal.open('auth-modal');
-            },
-
-            _onStateChange(user) {
-                State.currentUser = user;
-                Header.render(user);
-                State.authReady
-                    ? Auth._guardSession(user)
-                    : Auth._resolveInitialView(user);
-            },
-
-            // Called once on page load — shows correct view based on URL and auth state
-            _resolveInitialView(user) {
-                const { view } = UrlSync.read();
-                State.currentView = view;
-                UrlSync.replace({ view });
-
-                // Restore auth modal if URL has ?auth= param and user is not signed in
-                const { auth: authParam } = UrlSync.read();
-                if (authParam && !user) {
-                    if (authParam === 'register') Modal.toggleAuthMode();
-                    Modal.open('auth-modal', false);
-                }
-
-                if (user) {
-                    Navigation.show(view, false);
-                    if (view === 'myposts') Jobs.loadMyJobs();
-                } else if (CONFIG.PROTECTED_VIEWS.includes(view)) {
-                    Navigation.show('browse', false);
-                    UrlSync.replace({ view: 'browse' });
-                    Modal.open('auth-modal');
-                } else {
-                    Navigation.show(view, false);
-                }
-
-                document.body.style.visibility = 'visible';
-                State.authReady = true;
-            },
-
-            // Called on subsequent auth changes — guards protected views on sign-out
-            _guardSession(user) {
-                if (!user && State.isProtectedView() && !State.signingOut) {
-                    Navigation.show('browse');
-                    UrlSync.replace({ view: 'browse' });
-                    Modal.open('auth-modal');
-                }
-            },
-
-            async deleteAccount() {
-                if (!State.currentUser) return;
-                try {
-                    // Delete all user's jobs first
-                    const snapshot = await Database.getMyJobs(State.currentUser.uid);
-                    const batch = Database.db.batch();
-                    snapshot.docs.forEach(doc => batch.delete(doc.ref));
-                    await batch.commit();
-
-                    State.signingOut = true;
-                    await State.currentUser.delete();
-                    UI.toast('Account deleted.');
-                    Modal.close('delete-account-modal');
-                    Navigation.show('browse');
-                } catch (error) {
-                    if (error.code === 'auth/requires-recent-login') {
-                        UI.toast('Please sign out, sign back in, then try again.');
-                    } else {
-                        UI.toast('Error: ' + error.message);
-                    }
-                }
-            }
-        };
-
-
-        // =============================================================================
-        // HEADER
-        // =============================================================================
-
-        const Header = {
-            init() {
-                // Close dropdown when clicking outside the profile menu
-                document.addEventListener('click', (event) => {
-                    if (!DOM.get('auth-menu-wrap').contains(event.target)) {
-                        DOM.get('profile-dropdown').classList.add(CONFIG.CLASSES.HIDDEN);
-                    }
-                });
-            },
-
-            render(user) {
-                const signinButton = DOM.get('auth-btn-signin');
-                const menuWrap = DOM.get('auth-menu-wrap');
-                const profileInitial = DOM.get('profile-initial');
-
-                if (user) {
-                    signinButton.classList.add(CONFIG.CLASSES.HIDDEN);
-                    menuWrap.classList.remove(CONFIG.CLASSES.HIDDEN);
-                    profileInitial.textContent = (user.email || '?')[0].toUpperCase();
-                } else {
-                    signinButton.classList.remove(CONFIG.CLASSES.HIDDEN);
-                    menuWrap.classList.add(CONFIG.CLASSES.HIDDEN);
-                }
-            },
-
-            toggleProfileMenu() {
-                DOM.get('profile-dropdown').classList.toggle(CONFIG.CLASSES.HIDDEN);
-            },
-
-            closeProfileMenu() {
-                DOM.get('profile-dropdown').classList.add(CONFIG.CLASSES.HIDDEN);
-            }
-        };
-
-
-        // =============================================================================
-        // NAVIGATION
-        // =============================================================================
-
-        const Navigation = {
-            init() {
-                window.addEventListener('popstate', () => Navigation._onPopState());
-            },
-
-            _onPopState() {
-                const { view, auth: authParam } = UrlSync.read();
-
-                if (authParam) {
-                    if (authParam === 'register' && Modal._authMode !== 'register') Modal.toggleAuthMode();
-                    if (authParam === 'signin' && Modal._authMode !== 'signin') Modal.toggleAuthMode();
-                    Modal.open('auth-modal', false);
-                } else {
-                    Modal.close('auth-modal');
-                }
-
-                // Clear edit state when navigating away from post view
-                if (view !== 'post' && State._editingJobId) {
-                    State._editingJobId = null;
-                    UrlSync.replace({ edit: null });
-                }
-
-                Navigation.show(view, false);
-            },
-
-            show(view, updateUrl = true) {
-                ['browse', 'post', 'myposts'].forEach(v =>
-                    DOM.get(`view-${v}`)?.classList.add(CONFIG.CLASSES.HIDDEN)
-                );
-                DOM.get(`view-${view}`)?.classList.remove(CONFIG.CLASSES.HIDDEN);
-
-                State.currentView = view;
-                window.scrollTo(0, 0);
-                if (updateUrl) UrlSync.push({ view });
-
-                DOM.get('header-post-btn').classList.toggle(CONFIG.CLASSES.HIDDEN, view === 'post');
-
-                if (view === 'browse') Jobs.loadAllJobs();
-                if (view === 'myposts') Jobs.loadMyJobs();
-                if (view === 'post' && !State._editingJobId) Form.clear();
-            }
-        };
-
-
-        // =============================================================================
-        // JOBS
-        // =============================================================================
-
-        const Jobs = {
-            async loadAllJobs() {
-                const list = DOM.get('job-list');
-                const count = DOM.get('job-count');
-                count.textContent = '';
-                list.innerHTML = Templates.skeletonCards(8);
-
-                try {
-                    const [snapshot] = await Promise.all([
-                        Database.getAllJobs(),
-                        new Promise(r => setTimeout(r, CONFIG.TIMING.SKELETON_DELAY_MS))
-                    ]);
-
-                    if (snapshot.empty) {
-                        count.textContent = '';
-                        list.innerHTML = Templates.emptyState('No openings found. Be the first to post one!');
-                        return;
-                    }
-
-                    State.allJobs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    Search.filter();
-
-                } catch (error) {
-                    list.innerHTML = Templates.errorState(error.message);
-                }
-            },
-
-            async loadMyJobs() {
-                const list = DOM.get('my-job-list');
-                const greeting = DOM.get('myposts-greeting');
-                if (!State.currentUser) return;
-
-                greeting.textContent = State.currentUser.email;
-                list.innerHTML = Templates.skeletonCards(8);
-
-                try {
-                    const [snapshot] = await Promise.all([
-                        Database.getMyJobs(State.currentUser.uid),
-                        new Promise(r => setTimeout(r, CONFIG.TIMING.SKELETON_DELAY_MS))
-                    ]);
-                    if (snapshot.empty) {
-                        list.innerHTML = Templates.emptyState("You haven't posted any jobs yet.");
-                        return;
-                    }
-                    State.myJobs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    list.innerHTML = State.myJobs.map(job => Templates.jobCard(job, true, 'my-')).join('');
-                } catch (error) {
-                    list.innerHTML = Templates.errorState(error.message);
-                }
-            },
-
-            deleteJob(jobId) {
-                State._pendingDeleteId = jobId;
-                Modal.open('delete-modal');
-            },
-
-            async confirmDelete() {
-                if (!State._pendingDeleteId) return;
-                const button = DOM.get('delete-confirm-btn');
-                UI.setButtonLoading(button, 'Deleting…');
-                try {
-                    await Database.deleteJob(State._pendingDeleteId);
-                    UI.toast('Job deleted.');
-                    Modal.close('delete-modal');
-                    State._pendingDeleteId = null;
-                    await Jobs.loadMyJobs();
-                } catch (error) {
-                    UI.toast('Error deleting job: ' + error.message);
-                } finally {
-                    UI.resetButton(button, 'Yes, delete');
-                }
-            },
-
-            loadMore() {
-                State.jobsPage++;
-                Search._render();
-            },
-        };
-
-        // =============================================================================
-        // SEARCH
-        // =============================================================================
-
-        const Search = {
-            filter() {
-                State.jobsPage = 1;
-                Search.toggleClearButton();
-                const query = DOM.get('search-input').value.toLowerCase().trim();
-                const type = DOM.get('filter-type').value;
-
-                Search.filteredJobs = State.allJobs.filter(job => {
-                    const matchText = !query ||
-                        (job.title || '').toLowerCase().includes(query) ||
-                        (job.industry || '').toLowerCase().includes(query);
-                    const matchType = !type || job.jobType === type;
-                    return matchText && matchType;
-                });
-
-                Search._render();
-            },
-
-            _render() {
-                const list = DOM.get('job-list');
-                const count = DOM.get('job-count');
-
-                if (!Search.filteredJobs.length) {
-                    count.textContent = '';
-                    list.innerHTML = Templates.emptyState('No openings match your search.');
-                    return;
-                }
-
-                const total = Search.filteredJobs.length;
-                const visible = Search.filteredJobs.slice(0, State.jobsPage * State.PAGE_SIZE);
-                const hasMore = visible.length < total;
-
-                count.textContent = `${total} opening${total !== 1 ? 's' : ''} found`;
-                list.innerHTML = visible.map(job => Templates.jobCard(job, false)).join('');
-                if (hasMore) list.innerHTML += Templates.loadMoreBtn();
-            },
-
-            toggleClearButton() {
-                const hasValue = DOM.get('search-input').value.trim().length > 0;
-                const btn = DOM.get('search-clear-btn');
-                btn.classList.toggle('hidden', !hasValue);
-                btn.classList.toggle('flex', hasValue);
-            },
-
-            clearSearch() {
-                DOM.get('search-input').value = '';
-                DOM.get('filter-type').value = '';
-                this.toggleClearButton();
-                this.filter();
-                DOM.get('search-input').focus();
-            }
-        };
-
-        // =============================================================================
-        // FORM
-        // =============================================================================
-
-        const Form = {
-            async submit() {
-                const data = Form.collect();
-                const isEdit = !!State._editingJobId;
-                if (!Form.validate(data)) return;
-
-                const button = DOM.get('submit-btn');
-                UI.setButtonLoading(button, isEdit ? 'Saving…' : 'Posting…');
-
-                try {
-                    if (isEdit) {
-                        await Database.updateJob(State._editingJobId, data);
-                        UI.toast('Job updated!');
-                    } else {
-                        await Database.addJob(data, State.currentUser.uid);
-                        UI.toast('Job posted successfully!');
-                    }
-                    State._editingJobId = null;
-                    UrlSync.replace({ edit: null });
-                    Navigation.show('myposts');
-                } catch (error) {
-                    UI.toast('Error: ' + error.message);
-                } finally {
-                    UI.resetButton(button, isEdit ? 'Save Changes' : 'Post Job');
-                }
-            },
-
-            collect() {
-                return {
-                    title: Utils.capitalizeWords(DOM.get('title').value.trim()),
-                    industry: CustomSelect.getValue('industry'),
-                    location: Utils.capitalizeWords(DOM.get('location').value.trim()),
-                    salaryRange: DOM.get('salary').value.trim(),
-                    jobType: CustomSelect.getValue('jobtype'),
-                    experienceRequired: DOM.get('exp').value,
-                    description: DOM.get('desc').value.trim(),
-                    contactMethods: Array.from(document.querySelectorAll('input[name="contact"]:checked')).map(cb => cb.value),
-                    contactPhone: DOM.get('phone')?.value.trim() || '',
-                    contactEmail: DOM.get('email')?.value.trim() || '',
-                };
-            },
-
-            validate(data) {
-                let valid = true;
-
-                const check = (condition, errorId, fieldId) => {
-                    const errorEl = document.getElementById(errorId);
-                    const fieldEl = fieldId ? document.getElementById(fieldId) : null;
-                    const targetEl = fieldEl?.classList.contains('custom-select')
-                        ? fieldEl.querySelector('.cs-box')
-                        : fieldEl;
-
-                    errorEl?.classList.toggle('hidden', !condition);
-                    if (targetEl) targetEl.style.borderColor = condition ? '#b0421d' : '';
-                    if (condition) valid = false;
-                };
-
-                const expOn = DOM.get('exp-toggle-btn').getAttribute('aria-pressed') === 'true';
-                const needsPhone = data.contactMethods.some(v => ['Phone Call', 'Text Message', 'WhatsApp'].includes(v));
-
-                check(!data.title, 'title-error', 'title');
-                check(!data.industry, 'industry-error', 'industry-container');
-                check(!data.location, 'location-error', 'location');
-                check(!data.jobType, 'jobtype-error', 'jobtype-container');
-                check(!data.description, 'desc-error', 'desc');
-                check(expOn && (!data.experienceRequired || isNaN(parseInt(data.experienceRequired))), 'exp-error', 'exp-years');
-                check(!data.contactMethods.length, 'contact-error', null);
-                check(needsPhone && !CONFIG.PATTERNS.PHONE.test(data.contactPhone), 'phone-error', 'phone');
-                check(data.contactMethods.includes('Email') && !CONFIG.PATTERNS.EMAIL.test(data.contactEmail), 'email-error', 'email');
-
-                if (!valid) {
-                    document.querySelector('.error-msg:not(.hidden)')
-                        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-
-                return valid;
-            },
-
-            loadEdit(jobId) {
-                const job = State.myJobs.find(j => j.id === jobId);
-                if (!job) return;
-
-                State._editingJobId = jobId;
-                Navigation.show('post');
-                UrlSync.replace({ edit: jobId });
-
-                // Prefill fields
-                DOM.get('title').value = job.title || '';
-                DOM.get('location').value = job.location || '';
-                DOM.get('salary').value = job.salaryRange || '';
-                DOM.get('desc').value = job.description || '';
-                CustomSelect.setValue('industry', job.industry);
-                CustomSelect.setValue('jobtype', job.jobType);
-
-                // Experience toggle
-                if (job.experienceRequired) {
-                    if (DOM.get('exp-toggle-btn').getAttribute('aria-pressed') === 'false') {
-                        UI.toggleExpField();
-                    }
-                    const years = parseInt(job.experienceRequired);
-                    if (!isNaN(years)) {
-                        DOM.get('exp-years').value = years;
-                        UI.syncExpValue();
-                    }
-                }
-
-                // Contact methods
-                document.querySelectorAll('input[name="contact"]').forEach(cb => {
-                    cb.checked = (job.contactMethods || []).includes(cb.value);
-                });
-                DOM.get('phone').value = job.contactPhone || '';
-                DOM.get('email').value = job.contactEmail || '';
-                UI.toggleContactInput();
-
-                Form._setEditMode(true);
-            },
-
-            _setEditMode(isEdit) {
-                document.getElementById('post-view-title').textContent = isEdit ? 'Edit Opening' : 'Post an Opening';
-                DOM.get('submit-btn').textContent = isEdit ? 'Save Changes' : 'Post Job';
-            },
-
-            clear() {
-                // Text fields
-                ['title', 'location', 'salary', 'desc'].forEach(id => DOM.get(id).value = '');
-
-                // Custom selects
-                CustomSelect.reset('industry');
-                CustomSelect.reset('jobtype');
-
-                // Experience toggle — turn off if currently on
-                if (DOM.get('exp-toggle-btn').getAttribute('aria-pressed') === 'true') {
-                    UI.toggleExpField();
-                }
-
-                // Contact checkboxes and inputs
-                document.querySelectorAll('input[name="contact"]').forEach(cb => cb.checked = false);
-                DOM.get('contact-phone').classList.add(CONFIG.CLASSES.HIDDEN);
-                DOM.get('contact-email').classList.add(CONFIG.CLASSES.HIDDEN);
-                DOM.get('phone').value = '';
-                DOM.get('email').value = '';
-
-                // Clear all error states
-                document.querySelectorAll('.error-msg').forEach(el => el.classList.add(CONFIG.CLASSES.HIDDEN));
-                document.querySelectorAll('.cs-box, input, textarea').forEach(el => el.style.borderColor = '');
-
-                State._editingJobId = null;
-                Form._setEditMode(false);
-                UrlSync.replace({ edit: null });
-            }
-        };
-
-
-        // =============================================================================
-        // MODAL
-        // =============================================================================
-
-        const Modal = {
-            _authMode: 'signin',
-
-            open(id, updateUrl = true) {
-                DOM.get(id)?.classList.add(CONFIG.CLASSES.OPEN);
-                if (id === 'auth-modal' && updateUrl) UrlSync.push({ auth: this._authMode });
-            },
-
-            close(id) {
-                DOM.get(id)?.classList.remove(CONFIG.CLASSES.OPEN);
-                if (id === 'auth-modal') UrlSync.replace({ auth: null });
-            },
-
-            toggleAuthMode() {
-                const toRegister = this._authMode !== 'register';
-                this._authMode = toRegister ? 'register' : 'signin';
-                UrlSync.replace({ auth: this._authMode });
-
-                DOM.get('auth-modal-title').textContent = toRegister ? 'Create Account' : 'Sign In';
-                DOM.get('auth-modal-sub').textContent = toRegister ? 'Join to post jobs' : 'Access your job postings';
-                DOM.get('auth-submit-btn').textContent = toRegister ? 'Register' : 'Sign In';
-                DOM.get('auth-toggle-text').textContent = toRegister ? 'Already have an account?' : 'No account?';
-                DOM.get('auth-toggle-btn').textContent = toRegister ? 'Sign In' : 'Register';
-            }
-        };
-
-
-        // =============================================================================
-        // CUSTOM SELECT
-        // =============================================================================
-
-        const CustomSelect = {
-            _openDropdown: null,
-
-            init() {
-                document.querySelectorAll('.custom-select').forEach(container => this._build(container));
-                document.addEventListener('click', () => this._closeAll());
-            },
-
-            _build(container) {
-                const placeholder = container.dataset.placeholder || 'Select…';
-                const options = JSON.parse(container.dataset.options || '[]');
-                container._value = '';
-
-                const box = this._createBox(placeholder);
-                const dropdown = this._createDropdown(container, box, placeholder, options);
-
-                container.appendChild(box);
-                container.appendChild(dropdown);
-                box.addEventListener('click', (e) => { e.stopPropagation(); this._toggle(box, dropdown); });
-            },
-
-            _createBox(placeholder) {
-                const box = document.createElement('div');
-                box.className = 'cs-box';
-                box.innerHTML = `<span class="cs-placeholder">${placeholder}</span>${this._chevronSvg()}`;
-                return box;
-            },
-
-            _createDropdown(container, box, placeholder, options) {
-                const dropdown = document.createElement('div');
-                dropdown.className = 'cs-dropdown';
-                const optsList = document.createElement('div');
-                optsList.className = 'cs-options';
-
-                options.forEach(opt => {
-                    const el = this._createOption(opt, container, box, dropdown, placeholder);
-                    optsList.appendChild(el);
-                });
-
-                dropdown.appendChild(optsList);
-                return dropdown;
-            },
-
-            _createOption(opt, container, box, dropdown, placeholder) {
-                const el = document.createElement('div');
-                el.className = 'cs-option';
-                el.dataset.value = opt;
-                el.innerHTML = `<span>${opt}</span>${this._checkSvg()}`;
-
-                if (opt === 'Other') {
-                    el.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        this._closeAll();
-                        this._activateCustomInput(container, box, dropdown, placeholder);
-                    });
-                } else {
-                    el.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        this._select(container, container._box || box, dropdown, opt);
-                    });
-                }
-
-                return el;
-            },
-
-            _activateCustomInput(container, box, dropdown, placeholder) {
-                const currentBox = container._box || box;
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.placeholder = 'Enter custom value…';
-                input.className = 'cs-box';
-                input.style.cursor = 'text';
-                currentBox.replaceWith(input);
-                input.focus();
-
-                input.addEventListener('blur', () => {
-                    const val = input.value.trim();
-                    container._value = val || '';
-                    dropdown.querySelectorAll('.cs-option').forEach(o => o.classList.remove('selected'));
-
-                    const newBox = document.createElement('div');
-                    newBox.className = 'cs-box';
-                    newBox.innerHTML = val
-                        ? `<span class="cs-value">${val}</span>${this._chevronSvg()}`
-                        : `<span class="cs-placeholder">${placeholder}</span>${this._chevronSvg()}`;
-                    input.replaceWith(newBox);
-                    container._box = newBox;
-                    newBox.addEventListener('click', (e) => { e.stopPropagation(); this._toggle(newBox, dropdown); });
-                });
-
-                input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); });
-            },
-
-            _toggle(box, dropdown) {
-                const isOpen = dropdown.classList.contains('open');
-                this._closeAll();
-                if (!isOpen) {
-                    const activeBox = dropdown._currentBox || box;
-                    dropdown.classList.add('open');
-                    activeBox.classList.add('open');
-                    activeBox.querySelector('.cs-chevron')?.classList.add('open');
-                    this._openDropdown = { box: activeBox, dropdown };
-                }
-            },
-
-            _closeAll() {
-                if (this._openDropdown) {
-                    this._openDropdown.dropdown.classList.remove('open');
-                    this._openDropdown.box.classList.remove('open');
-                    this._openDropdown.box.querySelector('.cs-chevron')?.classList.remove('open');
-                    this._openDropdown = null;
-                }
-            },
-
-            _select(container, box, dropdown, value) {
-                container._value = value;
-                const activeBox = dropdown._currentBox || box;
-                activeBox.innerHTML = `<span class="cs-value">${value}</span>${this._chevronSvg()}`;
-                dropdown.querySelectorAll('.cs-option').forEach(el => {
-                    el.classList.toggle('selected', el.dataset.value === value);
-                });
-                container._box = activeBox;
-                this._closeAll();
-            },
-
-            getValue(name) {
-                return document.querySelector(`.custom-select[data-name="${name}"]`)?._value || '';
-            },
-
-            setValue(name, value) {
-                const container = document.querySelector(`.custom-select[data-name="${name}"]`);
-                if (!container || !value) return;
-                const box = container.querySelector('.cs-box');
-                const dropdown = container.querySelector('.cs-dropdown');
-                if (box && dropdown) this._select(container, box, dropdown, value);
-            },
-
-            reset(name) {
-                const container = document.querySelector(`.custom-select[data-name="${name}"]`);
-                if (!container) return;
-                container._value = '';
-                const box = container.querySelector('.cs-box');
-                if (box) box.innerHTML = `<span class="cs-placeholder">${container.dataset.placeholder || 'Select…'}</span>${this._chevronSvg()}`;
-                container.querySelectorAll('.cs-option').forEach(el => el.classList.remove('selected'));
-            },
-
-            _chevronSvg() {
-                return `<svg class="cs-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>`;
-            },
-
-            _checkSvg() {
-                return `<svg class="cs-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>`;
-            }
-        };
-
-
-        // =============================================================================
-        // UI
-        // =============================================================================
-
-        const UI = {
-            toast(message) {
-                const toastEl = DOM.get('toast');
-                toastEl.textContent = message;
-                toastEl.classList.add('show');
-                setTimeout(() => toastEl.classList.remove('show'), CONFIG.TIMING.TOAST_DURATION_MS);
-            },
-
-            setButtonLoading(button, loadingText) {
-                button.disabled = true;
-                button.textContent = loadingText;
-            },
-
-            resetButton(button, defaultText) {
-                button.disabled = false;
-                button.textContent = defaultText;
-            },
-
-            toggleCard(jobId) {
-                const card = document.getElementById(`card-${jobId}`);
-                const details = document.getElementById(`details-${jobId}`);
-                const wasOpen = card.classList.contains(CONFIG.CLASSES.OPEN);
-
-                document.querySelectorAll('.job-card.open').forEach(c => c.classList.remove(CONFIG.CLASSES.OPEN));
-                document.querySelectorAll('.job-details.open').forEach(d => d.classList.remove(CONFIG.CLASSES.OPEN));
-
-                if (!wasOpen) {
-                    card.classList.add(CONFIG.CLASSES.OPEN);
-                    details.classList.add(CONFIG.CLASSES.OPEN);
-                }
-            },
-
-            toggleExpField() {
-                const button = DOM.get('exp-toggle-btn');
-                const dot = DOM.get('exp-toggle-dot');
-                const field = DOM.get('exp-field');
-                const isOn = button.getAttribute('aria-pressed') === 'true';
-
-                button.setAttribute('aria-pressed', String(!isOn));
-                button.style.background = isOn ? 'var(--border)' : 'var(--accent)';
-                dot.style.transform = isOn ? 'translateX(0)' : 'translateX(20px)';
-                field.classList.toggle('hidden', isOn);
-
-                if (isOn) {
-                    DOM.get('exp').value = '';
-                    DOM.get('exp-years').value = '';
-                }
-            },
-
-            syncExpValue() {
-                const years = DOM.get('exp-years').value;
-                DOM.get('exp').value = years ? `${years} yr${years == 1 ? '' : 's'} min` : '';
-            },
-
-            toggleContactInput() {
-                const checked = Array.from(document.querySelectorAll('input[name="contact"]:checked')).map(cb => cb.value);
-                const needsPhone = checked.some(v => ['Phone Call', 'Text Message', 'WhatsApp'].includes(v));
-                DOM.get('contact-phone').classList.toggle('hidden', !needsPhone);
-                DOM.get('contact-email').classList.toggle('hidden', !checked.includes('Email'));
-            }
-        };
-
-
-        // =============================================================================
-        // APP
-        // =============================================================================
-
-        const App = {
-            init() {
-                Database.init();
-                const firebaseAuth = firebase.auth();
-
-                DOM.init();
-                CustomSelect.init();
-
-                Auth.init(firebaseAuth);
-                Navigation.init();
-                Header.init();
-            }
-        };
-
-
-        // =============================================================================
-        // INITIALIZATION
-        // =============================================================================
-
-        document.addEventListener('DOMContentLoaded', () => {
-            App.init();
+      },
+
+      loadMoreBtn() {
+        return `
+                    <button id="load-more-btn" onclick="Jobs.loadMore()"
+                        class="w-full mt-4 py-3 text-sm font-medium rounded-lg"
+                        style="border:1px solid var(--border); color:var(--muted); background:var(--card); cursor:pointer">
+                        Load more
+                    </button>`;
+      },
+
+      emptyState(msg) { return `<div class="state-msg">${msg}</div>`; },
+      loadingState() { return `<div class="state-msg">Loading…</div>`; },
+      errorState(msg) { return `<div class="state-msg">Error loading posts.<br><small>${msg}</small></div>`; }
+    };
+
+
+    // =============================================================================
+    // DATABASE
+    // =============================================================================
+
+    const Database = {
+      db: null,
+
+      init() {
+        firebase.initializeApp(CONFIG.FIREBASE);
+        this.db = firebase.firestore();
+      },
+
+      async getAllJobs() {
+        return this.db.collection('jobs').orderBy('createdAt', 'desc').get();
+      },
+
+      async getMyJobs(uid) {
+        return this.db.collection('jobs').where('uid', '==', uid).orderBy('createdAt', 'desc').get();
+      },
+
+      async addJob(data, uid) {
+        const snapshot = await this.db.collection('jobs').get();
+        const ids = snapshot.docs.map(d => parseInt(d.id)).filter(n => !isNaN(n));
+        const nextId = String(ids.length ? Math.max(...ids) + 1 : 1);
+        return this.db.collection('jobs').doc(nextId).set({
+          ...data,
+          uid,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-    </script>
+      },
+
+      async updateJob(jobId, data) {
+        return this.db.collection('jobs').doc(jobId).update(data);
+      },
+
+      async deleteJob(jobId) {
+        return this.db.collection('jobs').doc(jobId).delete();
+      }
+    };
+
+
+    // =============================================================================
+    // AUTH
+    // =============================================================================
+
+    const Auth = {
+      _firebaseAuth: null,
+
+      init(firebaseAuth) {
+        this._firebaseAuth = firebaseAuth;
+        DOM.get('auth-submit-btn').addEventListener('click', () => Auth.submit());
+        this._firebaseAuth.onAuthStateChanged(user => Auth._onStateChange(user));
+      },
+
+      async submit() {
+        const email = DOM.get('auth-email').value.trim();
+        const password = DOM.get('auth-password').value;
+        if (!email || !password) { UI.toast('Please enter email and password.'); return; }
+
+        const button = DOM.get('auth-submit-btn');
+        const isRegister = Modal._authMode === 'register';
+        UI.setButtonLoading(button, 'Please wait…');
+
+        try {
+          isRegister
+            ? await this._firebaseAuth.createUserWithEmailAndPassword(email, password)
+            : await this._firebaseAuth.signInWithEmailAndPassword(email, password);
+          UI.toast(isRegister ? 'Account created — welcome!' : 'Welcome back!');
+          Modal.close('auth-modal');
+          DOM.get('auth-email').value = '';
+          DOM.get('auth-password').value = '';
+        } catch (error) {
+          UI.toast(CONFIG.AUTH_ERRORS[error.code] || 'Something went wrong.');
+        } finally {
+          UI.resetButton(button, isRegister ? 'Register' : 'Sign In');
+        }
+      },
+
+      async signOut() {
+        State.signingOut = true;
+        await this._firebaseAuth.signOut();
+        UI.toast('Signed out.');
+        Navigation.show('browse');
+      },
+
+      requireAuth(view) {
+        State.currentUser ? Navigation.show(view) : Modal.open('auth-modal');
+      },
+
+      async deleteAccount() {
+        if (!State.currentUser) return;
+        try {
+          const snapshot = await Database.getMyJobs(State.currentUser.uid);
+          const batch = Database.db.batch();
+          snapshot.docs.forEach(doc => batch.delete(doc.ref));
+          await batch.commit();
+
+          State.signingOut = true;
+          await State.currentUser.delete();
+          UI.toast('Account deleted.');
+          Modal.close('delete-account-modal');
+          Navigation.show('browse');
+        } catch (error) {
+          UI.toast(
+            error.code === 'auth/requires-recent-login'
+              ? 'Please sign out, sign back in, then try again.'
+              : 'Error: ' + error.message
+          );
+        }
+      },
+
+      _onStateChange(user) {
+        State.currentUser = user;
+        Header.render(user);
+        State.authReady
+          ? Auth._guardSession(user)
+          : Auth._resolveInitialView(user);
+      },
+
+      // Called once on page load — shows correct view based on URL and auth state
+      _resolveInitialView(user) {
+        const { view, auth: authParam } = UrlSync.read();
+        State.currentView = view;
+        UrlSync.replace({ view });
+
+        if (authParam && !user) {
+          if (authParam === 'register') Modal.toggleAuthMode();
+          Modal.open('auth-modal', false);
+        }
+
+        if (user) {
+          Navigation.show(view, false);
+          if (view === 'myposts') Jobs.loadMyJobs();
+        } else if (CONFIG.PROTECTED_VIEWS.includes(view)) {
+          Navigation.show('browse', false);
+          UrlSync.replace({ view: 'browse' });
+          Modal.open('auth-modal');
+        } else {
+          Navigation.show(view, false);
+        }
+
+        document.body.style.visibility = 'visible';
+        State.authReady = true;
+      },
+
+      // Called on subsequent auth changes — guards protected views on sign-out
+      _guardSession(user) {
+        if (!user && State.isProtectedView() && !State.signingOut) {
+          Navigation.show('browse');
+          UrlSync.replace({ view: 'browse' });
+          Modal.open('auth-modal');
+        }
+      }
+    };
+
+
+    // =============================================================================
+    // HEADER
+    // =============================================================================
+
+    const Header = {
+      init() {
+        document.addEventListener('click', (e) => {
+          if (!DOM.get('auth-menu-wrap').contains(e.target)) {
+            DOM.get('profile-dropdown').classList.add(CONFIG.CLASSES.HIDDEN);
+          }
+        });
+      },
+
+      render(user) {
+        const signinBtn = DOM.get('auth-btn-signin');
+        const menuWrap = DOM.get('auth-menu-wrap');
+        const profileInitial = DOM.get('profile-initial');
+
+        if (user) {
+          signinBtn.classList.add(CONFIG.CLASSES.HIDDEN);
+          menuWrap.classList.remove(CONFIG.CLASSES.HIDDEN);
+          profileInitial.textContent = (user.email || '?')[0].toUpperCase();
+        } else {
+          signinBtn.classList.remove(CONFIG.CLASSES.HIDDEN);
+          menuWrap.classList.add(CONFIG.CLASSES.HIDDEN);
+        }
+      },
+
+      toggleProfileMenu() {
+        DOM.get('profile-dropdown').classList.toggle(CONFIG.CLASSES.HIDDEN);
+      },
+
+      closeProfileMenu() {
+        DOM.get('profile-dropdown').classList.add(CONFIG.CLASSES.HIDDEN);
+      }
+    };
+
+
+    // =============================================================================
+    // NAVIGATION
+    // =============================================================================
+
+    const Navigation = {
+      init() {
+        window.addEventListener('popstate', () => Navigation._onPopState());
+      },
+
+      show(view, updateUrl = true) {
+        CONFIG.ALL_VIEWS.forEach(v =>
+          DOM.get(`view-${v}`)?.classList.add(CONFIG.CLASSES.HIDDEN)
+        );
+        DOM.get(`view-${view}`)?.classList.remove(CONFIG.CLASSES.HIDDEN);
+
+        State.currentView = view;
+        window.scrollTo(0, 0);
+        if (updateUrl) UrlSync.push({ view });
+
+        DOM.get('header-post-btn').classList.toggle(CONFIG.CLASSES.HIDDEN, view === 'post');
+
+        if (view === 'browse') Jobs.loadAllJobs();
+        if (view === 'myposts') Jobs.loadMyJobs();
+        if (view === 'post' && !State._editingJobId) Form.clear();
+      },
+
+      _onPopState() {
+        const { view, auth: authParam } = UrlSync.read();
+
+        if (authParam) {
+          if (authParam === 'register' && Modal._authMode !== 'register') Modal.toggleAuthMode();
+          if (authParam === 'signin' && Modal._authMode !== 'signin') Modal.toggleAuthMode();
+          Modal.open('auth-modal', false);
+        } else {
+          Modal.close('auth-modal');
+        }
+
+        if (view !== 'post' && State._editingJobId) {
+          State._editingJobId = null;
+          UrlSync.replace({ edit: null });
+        }
+
+        Navigation.show(view, false);
+      }
+    };
+
+
+    // =============================================================================
+    // JOBS
+    // =============================================================================
+
+    const Jobs = {
+      async loadAllJobs() {
+        const list = DOM.get('job-list');
+        const count = DOM.get('job-count');
+        count.textContent = '';
+        list.innerHTML = Templates.skeletonCards(8);
+
+        try {
+          const [snapshot] = await Promise.all([
+            Database.getAllJobs(),
+            new Promise(r => setTimeout(r, CONFIG.TIMING.SKELETON_DELAY_MS))
+          ]);
+
+          if (snapshot.empty) {
+            list.innerHTML = Templates.emptyState('No openings found. Be the first to post one!');
+            return;
+          }
+
+          State.allJobs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          Search.filter();
+        } catch (error) {
+          list.innerHTML = Templates.errorState(error.message);
+        }
+      },
+
+      async loadMyJobs() {
+        const list = DOM.get('my-job-list');
+        const greeting = DOM.get('myposts-greeting');
+        if (!State.currentUser) return;
+
+        greeting.textContent = State.currentUser.email;
+        list.innerHTML = Templates.skeletonCards(8);
+
+        try {
+          const [snapshot] = await Promise.all([
+            Database.getMyJobs(State.currentUser.uid),
+            new Promise(r => setTimeout(r, CONFIG.TIMING.SKELETON_DELAY_MS))
+          ]);
+
+          if (snapshot.empty) {
+            list.innerHTML = Templates.emptyState("You haven't posted any jobs yet.");
+            return;
+          }
+
+          State.myJobs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          list.innerHTML = State.myJobs.map(job => Templates.jobCard(job, true, 'my-')).join('');
+        } catch (error) {
+          list.innerHTML = Templates.errorState(error.message);
+        }
+      },
+
+      deleteJob(jobId) {
+        State._pendingDeleteId = jobId;
+        Modal.open('delete-modal');
+      },
+
+      async confirmDelete() {
+        if (!State._pendingDeleteId) return;
+        const button = DOM.get('delete-confirm-btn');
+        UI.setButtonLoading(button, 'Deleting…');
+
+        try {
+          await Database.deleteJob(State._pendingDeleteId);
+          UI.toast('Job deleted.');
+          Modal.close('delete-modal');
+          State._pendingDeleteId = null;
+          await Jobs.loadMyJobs();
+        } catch (error) {
+          UI.toast('Error deleting job: ' + error.message);
+        } finally {
+          UI.resetButton(button, 'Yes, delete');
+        }
+      },
+
+      loadMore() {
+        State.jobsPage++;
+        Search._render();
+      }
+    };
+
+
+    // =============================================================================
+    // SEARCH
+    // =============================================================================
+
+    const Search = {
+      filteredJobs: [],
+      _filters: {},
+      _openPill: null,
+
+      init() {
+        // Build _filters from config
+        Object.keys(CONFIG.PILL_FILTERS).forEach(key => {
+          this._filters[key] = '';
+        });
+
+        // Inject pill buttons into bar (before clear-all)
+        const bar = document.getElementById('filter-pills-bar');
+        const clearAll = document.getElementById('pill-clear-all');
+        const dropContainer = document.getElementById('pill-dropdowns');
+
+        Object.entries(CONFIG.PILL_FILTERS).forEach(([key, cfg]) => {
+          // Button
+          const wrap = document.createElement('div');
+          wrap.className = 'relative flex-shrink-0';
+          wrap.id = `pill-wrap-${key}`;
+          wrap.innerHTML = `
+        <button onclick="event.stopPropagation(); Search.togglePillDropdown('${key}')"
+          id="pill-btn-${key}"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+          style="border:1px solid var(--border); background:var(--card); color:var(--muted); cursor:pointer">
+          <span id="pill-label-${key}">${cfg.label}</span>
+          <i class="fas fa-chevron-down" id="pill-chevron-${key}" style="font-size:9px"></i>
+        </button>`;
+          bar.insertBefore(wrap, clearAll);
+
+          // Dropdown
+          const drop = document.createElement('div');
+          drop.id = `pill-drop-${key}`;
+          drop.className = 'hidden absolute mt-1 rounded-xl z-50';
+          drop.style.cssText = `top:100%; left:0; background:var(--card); border:1px solid var(--border); box-shadow:0 8px 24px rgba(26,22,18,.12); min-width:160px; overflow:hidden`;
+          drop.innerHTML = `<div id="pill-opts-${key}" style="max-height:220px; overflow-y:auto; border-radius:inherit"></div>`;
+          dropContainer.appendChild(drop);
+
+          // Options
+          this._buildOpts(key);
+        });
+
+        document.addEventListener('click', e => {
+          if (!e.target.closest('.relative')) this._closeAll();
+        });
+      },
+
+      _buildOpts(key) {
+        const container = document.getElementById(`pill-opts-${key}`);
+        if (!container) return;
+
+        const { label, options } = CONFIG.PILL_FILTERS[key];
+        const full = [
+          { label: `All ${label}s`, value: '' },
+          ...options.map(o => ({ label: o, value: o }))
+        ];
+
+        container.innerHTML = full.map(o => `
+    <div onclick="Search._selectOpt('${key}', '${o.value}')"
+      class="px-4 py-2.5 text-xs cursor-pointer transition-colors flex items-center justify-between gap-3"
+      id="pill-opt-${key}-${o.value || 'all'}"
+      style="color:var(--ink)">
+      <span>${Utils.esc(o.label)}</span>
+      <i class="fas fa-check hidden" id="pill-check-${key}-${o.value || 'all'}" style="color:var(--accent); font-size:10px"></i>
+    </div>`).join('');
+
+        this._markOpt(key, this._filters[key] || '');
+      },
+
+      _selectOpt(key, value) {
+        this._filters[key] = value;
+        this._markOpt(key, value);
+        this._updatePillAppearance(key);
+        this._closeAll();
+        this.filter();
+      },
+
+      _markOpt(key, value) {
+        const opts = CONFIG.PILL_FILTERS[key].options;
+        opts.forEach(o => {
+          const optId = o.value || 'all';
+          const check = document.getElementById(`pill-check-${key}-${optId}`);
+          const row = document.getElementById(`pill-opt-${key}-${optId}`);
+          if (!check || !row) return;
+          const active = o.value === value;
+          check.classList.toggle('hidden', !active);
+          row.style.background = active ? 'rgba(200,82,42,.06)' : '';
+          row.style.color = active ? 'var(--accent)' : 'var(--ink)';
+          row.style.fontWeight = active ? '600' : '';
+        });
+      },
+
+      _updatePillAppearance(key) {
+        const value = this._filters[key];
+        const btn = document.getElementById(`pill-btn-${key}`);
+        const label = document.getElementById(`pill-label-${key}`);
+        if (!btn || !label) return;
+
+        const isActive = !!value;
+
+        label.textContent = isActive ? value : CONFIG.PILL_FILTERS[key].label;
+        btn.style.borderColor = isActive ? 'var(--accent)' : 'var(--border)';
+        btn.style.background  = 'var(--card)';
+        btn.style.color = isActive ? 'var(--accent)' : 'var(--muted)';
+
+        const anyActive = Object.values(this._filters).some(v => !!v);
+        document.getElementById('pill-clear-all')?.classList.toggle('hidden', !anyActive);
+      },
+
+      togglePillDropdown(key) {
+        const drop = document.getElementById(`pill-drop-${key}`);
+        const chevron = document.getElementById(`pill-chevron-${key}`);
+        const btn = document.getElementById(`pill-btn-${key}`);
+        const isOpen = !drop.classList.contains('hidden');
+
+        this._closeAll();
+
+        if (!isOpen) {
+          const btnRect = btn.getBoundingClientRect();
+          const barRect = document.getElementById('filter-pills-bar').parentElement.getBoundingClientRect();
+          drop.style.left = (btnRect.left - barRect.left) + 'px';
+
+          drop.classList.remove('hidden');
+          chevron.style.transform = 'rotate(180deg)';
+          this._openPill = key;
+        }
+      },
+
+      _closeAll() {
+        if (!this._openPill) return;
+        const drop = document.getElementById(`pill-drop-${this._openPill}`);
+        const chevron = document.getElementById(`pill-chevron-${this._openPill}`);
+        drop?.classList.add('hidden');
+        if (chevron) chevron.style.transform = '';
+        this._openPill = null;
+      },
+
+      filter() {
+        State.jobsPage = 1;
+        this.toggleClearButton();
+        const query = DOM.get('search-input').value.toLowerCase().trim();
+
+        Search.filteredJobs = State.allJobs.filter(job => {
+          const matchText = !query || (job.title || '').toLowerCase().includes(query) || (job.industry || '').toLowerCase().includes(query);
+          const matchType = !this._filters.type || job.jobType === this._filters.type;
+          const matchIndustry = !this._filters.industry || job.industry === this._filters.industry;
+          const matchLocation = !this._filters.location || job.location === this._filters.location;
+          return matchText && matchType && matchIndustry && matchLocation;
+        });
+
+        Search._render();
+      },
+
+      _render() {
+        const list = DOM.get('job-list');
+        const count = DOM.get('job-count');
+
+        if (!Search.filteredJobs.length) {
+          count.textContent = '';
+          list.innerHTML = Templates.emptyState('No openings match your search.');
+          return;
+        }
+
+        const total = Search.filteredJobs.length;
+        const visible = Search.filteredJobs.slice(0, State.jobsPage * CONFIG.PAGE_SIZE);
+        const hasMore = visible.length < total;
+
+        count.textContent = `${total} opening${total !== 1 ? 's' : ''} found`;
+        list.innerHTML = visible.map(job => Templates.jobCard(job, false)).join('');
+        if (hasMore) list.innerHTML += Templates.loadMoreBtn();
+      },
+
+      toggleClearButton() {
+        const hasValue = DOM.get('search-input').value.trim().length > 0;
+        const btn = DOM.get('search-clear-btn');
+        btn.classList.toggle('hidden', !hasValue);
+        btn.classList.toggle('flex', hasValue);
+      },
+
+      clear() {
+        DOM.get('search-input').value = '';
+        this.toggleClearButton();
+        this.filter();
+        DOM.get('search-input').focus();
+      },
+
+      clearAllFilters() {
+        Object.keys(this._filters).forEach(key => {
+          this._filters[key] = '';
+          this._markOpt(key, '');
+          this._updatePillAppearance(key);
+        });
+        this.filter();
+      }
+    }
+
+
+    // =============================================================================
+    // FORM
+    // =============================================================================
+
+    const Form = {
+      async submit() {
+        const data = Form.collect();
+        const isEdit = !!State._editingJobId;
+        if (!Form.validate(data)) return;
+
+        const button = DOM.get('submit-btn');
+        UI.setButtonLoading(button, isEdit ? 'Saving…' : 'Posting…');
+
+        try {
+          if (isEdit) {
+            await Database.updateJob(State._editingJobId, data);
+            UI.toast('Job updated!');
+          } else {
+            await Database.addJob(data, State.currentUser.uid);
+            UI.toast('Job posted successfully!');
+          }
+          State._editingJobId = null;
+          UrlSync.replace({ edit: null });
+          Navigation.show('myposts');
+        } catch (error) {
+          UI.toast('Error: ' + error.message);
+        } finally {
+          UI.resetButton(button, isEdit ? 'Save Changes' : 'Post Job');
+        }
+      },
+
+      collect() {
+        return {
+          title: Utils.capitalizeWords(DOM.get('title').value.trim()),
+          industry: CustomSelect.getValue('industry'),
+          location: Utils.capitalizeWords(DOM.get('location').value.trim()),
+          salaryRange: DOM.get('salary').value.trim(),
+          jobType: CustomSelect.getValue('jobtype'),
+          experienceRequired: DOM.get('exp').value,
+          description: DOM.get('desc').value.trim(),
+          contactMethods: Array.from(document.querySelectorAll('input[name="contact"]:checked')).map(cb => cb.value),
+          contactPhone: DOM.get('phone')?.value.trim() || '',
+          contactEmail: DOM.get('email')?.value.trim() || ''
+        };
+      },
+
+      validate(data) {
+        let valid = true;
+
+        const check = (condition, errorId, fieldId) => {
+          const errorEl = document.getElementById(errorId);
+          const fieldEl = fieldId ? document.getElementById(fieldId) : null;
+          const targetEl = fieldEl?.classList.contains('custom-select')
+            ? fieldEl.querySelector('.cs-box')
+            : fieldEl;
+
+          errorEl?.classList.toggle(CONFIG.CLASSES.HIDDEN, !condition);
+          if (targetEl) targetEl.style.borderColor = condition ? '#b0421d' : '';
+          if (condition) valid = false;
+        };
+
+        const expOn = DOM.get('exp-toggle-btn').getAttribute('aria-pressed') === 'true';
+        const needsPhone = data.contactMethods.some(v => CONFIG.PHONE_CONTACT_METHODS.includes(v));
+
+        check(!data.title, 'title-error', 'title');
+        check(!data.industry, 'industry-error', 'industry-container');
+        check(!data.location, 'location-error', 'location');
+        check(!data.jobType, 'jobtype-error', 'jobtype-container');
+        check(!data.description, 'desc-error', 'desc');
+        check(expOn && (!data.experienceRequired || isNaN(parseInt(data.experienceRequired))), 'exp-error', 'exp-years');
+        check(!data.contactMethods.length, 'contact-error', null);
+        check(needsPhone && !CONFIG.PATTERNS.PHONE.test(data.contactPhone), 'phone-error', 'phone');
+        check(data.contactMethods.includes('Email') && !CONFIG.PATTERNS.EMAIL.test(data.contactEmail), 'email-error', 'email');
+
+        if (!valid) {
+          document.querySelector('.error-msg:not(.hidden)')
+            ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        return valid;
+      },
+
+      loadEdit(jobId) {
+        const job = State.myJobs.find(j => j.id === jobId);
+        if (!job) return;
+
+        State._editingJobId = jobId;
+        Navigation.show('post');
+        UrlSync.replace({ edit: jobId });
+
+        DOM.get('title').value = job.title || '';
+        DOM.get('location').value = job.location || '';
+        DOM.get('salary').value = job.salaryRange || '';
+        DOM.get('desc').value = job.description || '';
+        CustomSelect.setValue('industry', job.industry);
+        CustomSelect.setValue('jobtype', job.jobType);
+
+        if (job.experienceRequired) {
+          if (DOM.get('exp-toggle-btn').getAttribute('aria-pressed') === 'false') {
+            UI.toggleExpField();
+          }
+          const years = parseInt(job.experienceRequired);
+          if (!isNaN(years)) {
+            DOM.get('exp-years').value = years;
+            UI.syncExpValue();
+          }
+        }
+
+        document.querySelectorAll('input[name="contact"]').forEach(cb => {
+          cb.checked = (job.contactMethods || []).includes(cb.value);
+        });
+        DOM.get('phone').value = job.contactPhone || '';
+        DOM.get('email').value = job.contactEmail || '';
+        UI.toggleContactInput();
+
+        Form._setEditMode(true);
+      },
+
+      clear() {
+        ['title', 'location', 'salary', 'desc'].forEach(id => DOM.get(id).value = '');
+
+        CustomSelect.reset('industry');
+        CustomSelect.reset('jobtype');
+
+        if (DOM.get('exp-toggle-btn').getAttribute('aria-pressed') === 'true') {
+          UI.toggleExpField();
+        }
+
+        document.querySelectorAll('input[name="contact"]').forEach(cb => cb.checked = false);
+        DOM.get('contact-phone').classList.add(CONFIG.CLASSES.HIDDEN);
+        DOM.get('contact-email').classList.add(CONFIG.CLASSES.HIDDEN);
+        DOM.get('phone').value = '';
+        DOM.get('email').value = '';
+
+        document.querySelectorAll('.error-msg').forEach(el => el.classList.add(CONFIG.CLASSES.HIDDEN));
+        document.querySelectorAll('.cs-box, input, textarea').forEach(el => el.style.borderColor = '');
+
+        State._editingJobId = null;
+        Form._setEditMode(false);
+        UrlSync.replace({ edit: null });
+      },
+
+      _setEditMode(isEdit) {
+        DOM.get('post-view-title').textContent = isEdit ? 'Edit Opening' : 'Post an Opening';
+        DOM.get('submit-btn').textContent = isEdit ? 'Save Changes' : 'Post Job';
+      }
+    };
+
+
+    // =============================================================================
+    // MODAL
+    // =============================================================================
+
+    const Modal = {
+      _authMode: 'signin',
+
+      open(id, updateUrl = true) {
+        if (id === 'auth-modal' && updateUrl && this._authMode !== 'signin') {
+          this.toggleAuthMode();
+        }
+        DOM.get(id)?.classList.add(CONFIG.CLASSES.OPEN);
+        if (id === 'auth-modal' && updateUrl) UrlSync.push({ auth: this._authMode });
+      },
+
+      close(id) {
+        DOM.get(id)?.classList.remove(CONFIG.CLASSES.OPEN);
+        if (id === 'auth-modal') UrlSync.replace({ auth: null });
+      },
+
+      toggleAuthMode() {
+        const toRegister = this._authMode !== 'register';
+        this._authMode = toRegister ? 'register' : 'signin';
+        UrlSync.replace({ auth: this._authMode });
+
+        DOM.get('auth-modal-title').textContent = toRegister ? 'Create Account' : 'Sign In';
+        DOM.get('auth-modal-sub').textContent = toRegister ? 'Join to post jobs' : 'Access your job postings';
+        DOM.get('auth-submit-btn').textContent = toRegister ? 'Register' : 'Sign In';
+        DOM.get('auth-toggle-text').textContent = toRegister ? 'Already have an account?' : 'No account?';
+        DOM.get('auth-toggle-btn').textContent = toRegister ? 'Sign In' : 'Register';
+      }
+    };
+
+
+    // =============================================================================
+    // CUSTOM SELECT
+    // =============================================================================
+
+    const CustomSelect = {
+      _openDropdown: null,
+
+      init() {
+        document.querySelectorAll('.custom-select').forEach(container => this._build(container));
+        document.addEventListener('click', () => this._closeAll());
+      },
+
+      getValue(name) {
+        return document.querySelector(`.custom-select[data-name="${name}"]`)?._value || '';
+      },
+
+      setValue(name, value) {
+        const container = document.querySelector(`.custom-select[data-name="${name}"]`);
+        if (!container || !value) return;
+        const box = container.querySelector('.cs-box');
+        const dropdown = container.querySelector('.cs-dropdown');
+        if (box && dropdown) this._select(container, box, dropdown, value);
+      },
+
+      reset(name) {
+        const container = document.querySelector(`.custom-select[data-name="${name}"]`);
+        if (!container) return;
+        container._value = '';
+        const box = container.querySelector('.cs-box');
+        if (box) box.innerHTML = `<span class="cs-placeholder">${container.dataset.placeholder || 'Select…'}</span>${this._chevronSvg()}`;
+        container.querySelectorAll('.cs-option').forEach(el => el.classList.remove('selected'));
+      },
+
+      _build(container) {
+        const placeholder = container.dataset.placeholder || 'Select…';
+        const options = JSON.parse(container.dataset.options || '[]');
+        container._value = '';
+
+        const box = this._createBox(placeholder);
+        const dropdown = this._createDropdown(container, box, placeholder, options);
+
+        container.appendChild(box);
+        container.appendChild(dropdown);
+        box.addEventListener('click', (e) => { e.stopPropagation(); this._toggle(box, dropdown); });
+      },
+
+      _createBox(placeholder) {
+        const box = document.createElement('div');
+        box.className = 'cs-box';
+        box.innerHTML = `<span class="cs-placeholder">${placeholder}</span>${this._chevronSvg()}`;
+        return box;
+      },
+
+      _createDropdown(container, box, placeholder, options) {
+        const dropdown = document.createElement('div');
+        dropdown.className = 'cs-dropdown';
+        const optsList = document.createElement('div');
+        optsList.className = 'cs-options';
+
+        options.forEach(opt => {
+          optsList.appendChild(this._createOption(opt, container, box, dropdown, placeholder));
+        });
+
+        dropdown.appendChild(optsList);
+        return dropdown;
+      },
+
+      _createOption(opt, container, box, dropdown, placeholder) {
+        const el = document.createElement('div');
+        el.className = 'cs-option';
+        el.dataset.value = opt;
+        el.innerHTML = `<span>${opt}</span>${this._checkSvg()}`;
+
+        if (opt === 'Other') {
+          el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this._closeAll();
+            this._activateCustomInput(container, box, dropdown, placeholder);
+          });
+        } else {
+          el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this._select(container, container._box || box, dropdown, opt);
+          });
+        }
+
+        return el;
+      },
+
+      _activateCustomInput(container, box, dropdown, placeholder) {
+        const currentBox = container._box || box;
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = 'Enter custom value…';
+        input.className = 'cs-box';
+        input.style.cursor = 'text';
+        currentBox.replaceWith(input);
+        input.focus();
+
+        input.addEventListener('blur', () => {
+          const val = input.value.trim();
+          container._value = val || '';
+          dropdown.querySelectorAll('.cs-option').forEach(o => o.classList.remove('selected'));
+
+          const newBox = document.createElement('div');
+          newBox.className = 'cs-box';
+          newBox.innerHTML = val
+            ? `<span class="cs-value">${val}</span>${this._chevronSvg()}`
+            : `<span class="cs-placeholder">${placeholder}</span>${this._chevronSvg()}`;
+          input.replaceWith(newBox);
+          container._box = newBox;
+          newBox.addEventListener('click', (e) => { e.stopPropagation(); this._toggle(newBox, dropdown); });
+        });
+
+        input.addEventListener('keydown', (e) => { if (e.key === 'Enter') input.blur(); });
+      },
+
+      _toggle(box, dropdown) {
+        const isOpen = dropdown.classList.contains(CONFIG.CLASSES.OPEN);
+        this._closeAll();
+        if (!isOpen) {
+          dropdown.classList.add(CONFIG.CLASSES.OPEN);
+          box.classList.add(CONFIG.CLASSES.OPEN);
+          box.querySelector('.cs-chevron')?.classList.add(CONFIG.CLASSES.OPEN);
+          this._openDropdown = { box, dropdown };
+        }
+      },
+
+      _closeAll() {
+        if (this._openDropdown) {
+          this._openDropdown.dropdown.classList.remove(CONFIG.CLASSES.OPEN);
+          this._openDropdown.box.classList.remove(CONFIG.CLASSES.OPEN);
+          this._openDropdown.box.querySelector('.cs-chevron')?.classList.remove(CONFIG.CLASSES.OPEN);
+          this._openDropdown = null;
+        }
+      },
+
+      _select(container, box, dropdown, value) {
+        container._value = value;
+        const activeBox = dropdown._currentBox || box;
+        activeBox.innerHTML = `<span class="cs-value">${value}</span>${this._chevronSvg()}`;
+        dropdown.querySelectorAll('.cs-option').forEach(el => {
+          el.classList.toggle('selected', el.dataset.value === value);
+        });
+        container._box = activeBox;
+        this._closeAll();
+      },
+
+      _chevronSvg() {
+        return `<svg class="cs-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>`;
+      },
+
+      _checkSvg() {
+        return `<svg class="cs-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>`;
+      }
+    };
+
+
+    // =============================================================================
+    // UI
+    // =============================================================================
+
+    const UI = {
+      toast(message) {
+        const toastEl = DOM.get('toast');
+        toastEl.textContent = message;
+        toastEl.classList.add('show');
+        setTimeout(() => toastEl.classList.remove('show'), CONFIG.TIMING.TOAST_DURATION_MS);
+      },
+
+      setButtonLoading(button, loadingText) {
+        button.disabled = true;
+        button.textContent = loadingText;
+      },
+
+      resetButton(button, defaultText) {
+        button.disabled = false;
+        button.textContent = defaultText;
+      },
+
+      toggleCard(jobId) {
+        const card = document.getElementById(`card-${jobId}`);
+        const details = document.getElementById(`details-${jobId}`);
+        const wasOpen = card.classList.contains(CONFIG.CLASSES.OPEN);
+
+        document.querySelectorAll('.job-card.open').forEach(c => c.classList.remove(CONFIG.CLASSES.OPEN));
+        document.querySelectorAll('.job-details.open').forEach(d => d.classList.remove(CONFIG.CLASSES.OPEN));
+
+        if (!wasOpen) {
+          card.classList.add(CONFIG.CLASSES.OPEN);
+          details.classList.add(CONFIG.CLASSES.OPEN);
+        }
+      },
+
+      toggleExpField() {
+        const button = DOM.get('exp-toggle-btn');
+        const dot = DOM.get('exp-toggle-dot');
+        const field = DOM.get('exp-field');
+        const isOn = button.getAttribute('aria-pressed') === 'true';
+
+        button.setAttribute('aria-pressed', String(!isOn));
+        button.style.background = isOn ? 'var(--border)' : 'var(--accent)';
+        dot.style.transform = isOn ? 'translateX(0)' : 'translateX(20px)';
+        field.classList.toggle(CONFIG.CLASSES.HIDDEN, isOn);
+
+        if (isOn) {
+          DOM.get('exp').value = '';
+          DOM.get('exp-years').value = '';
+        }
+      },
+
+      syncExpValue() {
+        const years = DOM.get('exp-years').value;
+        DOM.get('exp').value = years ? `${years} yr${years == 1 ? '' : 's'} min` : '';
+      },
+
+      toggleContactInput() {
+        const checked = Array.from(document.querySelectorAll('input[name="contact"]:checked')).map(cb => cb.value);
+        const needsPhone = checked.some(v => CONFIG.PHONE_CONTACT_METHODS.includes(v));
+        DOM.get('contact-phone').classList.toggle(CONFIG.CLASSES.HIDDEN, !needsPhone);
+        DOM.get('contact-email').classList.toggle(CONFIG.CLASSES.HIDDEN, !checked.includes('Email'));
+      }
+    };
+
+
+    // =============================================================================
+    // APP
+    // =============================================================================
+
+    const App = {
+      init() {
+        // Initialize Firebase
+        Database.init();
+        const firebaseAuth = firebase.auth();
+
+        // Cache DOM elements
+        DOM.init();
+
+        // Initialize UI components
+        CustomSelect.init();
+        Search.init();
+
+        // Setup modules
+        Auth.init(firebaseAuth);
+        Navigation.init();
+        Header.init();
+      }
+    };
+
+
+    // =============================================================================
+    // INITIALIZATION
+    // =============================================================================
+
+    document.addEventListener('DOMContentLoaded', () => {
+      App.init();
+    });
+
+  </script>
 </body>
 
 </html>
