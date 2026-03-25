@@ -79,6 +79,22 @@
       border-radius: 3px;
     }
 
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .view-slide-up {
+      animation: slideUp 0.3s ease-out forwards;
+    }
+
     /* =============================================================================
            Header
         ============================================================================= */
@@ -479,7 +495,7 @@
     <div class="flex gap-2 mb-3">
       <div class="relative flex-1">
         <input id="search-input" type="text" placeholder="Search title or industry…"
-          class="w-full px-3 py-2 pr-8 text-sm" oninput="Search.filter()" />
+          class="w-full px-3 py-2 pr-8 text-sm" oninput="Display.refresh()" />
         <button id="search-clear-btn" onclick="Search.clear()"
           class="hidden absolute inset-y-0 right-0 pr-3 items-center" style="color:var(--muted)">
           <i class="fas fa-times text-xs"></i>
@@ -496,15 +512,55 @@
             display: none
           }
         </style>
-        <!-- Pills injected by Search.init() -->
+
+        <div class="relative flex-shrink-0">
+          <button onclick="event.stopPropagation(); Search.togglePillDropdown('industry')" id="pill-btn-industry"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+            style="border:1px solid var(--border); background:var(--card); color:var(--muted); cursor:pointer">
+            <span id="pill-label-industry">Industry</span>
+            <i class="fas fa-chevron-down" id="pill-chevron-industry" style="font-size:9px"></i>
+          </button>
+        </div>
+
+        <div class="relative flex-shrink-0">
+          <button onclick="event.stopPropagation(); Search.togglePillDropdown('location')" id="pill-btn-location"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+            style="border:1px solid var(--border); background:var(--card); color:var(--muted); cursor:pointer">
+            <span id="pill-label-location">Location</span>
+            <i class="fas fa-chevron-down" id="pill-chevron-location" style="font-size:9px"></i>
+          </button>
+        </div>
+
+        <div class="relative flex-shrink-0">
+          <button onclick="event.stopPropagation(); Search.togglePillDropdown('type')" id="pill-btn-type"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+            style="border:1px solid var(--border); background:var(--card); color:var(--muted); cursor:pointer">
+            <span id="pill-label-type">Job Type</span>
+            <i class="fas fa-chevron-down" id="pill-chevron-type" style="font-size:9px"></i>
+          </button>
+        </div>
+
         <button id="pill-clear-all" onclick="Search.clearAllFilters()"
           class="hidden flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap"
           style="border:1px solid rgba(200,82,42,.3); color:var(--accent); background:rgba(200,82,42,.06); cursor:pointer">
           Clear all
         </button>
       </div>
-      <!-- Dropdowns injected by Search.init() -->
-      <div id="pill-dropdowns"></div>
+
+      <div id="pill-dropdowns">
+        <div id="section-industry" class="hidden absolute mt-1 rounded-xl z-50"
+          style="background:var(--card); border:1px solid var(--border); box-shadow:0 8px 24px rgba(26,22,18,.12); min-width:160px; overflow:hidden">
+          <div style="max-height:220px; overflow-y:auto; border-radius:inherit"></div>
+        </div>
+        <div id="section-location" class="hidden absolute mt-1 rounded-xl z-50"
+          style="background:var(--card); border:1px solid var(--border); box-shadow:0 8px 24px rgba(26,22,18,.12); min-width:160px; overflow:hidden">
+          <div style="max-height:220px; overflow-y:auto; border-radius:inherit"></div>
+        </div>
+        <div id="section-type" class="hidden absolute mt-1 rounded-xl z-50"
+          style="background:var(--card); border:1px solid var(--border); box-shadow:0 8px 24px rgba(26,22,18,.12); min-width:160px; overflow:hidden">
+          <div style="max-height:220px; overflow-y:auto; border-radius:inherit"></div>
+        </div>
+      </div>
     </div>
 
     <p id="job-count" class="text-xs mb-3" style="color:var(--muted); min-height:1rem"></p>
@@ -524,7 +580,7 @@
     <h2 class="serif text-2xl mb-1" id="post-view-title">Post an Opening</h2>
     <p class="text-sm mb-6" style="color:var(--muted)">Fill in the details — it only takes a minute.</p>
 
-    <div class="flex flex-col gap-4 post-form-card">
+    <div class="flex flex-col gap-4 post-form-card view-slide-up">
 
       <div>
         <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Position
@@ -537,8 +593,7 @@
         <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Industry
           *</label>
         <div class="custom-select w-full" id="industry-container" data-name="industry"
-          data-placeholder="Select industry…"
-          data-options='["Technology","Healthcare","Finance","Education","Retail","Hospitality","Construction","Legal","Media & Marketing","Non-Profit","Other"]'>
+          data-placeholder="Select industry…" data-options-key="industries">
         </div>
         <p class="error-msg hidden text-xs mt-1" id="industry-error" style="color:#b0421d">Industry is required.</p>
       </div>
@@ -563,7 +618,7 @@
         <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Job Type
           *</label>
         <div class="custom-select w-full" id="jobtype-container" data-name="jobtype" data-placeholder="Select type…"
-          data-options='["Full-time","Part-time"]'>
+          data-options-key="jobTypes">
         </div>
         <p class="error-msg hidden text-xs mt-1" id="jobtype-error" style="color:#b0421d">Job type is required.</p>
       </div>
@@ -688,7 +743,7 @@
       <h2 class="serif text-lg mb-2">Delete this job?</h2>
       <p class="text-sm mb-6" style="color:var(--muted)">This action cannot be undone.</p>
       <div class="flex gap-2">
-        <button class="btn-danger flex-1" id="delete-confirm-btn" onclick="Jobs.confirmDelete()">Yes, delete</button>
+        <button class="btn-danger flex-1" id="delete-confirm-btn" onclick="Display.confirmDelete()">Yes, delete</button>
         <button class="btn-ghost flex-1" onclick="Modal.close('delete-modal')">Cancel</button>
       </div>
     </div>
@@ -772,35 +827,23 @@
         OPEN: 'open'
       },
 
-      // Industry options for the custom select
-      INDUSTRY_OPTIONS: [
-        'Technology', 'Healthcare', 'Finance', 'Education', 'Retail',
-        'Hospitality', 'Construction', 'Legal', 'Media & Marketing', 'Non-Profit', 'Other'
-      ],
-
-      // Job type options for the custom select
-      JOB_TYPE_OPTIONS: ['Full-time', 'Part-time'],
-
       // Known location abbreviations to preserve when capitalizing
       LOCATION_ABBR: ['NY', 'NJ', 'PA', 'CA', 'TX', 'FL', 'NYC', 'USA', 'UK', 'EU'],
 
+      FILTER_OPTIONS: {
+        industries: ['Technology', 'Healthcare', 'Finance', 'Education', 'Retail',
+          'Hospitality', 'Construction', 'Legal', 'Media & Marketing', 'Non-Profit', 'Other'],
+        locations: ['Boro Park NY', 'Crown Heights NY', 'Deal NJ', 'Far Rockaway NY', 'Flatbush NY',
+          'Jackson NJ', 'Lakewood NJ', 'Lawrence NY', 'Long Island NY', 'Monroe NY', 'Monsey NY',
+          'Upstate NY', 'Williamsburg NY', 'Montreal - CA', 'Toronto - CA', 'London - UK',
+          'Manchester - UK', 'Antwerp - EU', 'Belgium - EU', 'Israel'],
+        jobTypes: ['Full-time', 'Part-time']
+      },
+
       PILL_FILTERS: {
-        industry: {
-          label: 'Industry',
-          options: ['Technology', 'Healthcare', 'Finance', 'Education', 'Retail',
-            'Hospitality', 'Construction', 'Legal', 'Media & Marketing', 'Non-Profit', 'Other']
-        },
-        location: {
-          label: 'Location',
-          options: ['Boro Park NY', 'Crown Heights NY', 'Deal NJ', 'Far Rockaway NY', 'Flatbush NY',
-            'Jackson NJ', 'Lakewood NJ', 'Lawrence NY', 'Long Island NY', 'Monroe NY', 'Monsey NY',
-            'Upstate NY', 'Williamsburg NY', 'Montreal - CA', 'Toronto - CA', 'London - UK',
-            'Manchester - UK', 'Antwerp - EU', 'Belgium - EU', 'Israel']
-        },
-        type: {
-          label: 'Job Type',
-          options: ['Full-time', 'Part-time']
-        }
+        industry: { label: 'Industry', options: 'industries' },
+        location: { label: 'Location', options: 'locations' },
+        type: { label: 'Job Type', options: 'jobTypes' }
       },
     });
 
@@ -945,21 +988,12 @@
       _buildUrl(params) {
         const url = new URL(window.location);
 
-        if ('view' in params) {
-          params.view === 'browse'
-            ? url.searchParams.delete('view')
-            : url.searchParams.set('view', params.view);
-        }
-        if ('auth' in params) {
-          params.auth === null
-            ? url.searchParams.delete('auth')
-            : url.searchParams.set('auth', params.auth);
-        }
-        if ('edit' in params) {
-          params.edit === null
-            ? url.searchParams.delete('edit')
-            : url.searchParams.set('edit', params.edit);
-        }
+        Object.entries(params).forEach(([key, value]) => {
+          const isEmpty = value === null || (key === 'view' && value === 'browse');
+          isEmpty
+            ? url.searchParams.delete(key)
+            : url.searchParams.set(key, value);
+        });
 
         return url;
       }
@@ -1035,7 +1069,7 @@
                                     ${showActions ? `
                                         <div class="flex gap-2 mt-4" onclick="event.stopPropagation()">
                                             <button class="btn-ghost" onclick="Form.loadEdit('${job.id}')">Edit</button>
-                                            <button class="btn-danger" onclick="Jobs.deleteJob('${job.id}')">Delete</button>
+                                            <button class="btn-danger" onclick="Display.deleteJob('${job.id}')">Delete</button>
                                         </div>` : ''}
                                 </div>
                             </div>
@@ -1045,25 +1079,25 @@
 
       skeletonCards(count = 8) {
         return Array(count).fill(0).map(() => `
-                    <div class="job-card mb-2 p-4">
-                        <div class="flex justify-between items-start gap-3">
-                            <div class="flex-1 space-y-2">
-                                <div class="skeleton h-2.5 w-16"></div>
-                                <div class="skeleton h-4 w-48"></div>
-                                <div class="skeleton h-2.5 w-28"></div>
-                            </div>
-                            <div class="space-y-2 text-right">
-                                <div class="skeleton h-4 w-20 ml-auto"></div>
-                                <div class="skeleton h-2.5 w-14 ml-auto"></div>
-                            </div>
+                      <div class="job-card mb-2 p-4"">
+                        <div class="flex justify-between items-center gap-3 h-full">
+                          <div class="flex-1 space-y-2.5">
+                            <div class="skeleton h-2.5 w-16"></div>
+                            <div class="skeleton h-5 w-48"></div>
+                            <div class="skeleton h-2.5 w-28"></div>
+                          </div>
+                          <div class="space-y-2 text-right">
+                            <div class="skeleton h-4 w-20 ml-auto"></div>
+                            <div class="skeleton h-2.5 w-14 ml-auto"></div>
+                            <div class="skeleton h-2.5 w-10 ml-auto"></div>
+                          </div>
                         </div>
-                    </div>
-                `).join('');
+                      </div>`).join('');
       },
 
       loadMoreBtn() {
         return `
-                    <button id="load-more-btn" onclick="Jobs.loadMore()"
+                    <button id="load-more-btn" onclick="Display.loadMore()"
                         class="w-full mt-4 py-3 text-sm font-medium rounded-lg"
                         style="border:1px solid var(--border); color:var(--muted); background:var(--card); cursor:pointer">
                         Load more
@@ -1071,51 +1105,8 @@
       },
 
       emptyState(msg) { return `<div class="state-msg">${msg}</div>`; },
-      loadingState() { return `<div class="state-msg">Loading…</div>`; },
       errorState(msg) { return `<div class="state-msg">Error loading posts.<br><small>${msg}</small></div>`; }
     };
-
-
-    // =============================================================================
-    // DATABASE
-    // =============================================================================
-
-    const Database = {
-      db: null,
-
-      init() {
-        firebase.initializeApp(CONFIG.FIREBASE);
-        this.db = firebase.firestore();
-      },
-
-      async getAllJobs() {
-        return this.db.collection('jobs').orderBy('createdAt', 'desc').get();
-      },
-
-      async getMyJobs(uid) {
-        return this.db.collection('jobs').where('uid', '==', uid).orderBy('createdAt', 'desc').get();
-      },
-
-      async addJob(data, uid) {
-        const snapshot = await this.db.collection('jobs').get();
-        const ids = snapshot.docs.map(d => parseInt(d.id)).filter(n => !isNaN(n));
-        const nextId = String(ids.length ? Math.max(...ids) + 1 : 1);
-        return this.db.collection('jobs').doc(nextId).set({
-          ...data,
-          uid,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-      },
-
-      async updateJob(jobId, data) {
-        return this.db.collection('jobs').doc(jobId).update(data);
-      },
-
-      async deleteJob(jobId) {
-        return this.db.collection('jobs').doc(jobId).delete();
-      }
-    };
-
 
     // =============================================================================
     // AUTH
@@ -1154,15 +1145,50 @@
         }
       },
 
-      async signOut() {
-        State.signingOut = true;
-        await this._firebaseAuth.signOut();
-        UI.toast('Signed out.');
-        Navigation.show('browse');
-      },
-
       requireAuth(view) {
         State.currentUser ? Navigation.show(view) : Modal.open('auth-modal');
+      },
+
+      _onStateChange(user) {
+        State.currentUser = user;
+        Header.render(user);
+
+        if (!State.authReady) {
+          const { view, auth: authParam } = UrlSync.read();
+          State.currentView = view;
+          UrlSync.replace({ view });
+
+          if (authParam && !user) {
+            if (authParam === 'register') Modal.toggleAuthMode();
+            Modal.open('auth-modal', false);
+          }
+
+          if (!user && CONFIG.PROTECTED_VIEWS.includes(view)) {
+            Navigation.show('browse', false);
+            UrlSync.replace({ view: 'browse' });
+            Modal.open('auth-modal');
+          } else {
+            Navigation.show(view, false);
+          }
+
+          document.body.style.visibility = 'visible';
+          State.authReady = true;
+          if (user) UrlSync.replace({ auth: null });
+          return;
+        }
+
+        // subsequent auth changes — only act if needed
+        if (!user && State.isProtectedView()) {
+          Navigation.show('browse');
+          UrlSync.replace({ view: 'browse' });
+          Modal.open('auth-modal');
+        }
+      },
+
+      async signOut() {
+        if (State.currentView !== 'browse') Navigation.show('browse');
+        await this._firebaseAuth.signOut();
+        UI.toast('Signed out.');
       },
 
       async deleteAccount() {
@@ -1186,153 +1212,36 @@
           );
         }
       },
-
-      _onStateChange(user) {
-        State.currentUser = user;
-        Header.render(user);
-        State.authReady
-          ? Auth._guardSession(user)
-          : Auth._resolveInitialView(user);
-      },
-
-      // Called once on page load — shows correct view based on URL and auth state
-      _resolveInitialView(user) {
-        const { view, auth: authParam } = UrlSync.read();
-        State.currentView = view;
-        UrlSync.replace({ view });
-
-        if (authParam && !user) {
-          if (authParam === 'register') Modal.toggleAuthMode();
-          Modal.open('auth-modal', false);
-        }
-
-        if (user) {
-          Navigation.show(view, false);
-          if (view === 'myposts') Jobs.loadMyJobs();
-        } else if (CONFIG.PROTECTED_VIEWS.includes(view)) {
-          Navigation.show('browse', false);
-          UrlSync.replace({ view: 'browse' });
-          Modal.open('auth-modal');
-        } else {
-          Navigation.show(view, false);
-        }
-
-        document.body.style.visibility = 'visible';
-        State.authReady = true;
-      },
-
-      // Called on subsequent auth changes — guards protected views on sign-out
-      _guardSession(user) {
-        if (!user && State.isProtectedView() && !State.signingOut) {
-          Navigation.show('browse');
-          UrlSync.replace({ view: 'browse' });
-          Modal.open('auth-modal');
-        }
-      }
     };
 
-
     // =============================================================================
-    // HEADER
+    // DATABASE
     // =============================================================================
 
-    const Header = {
+    const Database = {
+      db: null,
+
       init() {
-        document.addEventListener('click', (e) => {
-          if (!DOM.get('auth-menu-wrap').contains(e.target)) {
-            DOM.get('profile-dropdown').classList.add(CONFIG.CLASSES.HIDDEN);
-          }
-        });
+        firebase.initializeApp(CONFIG.FIREBASE);
+        this.db = firebase.firestore();
+
+        this.db.enablePersistence({ synchronizeTabs: true })
+          .catch(err => {
+            if (err.code !== 'failed-precondition' && err.code !== 'unimplemented') {
+              console.warn('Firestore persistence error:', err);
+            }
+          });
       },
 
-      render(user) {
-        const signinBtn = DOM.get('auth-btn-signin');
-        const menuWrap = DOM.get('auth-menu-wrap');
-        const profileInitial = DOM.get('profile-initial');
-
-        if (user) {
-          signinBtn.classList.add(CONFIG.CLASSES.HIDDEN);
-          menuWrap.classList.remove(CONFIG.CLASSES.HIDDEN);
-          profileInitial.textContent = (user.email || '?')[0].toUpperCase();
-        } else {
-          signinBtn.classList.remove(CONFIG.CLASSES.HIDDEN);
-          menuWrap.classList.add(CONFIG.CLASSES.HIDDEN);
-        }
-      },
-
-      toggleProfileMenu() {
-        DOM.get('profile-dropdown').classList.toggle(CONFIG.CLASSES.HIDDEN);
-      },
-
-      closeProfileMenu() {
-        DOM.get('profile-dropdown').classList.add(CONFIG.CLASSES.HIDDEN);
-      }
-    };
-
-
-    // =============================================================================
-    // NAVIGATION
-    // =============================================================================
-
-    const Navigation = {
-      init() {
-        window.addEventListener('popstate', () => Navigation._onPopState());
-      },
-
-      show(view, updateUrl = true) {
-        CONFIG.ALL_VIEWS.forEach(v =>
-          DOM.get(`view-${v}`)?.classList.add(CONFIG.CLASSES.HIDDEN)
-        );
-        DOM.get(`view-${view}`)?.classList.remove(CONFIG.CLASSES.HIDDEN);
-
-        State.currentView = view;
-        window.scrollTo(0, 0);
-        if (updateUrl) UrlSync.push({ view });
-
-        DOM.get('header-post-btn').classList.toggle(CONFIG.CLASSES.HIDDEN, view === 'post');
-
-        if (view === 'browse') Jobs.loadAllJobs();
-        if (view === 'myposts') Jobs.loadMyJobs();
-        if (view === 'post' && !State._editingJobId) Form.clear();
-      },
-
-      _onPopState() {
-        const { view, auth: authParam } = UrlSync.read();
-
-        if (authParam) {
-          if (authParam === 'register' && Modal._authMode !== 'register') Modal.toggleAuthMode();
-          if (authParam === 'signin' && Modal._authMode !== 'signin') Modal.toggleAuthMode();
-          Modal.open('auth-modal', false);
-        } else {
-          Modal.close('auth-modal');
-        }
-
-        if (view !== 'post' && State._editingJobId) {
-          State._editingJobId = null;
-          UrlSync.replace({ edit: null });
-        }
-
-        Navigation.show(view, false);
-      }
-    };
-
-
-    // =============================================================================
-    // JOBS
-    // =============================================================================
-
-    const Jobs = {
       async loadAllJobs() {
         const list = DOM.get('job-list');
-        const count = DOM.get('job-count');
-        count.textContent = '';
-        list.innerHTML = Templates.skeletonCards(8);
+        const noResults = DOM.get('job-count');
 
         try {
-          const [snapshot] = await Promise.all([
-            Database.getAllJobs(),
-            new Promise(r => setTimeout(r, CONFIG.TIMING.SKELETON_DELAY_MS))
-          ]);
+          noResults.textContent = '';
+          list.innerHTML = Templates.skeletonCards(8);
+
+          const snapshot = await this.db.collection('jobs').orderBy('createdAt', 'desc').get();
 
           if (snapshot.empty) {
             list.innerHTML = Templates.emptyState('No openings found. Be the first to post one!');
@@ -1340,25 +1249,25 @@
           }
 
           State.allJobs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          Search.filter();
+          Display.refresh();
+
         } catch (error) {
           list.innerHTML = Templates.errorState(error.message);
         }
       },
 
       async loadMyJobs() {
-        const list = DOM.get('my-job-list');
-        const greeting = DOM.get('myposts-greeting');
         if (!State.currentUser) return;
-
-        greeting.textContent = State.currentUser.email;
-        list.innerHTML = Templates.skeletonCards(8);
+        const list = DOM.get('my-job-list');
 
         try {
-          const [snapshot] = await Promise.all([
-            Database.getMyJobs(State.currentUser.uid),
-            new Promise(r => setTimeout(r, CONFIG.TIMING.SKELETON_DELAY_MS))
-          ]);
+          DOM.get('myposts-greeting').textContent = State.currentUser.email;
+          list.innerHTML = Templates.skeletonCards(3);
+
+          const snapshot = await this.db.collection('jobs')
+            .where('uid', '==', State.currentUser.uid)
+            .orderBy('createdAt', 'desc')
+            .get();
 
           if (snapshot.empty) {
             list.innerHTML = Templates.emptyState("You haven't posted any jobs yet.");
@@ -1366,10 +1275,104 @@
           }
 
           State.myJobs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          list.innerHTML = State.myJobs.map(job => Templates.jobCard(job, true, 'my-')).join('');
+          Display.refreshMyJobs();
+
         } catch (error) {
           list.innerHTML = Templates.errorState(error.message);
         }
+      },
+
+      async getMyJobs(uid) {
+        return this.db.collection('jobs')
+          .where('uid', '==', uid)
+          .orderBy('createdAt', 'desc')
+          .get();
+      },
+
+      async addJob(data, uid) {
+        const snapshot = await this.db.collection('jobs').get();
+        const ids = snapshot.docs.map(d => parseInt(d.id)).filter(n => !isNaN(n));
+        const nextId = String(ids.length ? Math.max(...ids) + 1 : 1);
+        return this.db.collection('jobs').doc(nextId).set({
+          ...data,
+          uid,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      },
+
+      async updateJob(jobId, data) {
+        return this.db.collection('jobs').doc(jobId).update(data);
+      },
+
+      async deleteJob(jobId) {
+        return this.db.collection('jobs').doc(jobId).delete();
+      }
+    };
+
+    // =============================================================================
+    // DISPLAY
+    // =============================================================================
+
+    const Display = {
+
+      refresh() {
+        const list = DOM.get('job-list');
+        const count = DOM.get('job-count');
+
+        State.jobsPage = 1;
+        count.textContent = '';
+        Search.toggleClearButton();
+        list.innerHTML = Templates.skeletonCards(8);
+
+        setTimeout(() => {
+          const query = DOM.get('search-input').value.toLowerCase().trim();
+
+          let jobs = [...State.allJobs];
+
+          jobs = jobs.filter(job => {
+            const matchText = !query || (job.title || '').toLowerCase().includes(query) || (job.industry || '').toLowerCase().includes(query);
+            const matchType = !Search._filters.type || job.jobType === Search._filters.type;
+            const matchIndustry = !Search._filters.industry || job.industry === Search._filters.industry;
+            const matchLocation = !Search._filters.location || job.location === Search._filters.location;
+            return matchText && matchType && matchIndustry && matchLocation;
+          });
+
+          Search.filteredJobs = jobs;
+          Display.renderJobs();
+
+        }, CONFIG.TIMING.SKELETON_DELAY_MS);
+      },
+
+      renderJobs() {
+        const list = DOM.get('job-list');
+        const count = DOM.get('job-count');
+
+        if (!Search.filteredJobs.length) {
+          count.textContent = '';
+          list.innerHTML = Templates.emptyState('No openings match your search.');
+          return;
+        }
+
+        const total = Search.filteredJobs.length;
+        const visible = Search.filteredJobs.slice(0, State.jobsPage * CONFIG.PAGE_SIZE);
+        count.textContent = `${total} opening${total !== 1 ? 's' : ''} found`;
+        list.innerHTML = visible.map(job => Templates.jobCard(job, false)).join('');
+        if (visible.length < total) list.innerHTML += Templates.loadMoreBtn();
+      },
+
+      refreshMyJobs() {
+        const list = DOM.get('my-job-list');
+        list.innerHTML = Templates.skeletonCards(3);
+
+        setTimeout(() => {
+          Display.renderMyJobs();
+        }, CONFIG.TIMING.SKELETON_DELAY_MS);
+      },
+
+      renderMyJobs() {
+        DOM.get('my-job-list').innerHTML = State.myJobs
+          .map(job => Templates.jobCard(job, true, 'my-'))
+          .join('');
       },
 
       deleteJob(jobId) {
@@ -1381,13 +1384,12 @@
         if (!State._pendingDeleteId) return;
         const button = DOM.get('delete-confirm-btn');
         UI.setButtonLoading(button, 'Deleting…');
-
         try {
           await Database.deleteJob(State._pendingDeleteId);
           UI.toast('Job deleted.');
           Modal.close('delete-modal');
           State._pendingDeleteId = null;
-          await Jobs.loadMyJobs();
+          await Database.loadMyJobs();
         } catch (error) {
           UI.toast('Error deleting job: ' + error.message);
         } finally {
@@ -1397,10 +1399,9 @@
 
       loadMore() {
         State.jobsPage++;
-        Search._render();
+        Display.renderJobs();
       }
     };
-
 
     // =============================================================================
     // SEARCH
@@ -1412,40 +1413,8 @@
       _openPill: null,
 
       init() {
-        // Build _filters from config
         Object.keys(CONFIG.PILL_FILTERS).forEach(key => {
           this._filters[key] = '';
-        });
-
-        // Inject pill buttons into bar (before clear-all)
-        const bar = document.getElementById('filter-pills-bar');
-        const clearAll = document.getElementById('pill-clear-all');
-        const dropContainer = document.getElementById('pill-dropdowns');
-
-        Object.entries(CONFIG.PILL_FILTERS).forEach(([key, cfg]) => {
-          // Button
-          const wrap = document.createElement('div');
-          wrap.className = 'relative flex-shrink-0';
-          wrap.id = `pill-wrap-${key}`;
-          wrap.innerHTML = `
-        <button onclick="event.stopPropagation(); Search.togglePillDropdown('${key}')"
-          id="pill-btn-${key}"
-          class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all"
-          style="border:1px solid var(--border); background:var(--card); color:var(--muted); cursor:pointer">
-          <span id="pill-label-${key}">${cfg.label}</span>
-          <i class="fas fa-chevron-down" id="pill-chevron-${key}" style="font-size:9px"></i>
-        </button>`;
-          bar.insertBefore(wrap, clearAll);
-
-          // Dropdown
-          const drop = document.createElement('div');
-          drop.id = `pill-drop-${key}`;
-          drop.className = 'hidden absolute mt-1 rounded-xl z-50';
-          drop.style.cssText = `top:100%; left:0; background:var(--card); border:1px solid var(--border); box-shadow:0 8px 24px rgba(26,22,18,.12); min-width:160px; overflow:hidden`;
-          drop.innerHTML = `<div id="pill-opts-${key}" style="max-height:220px; overflow-y:auto; border-radius:inherit"></div>`;
-          dropContainer.appendChild(drop);
-
-          // Options
           this._buildOpts(key);
         });
 
@@ -1455,10 +1424,12 @@
       },
 
       _buildOpts(key) {
-        const container = document.getElementById(`pill-opts-${key}`);
-        if (!container) return;
+        const outer = document.getElementById(`section-${key}`);
+        if (!outer) return;
+        const container = outer.querySelector('div');
 
-        const { label, options } = CONFIG.PILL_FILTERS[key];
+        const { label, options: optionsKey } = CONFIG.PILL_FILTERS[key];
+        const options = CONFIG.FILTER_OPTIONS[optionsKey];
         const full = [
           { label: `All ${label}s`, value: '' },
           ...options.map(o => ({ label: o, value: o }))
@@ -1481,17 +1452,17 @@
         this._markOpt(key, value);
         this._updatePillAppearance(key);
         this._closeAll();
-        this.filter();
+        Display.refresh()
       },
 
       _markOpt(key, value) {
-        const opts = CONFIG.PILL_FILTERS[key].options;
+        const opts = CONFIG.FILTER_OPTIONS[CONFIG.PILL_FILTERS[key].options];
         opts.forEach(o => {
-          const optId = o.value || 'all';
+          const optId = o || 'all';               // o is a plain string
           const check = document.getElementById(`pill-check-${key}-${optId}`);
           const row = document.getElementById(`pill-opt-${key}-${optId}`);
           if (!check || !row) return;
-          const active = o.value === value;
+          const active = o === value;             // compare string to string
           check.classList.toggle('hidden', !active);
           row.style.background = active ? 'rgba(200,82,42,.06)' : '';
           row.style.color = active ? 'var(--accent)' : 'var(--ink)';
@@ -1509,7 +1480,7 @@
 
         label.textContent = isActive ? value : CONFIG.PILL_FILTERS[key].label;
         btn.style.borderColor = isActive ? 'var(--accent)' : 'var(--border)';
-        btn.style.background  = 'var(--card)';
+        btn.style.background = 'var(--card)';
         btn.style.color = isActive ? 'var(--accent)' : 'var(--muted)';
 
         const anyActive = Object.values(this._filters).some(v => !!v);
@@ -1517,7 +1488,7 @@
       },
 
       togglePillDropdown(key) {
-        const drop = document.getElementById(`pill-drop-${key}`);
+        const drop = document.getElementById(`section-${key}`);
         const chevron = document.getElementById(`pill-chevron-${key}`);
         const btn = document.getElementById(`pill-btn-${key}`);
         const isOpen = !drop.classList.contains('hidden');
@@ -1537,46 +1508,11 @@
 
       _closeAll() {
         if (!this._openPill) return;
-        const drop = document.getElementById(`pill-drop-${this._openPill}`);
+        const drop = document.getElementById(`section-${this._openPill}`);
         const chevron = document.getElementById(`pill-chevron-${this._openPill}`);
         drop?.classList.add('hidden');
         if (chevron) chevron.style.transform = '';
         this._openPill = null;
-      },
-
-      filter() {
-        State.jobsPage = 1;
-        this.toggleClearButton();
-        const query = DOM.get('search-input').value.toLowerCase().trim();
-
-        Search.filteredJobs = State.allJobs.filter(job => {
-          const matchText = !query || (job.title || '').toLowerCase().includes(query) || (job.industry || '').toLowerCase().includes(query);
-          const matchType = !this._filters.type || job.jobType === this._filters.type;
-          const matchIndustry = !this._filters.industry || job.industry === this._filters.industry;
-          const matchLocation = !this._filters.location || job.location === this._filters.location;
-          return matchText && matchType && matchIndustry && matchLocation;
-        });
-
-        Search._render();
-      },
-
-      _render() {
-        const list = DOM.get('job-list');
-        const count = DOM.get('job-count');
-
-        if (!Search.filteredJobs.length) {
-          count.textContent = '';
-          list.innerHTML = Templates.emptyState('No openings match your search.');
-          return;
-        }
-
-        const total = Search.filteredJobs.length;
-        const visible = Search.filteredJobs.slice(0, State.jobsPage * CONFIG.PAGE_SIZE);
-        const hasMore = visible.length < total;
-
-        count.textContent = `${total} opening${total !== 1 ? 's' : ''} found`;
-        list.innerHTML = visible.map(job => Templates.jobCard(job, false)).join('');
-        if (hasMore) list.innerHTML += Templates.loadMoreBtn();
       },
 
       toggleClearButton() {
@@ -1589,7 +1525,7 @@
       clear() {
         DOM.get('search-input').value = '';
         this.toggleClearButton();
-        this.filter();
+        Display.refresh()
         DOM.get('search-input').focus();
       },
 
@@ -1599,7 +1535,7 @@
           this._markOpt(key, '');
           this._updatePillAppearance(key);
         });
-        this.filter();
+        Display.refresh()
       }
     }
 
@@ -1752,7 +1688,6 @@
       }
     };
 
-
     // =============================================================================
     // MODAL
     // =============================================================================
@@ -1763,6 +1698,10 @@
       open(id, updateUrl = true) {
         if (id === 'auth-modal' && updateUrl && this._authMode !== 'signin') {
           this.toggleAuthMode();
+        }
+        if (id === 'auth-modal') {
+          DOM.get('auth-email').value = '';
+          DOM.get('auth-password').value = '';
         }
         DOM.get(id)?.classList.add(CONFIG.CLASSES.OPEN);
         if (id === 'auth-modal' && updateUrl) UrlSync.push({ auth: this._authMode });
@@ -1786,6 +1725,89 @@
       }
     };
 
+    // =============================================================================
+    // HEADER
+    // =============================================================================
+
+    const Header = {
+      init() {
+        document.addEventListener('click', (e) => {
+          if (!DOM.get('auth-menu-wrap').contains(e.target)) {
+            DOM.get('profile-dropdown').classList.add(CONFIG.CLASSES.HIDDEN);
+          }
+        });
+      },
+
+      render(user) {
+        const signinBtn = DOM.get('auth-btn-signin');
+        const menuWrap = DOM.get('auth-menu-wrap');
+        const profileInitial = DOM.get('profile-initial');
+
+        if (user) {
+          signinBtn.classList.add(CONFIG.CLASSES.HIDDEN);
+          menuWrap.classList.remove(CONFIG.CLASSES.HIDDEN);
+          profileInitial.textContent = (user.email || '?')[0].toUpperCase();
+        } else {
+          signinBtn.classList.remove(CONFIG.CLASSES.HIDDEN);
+          menuWrap.classList.add(CONFIG.CLASSES.HIDDEN);
+        }
+      },
+
+      toggleProfileMenu() {
+        DOM.get('profile-dropdown').classList.toggle(CONFIG.CLASSES.HIDDEN);
+      },
+
+      closeProfileMenu() {
+        DOM.get('profile-dropdown').classList.add(CONFIG.CLASSES.HIDDEN);
+      }
+    };
+
+
+    // =============================================================================
+    // NAVIGATION
+    // =============================================================================
+
+    const Navigation = {
+      init() {
+        window.addEventListener('popstate', () => Navigation._onPopState());
+      },
+
+      show(view, updateUrl = true) {
+        CONFIG.ALL_VIEWS.forEach(v =>
+          DOM.get(`view-${v}`)?.classList.add(CONFIG.CLASSES.HIDDEN)
+        );
+        DOM.get(`view-${view}`)?.classList.remove(CONFIG.CLASSES.HIDDEN);
+
+        State.currentView = view;
+        window.scrollTo(0, 0);
+        if (updateUrl) UrlSync.push({ view });
+
+        DOM.get('header-post-btn').classList.toggle(CONFIG.CLASSES.HIDDEN, view === 'post');
+
+        if (view === 'browse') Database.loadAllJobs();
+        if (view === 'myposts') Database.loadMyJobs();
+        if (view === 'post' && !State._editingJobId) Form.clear();
+      },
+
+      _onPopState() {
+        const { view, auth: authParam } = UrlSync.read();
+
+        if (authParam && !State.currentUser) {
+          if (authParam === 'register' && Modal._authMode !== 'register') Modal.toggleAuthMode();
+          if (authParam === 'signin' && Modal._authMode !== 'signin') Modal.toggleAuthMode();
+          Modal.open('auth-modal', false);
+        } else {
+          Modal.close('auth-modal');
+        }
+
+        if (view !== 'post' && State._editingJobId) {
+          State._editingJobId = null;
+          UrlSync.replace({ edit: null });
+        }
+
+        Navigation.show(view, false);
+      }
+    };
 
     // =============================================================================
     // CUSTOM SELECT
@@ -1822,7 +1844,8 @@
 
       _build(container) {
         const placeholder = container.dataset.placeholder || 'Select…';
-        const options = JSON.parse(container.dataset.options || '[]');
+        const key = container.dataset.optionsKey;
+        const options = key ? CONFIG.FILTER_OPTIONS[key] : JSON.parse(container.dataset.options || '[]');
         container._value = '';
 
         const box = this._createBox(placeholder);
