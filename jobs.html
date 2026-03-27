@@ -16,13 +16,13 @@
            Base Styles
         ============================================================================= */
     :root {
-  --cream: #FAF7F2;
-  --ink: #1A1612;
-  --muted: #9A8F84;
-  --accent: #C8522A;
-  --card: #FFFDF9;
-  --border: #EDE5D8;
-}
+      --cream: #FAF7F2;
+      --ink: #1A1612;
+      --muted: #9A8F84;
+      --accent: #C8522A;
+      --card: #FFFDF9;
+      --border: #EDE5D8;
+    }
 
     * {
       box-sizing: border-box;
@@ -47,7 +47,7 @@
     }
 
     ::-webkit-scrollbar {
-      width: 4px;
+      width: 3px;
     }
 
     ::-webkit-scrollbar-track {
@@ -356,7 +356,6 @@
       background: var(--card);
       color: var(--ink);
       font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
@@ -415,7 +414,6 @@
 
     .cs-option {
       padding: 10px 14px;
-      font-size: 14px;
       cursor: pointer;
       color: var(--ink);
       transition: background .15s;
@@ -495,7 +493,7 @@
     <div class="flex gap-2 mb-3">
       <div class="relative flex-1">
         <input id="search-input" type="text" placeholder="Search title or industry…" class="w-full px-3 py-2 pr-8"
-          style="font-size:16px" oninput="Display.refresh()" />
+          oninput="Display.refresh()" />
         <button id="search-clear-btn" onclick="Search.clear()"
           class="hidden absolute inset-y-0 right-0 pr-3 items-center" style="color:var(--muted)">
           <i class="fas fa-times text-xs"></i>
@@ -515,7 +513,7 @@
 
         <div class="relative flex-shrink-0">
           <button onclick="event.stopPropagation(); Search.togglePillDropdown('industry')" id="pill-btn-industry"
-            class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-all"
             style="border:1px solid var(--border); background:var(--card); color:var(--muted); cursor:pointer">
             <span id="pill-label-industry">Industry</span>
             <i class="fas fa-chevron-down" id="pill-chevron-industry" style="font-size:9px"></i>
@@ -524,7 +522,7 @@
 
         <div class="relative flex-shrink-0">
           <button onclick="event.stopPropagation(); Search.togglePillDropdown('location')" id="pill-btn-location"
-            class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-all"
             style="border:1px solid var(--border); background:var(--card); color:var(--muted); cursor:pointer">
             <span id="pill-label-location">Location</span>
             <i class="fas fa-chevron-down" id="pill-chevron-location" style="font-size:9px"></i>
@@ -533,7 +531,7 @@
 
         <div class="relative flex-shrink-0">
           <button onclick="event.stopPropagation(); Search.togglePillDropdown('type')" id="pill-btn-type"
-            class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all"
+            class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-all"
             style="border:1px solid var(--border); background:var(--card); color:var(--muted); cursor:pointer">
             <span id="pill-label-type">Job Type</span>
             <i class="fas fa-chevron-down" id="pill-chevron-type" style="font-size:9px"></i>
@@ -541,22 +539,22 @@
         </div>
 
         <button id="pill-clear-all" onclick="Search.clearAllFilters()"
-          class="hidden flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap"
+          class="hidden flex-shrink-0 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap"
           style="border:1px solid rgba(200,82,42,.3); color:var(--accent); background:rgba(200,82,42,.06); cursor:pointer">
           Clear all
         </button>
       </div>
 
       <div id="pill-dropdowns">
-        <div id="section-industry" class="hidden absolute mt-1 rounded-xl z-50"
+        <div id="section-industry" class="hidden absolute mt-1 rounded-lg z-50"
           style="background:var(--card); border:1px solid var(--border); box-shadow:0 8px 24px rgba(26,22,18,.12); min-width:160px; overflow:hidden">
           <div style="max-height:220px; overflow-y:auto; border-radius:inherit"></div>
         </div>
-        <div id="section-location" class="hidden absolute mt-1 rounded-xl z-50"
+        <div id="section-location" class="hidden absolute mt-1 rounded-lg z-50"
           style="background:var(--card); border:1px solid var(--border); box-shadow:0 8px 24px rgba(26,22,18,.12); min-width:160px; overflow:hidden">
           <div style="max-height:220px; overflow-y:auto; border-radius:inherit"></div>
         </div>
-        <div id="section-type" class="hidden absolute mt-1 rounded-xl z-50"
+        <div id="section-type" class="hidden absolute mt-1 rounded-lg z-50"
           style="background:var(--card); border:1px solid var(--border); box-shadow:0 8px 24px rgba(26,22,18,.12); min-width:160px; overflow:hidden">
           <div style="max-height:220px; overflow-y:auto; border-radius:inherit"></div>
         </div>
@@ -585,7 +583,7 @@
       <div>
         <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Position
           Title *</label>
-        <input id="title" type="text" placeholder="e.g. Senior Designer" class="w-full px-3 py-2 text-sm" />
+        <input id="title" type="text" placeholder="e.g. Senior Designer" class="w-full px-3 py-2" />
         <p class="error-msg hidden text-xs mt-1" id="title-error" style="color:#b0421d">Position title is required.</p>
       </div>
 
@@ -612,7 +610,7 @@
       <div>
         <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Salary
           Range</label>
-        <input id="salary" type="text" placeholder="e.g. $60K – $80K / yr" class="w-full px-3 py-2 text-sm"
+        <input id="salary" type="text" placeholder="e.g. $60K – $80K / yr" class="w-full px-3 py-2"
           oninput="if(this.value && !this.value.startsWith('$')) this.value = '$' + this.value; this.value = Utils.formatSalary(this.value)" />
         <p class="error-msg hidden text-xs mt-1" id="salary-error" style="color:#b0421d">Please enter a valid salary
           (e.g. $60K / yr).</p>
@@ -640,7 +638,7 @@
         </div>
         <div id="exp-field" class="hidden">
           <div class="flex items-center gap-2">
-            <input id="exp-years" type="number" min="0" max="30" placeholder="e.g. 3" class="w-24 px-3 py-2 text-sm"
+            <input id="exp-years" type="number" min="0" max="30" placeholder="e.g. 3" class="w-24 px-3 py-2"
               oninput="UI.syncExpValue()" />
             <span class="text-sm" style="color:var(--muted)">years minimum</span>
           </div>
@@ -654,7 +652,7 @@
         <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Job
           Description *</label>
         <textarea id="desc" rows="8" placeholder="Describe responsibilities, requirements, perks…"
-          class="w-full px-3 py-2 text-sm resize-none"></textarea>
+          class="w-full px-3 py-2 resize-none"></textarea>
         <p class="error-msg hidden text-xs mt-1" id="desc-error" style="color:#b0421d">Job description is required.</p>
       </div>
 
@@ -687,13 +685,13 @@
         <p class="error-msg hidden text-xs" id="contact-error" style="color:#b0421d">Select at least one contact method.
         </p>
         <div id="contact-phone" class="hidden space-y-1">
-          <input id="phone" type="tel" placeholder="123-456-7890" class="w-full px-3 py-2 text-sm"
+          <input id="phone" type="tel" placeholder="123-456-7890" class="w-full px-3 py-2"
             oninput="this.value = Utils.formatPhone(this.value)" />
           <p class="error-msg hidden text-xs" id="phone-error" style="color:#b0421d">Please enter a valid phone number
             (123-456-7890).</p>
         </div>
         <div id="contact-email" class="hidden space-y-1">
-          <input id="email" type="email" placeholder="Email address" class="w-full px-3 py-2 text-sm" />
+          <input id="email" type="email" placeholder="Email address" class="w-full px-3 py-2" />
           <p class="error-msg hidden text-xs" id="email-error" style="color:#b0421d">Please enter a valid email address.
           </p>
         </div>
@@ -727,9 +725,8 @@
       <h2 class="serif text-xl mb-0.5" id="auth-modal-title">Sign In</h2>
       <p class="text-xs mb-5" style="color:var(--muted)" id="auth-modal-sub">Access your job postings</p>
       <div class="flex flex-col gap-3">
-        <input id="auth-email" type="email" placeholder="Email" class="w-full px-3 py-2 text-sm" />
-        <input id="auth-password" type="password" placeholder="Password (min 6 chars)"
-          class="w-full px-3 py-2 text-sm" />
+        <input id="auth-email" type="email" placeholder="Email" class="w-full px-3 py-2" />
+        <input id="auth-password" type="password" placeholder="Password (min 6 chars)" class="w-full px-3 py-2" />
         <button class="btn-accent" id="auth-submit-btn">Sign In</button>
       </div>
       <p class="text-xs text-center mt-4" style="color:var(--muted)">
@@ -866,14 +863,14 @@
           'Manufacturing', 'Marketing & Media', 'Non-Profit',
           'Pharmaceutical', 'Real Estate', 'Retail', 'Security',
           'Senior Care', 'Technology', 'Travel', 'Other'],
-        locations: ['Bayonne, NJ', 'Brooklyn, NY', 'Boro Park', 'Bronx, NY', 'Butler, NJ', 'Cherry Hill, NJ', 'Clifton, NJ',
+        locations: ['Bayonne, NJ', 'Brooklyn, NY', 'Boro Park, NY', 'Bronx , NY', 'Butler, NJ', 'Cherry Hill, NJ', 'Clifton, NJ',
           'Edison, NJ', 'East Rutherford, NJ', 'Fort Lee, NJ', 'Great Neck, NY', 'Hackensack, NJ', 'Howell, NJ', 'Jackson, NJ',
           'Jersey City, NJ', 'Lakewood, NJ', 'Linden, NJ', 'Long Island, NY', 'Mahwah, NJ', 'Manalapan, NJ', 'Manhattan, NY',
           'Middletown, NY', 'Monroe, NY', 'Monsey / Spring Valley, NY', 'Montvale, NJ', 'New Brunswick, NJ', 'Newark, NJ',
-          'New York, NY (NYC)', 'North Brunswick, NJ', 'North Jersey', 'Northern, NJ', 'Norwood, NJ', 'Parsippany, NJ',
+          'New York City, NY', 'North Brunswick, NJ', 'North Jersey', 'Northern, NJ', 'Norwood, NJ', 'Parsippany, NJ',
           'Passaic, NJ', 'Paterson, NJ', 'Pomona, NY', 'Queens, NY', 'Ramsey, NJ', 'Ridgefield, NJ', 'Teaneck, NJ',
           'Trenton, NJ', 'Union, NJ', 'Upper Saddle River, NJ', 'Upstate, NY', 'Wayne, NJ', 'West Orange, NJ', 'Westchester, NY',
-          'Williamsburg', 'Remote', 'Other'],
+          'Williamsburg, NY', 'Remote', 'Other'],
         jobTypes: ['Full-time', 'Part-time']
       },
 
@@ -1195,12 +1192,16 @@
           if (authParam && !user) {
             if (authParam === 'register') Modal.toggleAuthMode();
             Modal.open('auth-modal', false);
+            Navigation.show(view, false);
+            document.body.style.visibility = 'visible';
+            State.authReady = true;
+            return;
           }
 
           if (!user && CONFIG.PROTECTED_VIEWS.includes(view)) {
             Navigation.show('browse', false);
-            UrlSync.replace({ view: 'browse' });
-            Modal.open('auth-modal');
+            UrlSync.replace({ view: 'browse', edit: null });
+            Modal.open('auth-modal', false);
           } else {
             Navigation.show(view, false);
           }
@@ -1215,7 +1216,6 @@
         if (!user && State.isProtectedView()) {
           Navigation.show('browse');
           UrlSync.replace({ view: 'browse' });
-          Modal.open('auth-modal');
         }
       },
       /*
@@ -1248,7 +1248,7 @@
       async signOut() {
         if (State.currentView !== 'browse') {
           Navigation.show('browse', false);
-          UrlSync.replace({ view: 'browse' });
+          UrlSync.replace({ view: 'browse', edit: null });
         }
         await this._firebaseAuth.signOut();
         UI.toast('Signed out.');
@@ -1767,7 +1767,7 @@
       _authMode: 'signin',
 
       open(id, updateUrl = true) {
-        if (id === 'auth-modal' && this._authMode !== 'signin') {
+        if (id === 'auth-modal' && updateUrl && this._authMode !== 'signin') {
           this.toggleAuthMode(false);
         }
         if (id === 'auth-modal') {
@@ -1776,14 +1776,17 @@
         }
         DOM.get(id)?.classList.add(CONFIG.CLASSES.OPEN);
         if (id === 'auth-modal' && updateUrl) {
+          State._authModalPushed = true;
           UrlSync.push({ auth: this._authMode });
+        } else if (id === 'auth-modal') {
+          State._authModalPushed = false;
         }
       },
 
       close(id) {
         DOM.get(id)?.classList.remove(CONFIG.CLASSES.OPEN);
         if (id === 'auth-modal' && window.location.search.includes('auth=')) {
-          history.back();
+          State._authModalPushed ? history.back() : UrlSync.replace({ auth: null });
         }
       },
 
@@ -1797,9 +1800,67 @@
         DOM.get('auth-submit-btn').textContent = toRegister ? 'Register' : 'Sign In';
         DOM.get('auth-toggle-text').textContent = toRegister ? 'Already have an account?' : 'No account?';
         DOM.get('auth-toggle-btn').textContent = toRegister ? 'Sign In' : 'Register';
-        DOM.get('forgot-btn').classList.toggle(CONFIG.CLASSES.HIDDEN, toRegister);
-        DOM.get('forgot-separator').classList.toggle(CONFIG.CLASSES.HIDDEN, toRegister);
       }
+    };
+
+
+
+    // =============================================================================
+    // NAVIGATION
+    // =============================================================================
+
+    const Navigation = {
+      init() {
+        window.addEventListener('popstate', () => Navigation._onPopState());
+      },
+
+      show(view, updateUrl = true) {
+        CONFIG.ALL_VIEWS.forEach(v =>
+          DOM.get(`view-${v}`)?.classList.add(CONFIG.CLASSES.HIDDEN)
+        );
+        DOM.get(`view-${view}`)?.classList.remove(CONFIG.CLASSES.HIDDEN);
+
+        State.currentView = view;
+        window.scrollTo(0, 0);
+        if (updateUrl) UrlSync.push({ view });
+
+        DOM.get('header-post-btn').classList.toggle(CONFIG.CLASSES.HIDDEN, view === 'post');
+
+        if (view === 'browse') Database.loadAllJobs();
+        if (view === 'myposts') Database.loadMyJobs();
+        if (view === 'post' && !State._editingJobId) Form.clear();
+      },
+
+      _onPopState() {
+        const { view, auth: authParam, edit } = UrlSync.read();
+
+        // Clear edit param if not signed in
+        if (edit && !State.currentUser) {
+          UrlSync.replace({ edit: null });
+        }
+
+        // Sync modal to URL
+        if (authParam && !State.currentUser) {
+          if (authParam === 'register' && Modal._authMode !== 'register') Modal.toggleAuthMode(false);
+          if (authParam === 'signin' && Modal._authMode !== 'signin') Modal.toggleAuthMode(false);
+          DOM.get('auth-modal').classList.add(CONFIG.CLASSES.OPEN);
+        } else {
+          DOM.get('auth-modal').classList.remove(CONFIG.CLASSES.OPEN);
+        }
+
+        // Sync view to URL
+        if (view !== 'post' && State._editingJobId) {
+          State._editingJobId = null;
+          UrlSync.replace({ edit: null });
+        }
+
+        if (!State.currentUser && CONFIG.PROTECTED_VIEWS.includes(view)) {
+          Navigation.show('browse', false);
+          UrlSync.replace({ view: 'browse' });
+        } else if (view !== State.currentView) {
+          Navigation.show(view, false);
+        }
+      },
     };
 
     // =============================================================================
@@ -1837,60 +1898,6 @@
       closeProfileMenu() {
         DOM.get('profile-dropdown').classList.add(CONFIG.CLASSES.HIDDEN);
       }
-    };
-
-
-    // =============================================================================
-    // NAVIGATION
-    // =============================================================================
-
-    const Navigation = {
-      init() {
-        window.addEventListener('popstate', () => Navigation._onPopState());
-      },
-
-      show(view, updateUrl = true) {
-        CONFIG.ALL_VIEWS.forEach(v =>
-          DOM.get(`view-${v}`)?.classList.add(CONFIG.CLASSES.HIDDEN)
-        );
-        DOM.get(`view-${view}`)?.classList.remove(CONFIG.CLASSES.HIDDEN);
-
-        State.currentView = view;
-        window.scrollTo(0, 0);
-        if (updateUrl) UrlSync.push({ view });
-
-        DOM.get('header-post-btn').classList.toggle(CONFIG.CLASSES.HIDDEN, view === 'post');
-
-        if (view === 'browse') Database.loadAllJobs();
-        if (view === 'myposts') Database.loadMyJobs();
-        if (view === 'post' && !State._editingJobId) Form.clear();
-      },
-
-      _onPopState() {
-        const { view, auth: authParam } = UrlSync.read();
-
-        // Sync modal to URL
-        if (authParam && !State.currentUser) {
-          if (authParam === 'register' && Modal._authMode !== 'register') Modal.toggleAuthMode(false);
-          if (authParam === 'signin' && Modal._authMode !== 'signin') Modal.toggleAuthMode(false);
-          DOM.get('auth-modal').classList.add(CONFIG.CLASSES.OPEN);
-        } else {
-          DOM.get('auth-modal').classList.remove(CONFIG.CLASSES.OPEN);
-        }
-
-        // Sync view to URL
-        if (view !== 'post' && State._editingJobId) {
-          State._editingJobId = null;
-          UrlSync.replace({ edit: null });
-        }
-
-        if (!State.currentUser && CONFIG.PROTECTED_VIEWS.includes(view)) {
-          Navigation.show('browse', false);
-          UrlSync.replace({ view: 'browse' });
-        } else if (view !== State.currentView) {
-          Navigation.show(view, false);
-        }
-      },
     };
 
     // =============================================================================
