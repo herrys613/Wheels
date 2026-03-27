@@ -16,13 +16,13 @@
            Base Styles
         ============================================================================= */
     :root {
-      --cream: #F5F0E8;
-      --ink: #1A1612;
-      --muted: #7A6F63;
-      --accent: #C8522A;
-      --card: #FDFAF4;
-      --border: #E2D9CC;
-    }
+  --cream: #FAF7F2;
+  --ink: #1A1612;
+  --muted: #9A8F84;
+  --accent: #C8522A;
+  --card: #FFFDF9;
+  --border: #EDE5D8;
+}
 
     * {
       box-sizing: border-box;
@@ -494,8 +494,8 @@
   <div id="view-browse" class="max-w-lg mx-auto px-4 pt-5 pb-10 hidden">
     <div class="flex gap-2 mb-3">
       <div class="relative flex-1">
-        <input id="search-input" type="text" placeholder="Search title or industry…"
-          class="w-full px-3 py-2 pr-8 text-sm" oninput="Display.refresh()" />
+        <input id="search-input" type="text" placeholder="Search title or industry…" class="w-full px-3 py-2 pr-8"
+          style="font-size:16px" oninput="Display.refresh()" />
         <button id="search-clear-btn" onclick="Search.clear()"
           class="hidden absolute inset-y-0 right-0 pr-3 items-center" style="color:var(--muted)">
           <i class="fas fa-times text-xs"></i>
@@ -593,7 +593,8 @@
         <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Industry
           *</label>
         <div class="custom-select w-full" id="industry-container" data-name="industry"
-          data-placeholder="Select industry…" data-options-key="industries">
+          data-placeholder="Select industry…" data-options-key="industries"
+          data-custom-placeholder="Enter custom industry…">
         </div>
         <p class="error-msg hidden text-xs mt-1" id="industry-error" style="color:#b0421d">Industry is required.</p>
       </div>
@@ -601,7 +602,10 @@
       <div>
         <label class="block text-xs font-semibold mb-1 uppercase tracking-wide" style="color:var(--muted)">Location
           *</label>
-        <input id="location" type="text" placeholder="e.g. Brooklyn, NY / Remote" class="w-full px-3 py-2 text-sm" />
+        <div class="custom-select w-full" id="location-container" data-name="location"
+          data-placeholder="Select location…" data-options-key="locations"
+          data-custom-placeholder="Enter custom location…">
+        </div>
         <p class="error-msg hidden text-xs mt-1" id="location-error" style="color:#b0421d">Location is required.</p>
       </div>
 
@@ -731,9 +735,32 @@
       <p class="text-xs text-center mt-4" style="color:var(--muted)">
         <span id="auth-toggle-text">No account?</span>
         <button class="underline ml-1" onclick="Modal.toggleAuthMode()" id="auth-toggle-btn">Register</button>
+        <!--
+        <span class="mx-1" id="forgot-separator">·</span>
+        <button class="underline" id="forgot-btn" onclick="Auth.resetPassword()"
+          style="background:none; border:none; cursor:pointer; color:var(--muted)">Forgot password?</button>
       </p>
-      <button class="block text-xs text-center w-full mt-3" style="color:var(--border)"
-        onclick="Modal.close('auth-modal')">Cancel</button>
+      <div class="flex items-center gap-2 my-3">
+        <div class="flex-1 h-px" style="background:var(--border)"></div>
+        <span class="text-xs" style="color:var(--muted)">or</span>
+        <div class="flex-1 h-px" style="background:var(--border)"></div>
+      </div>
+      <button onclick="Auth.signInWithGoogle()"
+        class="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium"
+        style="border:1px solid var(--border); background:var(--card); color:var(--ink); cursor:pointer">
+        <svg width="18" height="18" viewBox="0 0 48 48">
+          <path fill="#EA4335"
+            d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+          <path fill="#4285F4"
+            d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+          <path fill="#FBBC05"
+            d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+          <path fill="#34A853"
+            d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+        </svg>
+        Continue with Google
+      </button>
+      -->
     </div>
   </div>
 
@@ -831,12 +858,22 @@
       LOCATION_ABBR: ['NY', 'NJ', 'PA', 'CA', 'TX', 'FL', 'NYC', 'USA', 'UK', 'EU'],
 
       FILTER_OPTIONS: {
-        industries: ['Technology', 'Healthcare', 'Finance', 'Education', 'Retail',
-          'Hospitality', 'Construction', 'Legal', 'Media & Marketing', 'Non-Profit', 'Other'],
-        locations: ['Boro Park NY', 'Crown Heights NY', 'Deal NJ', 'Far Rockaway NY', 'Flatbush NY',
-          'Jackson NJ', 'Lakewood NJ', 'Lawrence NY', 'Long Island NY', 'Monroe NY', 'Monsey NY',
-          'Upstate NY', 'Williamsburg NY', 'Montreal - CA', 'Toronto - CA', 'London - UK',
-          'Manchester - UK', 'Antwerp - EU', 'Belgium - EU', 'Israel'],
+        industries: ['Business Services', 'Childcare', 'Construction', 'Consumer Goods',
+          'Design & Architecture', 'Distribution & Logistics', 'E-commerce',
+          'Education', 'Energy', 'Finance & Accounting', 'Food & Hospitality',
+          'Healthcare', 'Home Services', 'HR & Staffing', 'Import & Trade',
+          'Insurance', 'Legal & Title', 'Lending & Mortgage', 'Maintenance Services',
+          'Manufacturing', 'Marketing & Media', 'Non-Profit',
+          'Pharmaceutical', 'Real Estate', 'Retail', 'Security',
+          'Senior Care', 'Technology', 'Travel', 'Other'],
+        locations: ['Bayonne, NJ', 'Brooklyn, NY', 'Boro Park', 'Bronx, NY', 'Butler, NJ', 'Cherry Hill, NJ', 'Clifton, NJ',
+          'Edison, NJ', 'East Rutherford, NJ', 'Fort Lee, NJ', 'Great Neck, NY', 'Hackensack, NJ', 'Howell, NJ', 'Jackson, NJ',
+          'Jersey City, NJ', 'Lakewood, NJ', 'Linden, NJ', 'Long Island, NY', 'Mahwah, NJ', 'Manalapan, NJ', 'Manhattan, NY',
+          'Middletown, NY', 'Monroe, NY', 'Monsey / Spring Valley, NY', 'Montvale, NJ', 'New Brunswick, NJ', 'Newark, NJ',
+          'New York, NY (NYC)', 'North Brunswick, NJ', 'North Jersey', 'Northern, NJ', 'Norwood, NJ', 'Parsippany, NJ',
+          'Passaic, NJ', 'Paterson, NJ', 'Pomona, NY', 'Queens, NY', 'Ramsey, NJ', 'Ridgefield, NJ', 'Teaneck, NJ',
+          'Trenton, NJ', 'Union, NJ', 'Upper Saddle River, NJ', 'Upstate, NY', 'Wayne, NJ', 'West Orange, NJ', 'Westchester, NY',
+          'Williamsburg', 'Remote', 'Other'],
         jobTypes: ['Full-time', 'Part-time']
       },
 
@@ -919,7 +956,7 @@
           // My Posts
           'my-job-list', 'myposts-greeting',
           // Post Form
-          'post-view-title', 'title', 'location', 'salary', 'desc',
+          'post-view-title', 'title', 'salary', 'desc',
           'exp-toggle-btn', 'exp-toggle-dot', 'exp-field', 'exp', 'exp-years',
           'contact-phone', 'contact-email', 'phone', 'email', 'submit-btn',
           // Misc
@@ -937,7 +974,6 @@
       // Auth
       currentUser: null,
       authReady: false,
-      signingOut: false,
 
       // Navigation
       currentView: 'browse',
@@ -1136,8 +1172,6 @@
             : await this._firebaseAuth.signInWithEmailAndPassword(email, password);
           UI.toast(isRegister ? 'Account created — welcome!' : 'Welcome back!');
           Modal.close('auth-modal');
-          DOM.get('auth-email').value = '';
-          DOM.get('auth-password').value = '';
         } catch (error) {
           UI.toast(CONFIG.AUTH_ERRORS[error.code] || 'Something went wrong.');
         } finally {
@@ -1184,9 +1218,38 @@
           Modal.open('auth-modal');
         }
       },
+      /*
+      async signInWithGoogle() {
+        try {
+          const provider = new firebase.auth.GoogleAuthProvider();
+          await this._firebaseAuth.signInWithPopup(provider);
+          UI.toast('Welcome!');
+          Modal.close('auth-modal');
+        } catch (error) {
+          UI.toast(error.message || 'Something went wrong.');
+        }
+      },
+
+      async resetPassword() {
+        const email = DOM.get('auth-email').value.trim();
+        if (!email) {
+          UI.toast('Enter your email address first.');
+          return;
+        }
+        try {
+          await this._firebaseAuth.sendPasswordResetEmail(email);
+          UI.toast('Password reset email sent!');
+        } catch (error) {
+          UI.toast(CONFIG.AUTH_ERRORS[error.code] || 'Something went wrong.');
+        }
+      },
+      */
 
       async signOut() {
-        if (State.currentView !== 'browse') Navigation.show('browse');
+        if (State.currentView !== 'browse') {
+          Navigation.show('browse', false);
+          UrlSync.replace({ view: 'browse' });
+        }
         await this._firebaseAuth.signOut();
         UI.toast('Signed out.');
       },
@@ -1199,11 +1262,13 @@
           snapshot.docs.forEach(doc => batch.delete(doc.ref));
           await batch.commit();
 
-          State.signingOut = true;
+          // Navigate first so State.currentView is 'browse' before Firebase fires
+          Modal.close('delete-account-modal');
+          Navigation.show('browse', false);
+          UrlSync.replace({ view: 'browse' });
+
           await State.currentUser.delete();
           UI.toast('Account deleted.');
-          Modal.close('delete-account-modal');
-          Navigation.show('browse');
         } catch (error) {
           UI.toast(
             error.code === 'auth/requires-recent-login'
@@ -1575,7 +1640,7 @@
         return {
           title: Utils.capitalizeWords(DOM.get('title').value.trim()),
           industry: CustomSelect.getValue('industry'),
-          location: Utils.capitalizeWords(DOM.get('location').value.trim()),
+          location: CustomSelect.getValue('location'),
           salaryRange: DOM.get('salary').value.trim(),
           jobType: CustomSelect.getValue('jobtype'),
           experienceRequired: DOM.get('exp').value,
@@ -1590,8 +1655,8 @@
         let valid = true;
 
         const check = (condition, errorId, fieldId) => {
-          const errorEl = document.getElementById(errorId);
-          const fieldEl = fieldId ? document.getElementById(fieldId) : null;
+          const errorEl = DOM.get(errorId);
+          const fieldEl = fieldId ? DOM.get(fieldId) : null;
           const targetEl = fieldEl?.classList.contains('custom-select')
             ? fieldEl.querySelector('.cs-box')
             : fieldEl;
@@ -1606,7 +1671,7 @@
 
         check(!data.title, 'title-error', 'title');
         check(!data.industry, 'industry-error', 'industry-container');
-        check(!data.location, 'location-error', 'location');
+        check(!data.location, 'location-error', 'location-container');
         check(!data.jobType, 'jobtype-error', 'jobtype-container');
         check(!data.description, 'desc-error', 'desc');
         check(expOn && (!data.experienceRequired || isNaN(parseInt(data.experienceRequired))), 'exp-error', 'exp-years');
@@ -1626,21 +1691,26 @@
         const job = State.myJobs.find(j => j.id === jobId);
         if (!job) return;
 
+        document.querySelectorAll('.error-msg').forEach(el => el.classList.add(CONFIG.CLASSES.HIDDEN));
+        document.querySelectorAll('.cs-box, input, textarea').forEach(el => el.style.borderColor = '');
+
         State._editingJobId = jobId;
         Navigation.show('post');
         UrlSync.replace({ edit: jobId });
 
         DOM.get('title').value = job.title || '';
-        DOM.get('location').value = job.location || '';
+        CustomSelect.setValue('location', job.location);
         DOM.get('salary').value = job.salaryRange || '';
         DOM.get('desc').value = job.description || '';
         CustomSelect.setValue('industry', job.industry);
         CustomSelect.setValue('jobtype', job.jobType);
 
+        if (DOM.get('exp-toggle-btn').getAttribute('aria-pressed') === 'true') {
+          UI.toggleExpField();
+        }
+
         if (job.experienceRequired) {
-          if (DOM.get('exp-toggle-btn').getAttribute('aria-pressed') === 'false') {
-            UI.toggleExpField();
-          }
+          UI.toggleExpField();
           const years = parseInt(job.experienceRequired);
           if (!isNaN(years)) {
             DOM.get('exp-years').value = years;
@@ -1659,8 +1729,9 @@
       },
 
       clear() {
-        ['title', 'location', 'salary', 'desc'].forEach(id => DOM.get(id).value = '');
+        ['title', 'salary', 'desc'].forEach(id => DOM.get(id).value = '');
 
+        CustomSelect.reset('location');
         CustomSelect.reset('industry');
         CustomSelect.reset('jobtype');
 
@@ -1696,32 +1767,38 @@
       _authMode: 'signin',
 
       open(id, updateUrl = true) {
-        if (id === 'auth-modal' && updateUrl && this._authMode !== 'signin') {
-          this.toggleAuthMode();
+        if (id === 'auth-modal' && this._authMode !== 'signin') {
+          this.toggleAuthMode(false);
         }
         if (id === 'auth-modal') {
           DOM.get('auth-email').value = '';
           DOM.get('auth-password').value = '';
         }
         DOM.get(id)?.classList.add(CONFIG.CLASSES.OPEN);
-        if (id === 'auth-modal' && updateUrl) UrlSync.push({ auth: this._authMode });
+        if (id === 'auth-modal' && updateUrl) {
+          UrlSync.push({ auth: this._authMode });
+        }
       },
 
       close(id) {
         DOM.get(id)?.classList.remove(CONFIG.CLASSES.OPEN);
-        if (id === 'auth-modal') UrlSync.replace({ auth: null });
+        if (id === 'auth-modal' && window.location.search.includes('auth=')) {
+          history.back();
+        }
       },
 
-      toggleAuthMode() {
+      toggleAuthMode(updateUrl = true) {
         const toRegister = this._authMode !== 'register';
         this._authMode = toRegister ? 'register' : 'signin';
-        UrlSync.replace({ auth: this._authMode });
+        if (updateUrl) UrlSync.replace({ auth: this._authMode });
 
         DOM.get('auth-modal-title').textContent = toRegister ? 'Create Account' : 'Sign In';
         DOM.get('auth-modal-sub').textContent = toRegister ? 'Join to post jobs' : 'Access your job postings';
         DOM.get('auth-submit-btn').textContent = toRegister ? 'Register' : 'Sign In';
         DOM.get('auth-toggle-text').textContent = toRegister ? 'Already have an account?' : 'No account?';
         DOM.get('auth-toggle-btn').textContent = toRegister ? 'Sign In' : 'Register';
+        DOM.get('forgot-btn').classList.toggle(CONFIG.CLASSES.HIDDEN, toRegister);
+        DOM.get('forgot-separator').classList.toggle(CONFIG.CLASSES.HIDDEN, toRegister);
       }
     };
 
@@ -1792,21 +1869,28 @@
       _onPopState() {
         const { view, auth: authParam } = UrlSync.read();
 
+        // Sync modal to URL
         if (authParam && !State.currentUser) {
-          if (authParam === 'register' && Modal._authMode !== 'register') Modal.toggleAuthMode();
-          if (authParam === 'signin' && Modal._authMode !== 'signin') Modal.toggleAuthMode();
-          Modal.open('auth-modal', false);
+          if (authParam === 'register' && Modal._authMode !== 'register') Modal.toggleAuthMode(false);
+          if (authParam === 'signin' && Modal._authMode !== 'signin') Modal.toggleAuthMode(false);
+          DOM.get('auth-modal').classList.add(CONFIG.CLASSES.OPEN);
         } else {
-          Modal.close('auth-modal');
+          DOM.get('auth-modal').classList.remove(CONFIG.CLASSES.OPEN);
         }
 
+        // Sync view to URL
         if (view !== 'post' && State._editingJobId) {
           State._editingJobId = null;
           UrlSync.replace({ edit: null });
         }
 
-        Navigation.show(view, false);
-      }
+        if (!State.currentUser && CONFIG.PROTECTED_VIEWS.includes(view)) {
+          Navigation.show('browse', false);
+          UrlSync.replace({ view: 'browse' });
+        } else if (view !== State.currentView) {
+          Navigation.show(view, false);
+        }
+      },
     };
 
     // =============================================================================
@@ -1903,7 +1987,7 @@
         const currentBox = container._box || box;
         const input = document.createElement('input');
         input.type = 'text';
-        input.placeholder = 'Enter custom value…';
+        input.placeholder = container.dataset.customPlaceholder || 'Enter custom value…';
         input.className = 'cs-box';
         input.style.cursor = 'text';
         currentBox.replaceWith(input);
@@ -2029,8 +2113,12 @@
       toggleContactInput() {
         const checked = Array.from(document.querySelectorAll('input[name="contact"]:checked')).map(cb => cb.value);
         const needsPhone = checked.some(v => CONFIG.PHONE_CONTACT_METHODS.includes(v));
+
         DOM.get('contact-phone').classList.toggle(CONFIG.CLASSES.HIDDEN, !needsPhone);
         DOM.get('contact-email').classList.toggle(CONFIG.CLASSES.HIDDEN, !checked.includes('Email'));
+
+        if (!needsPhone) DOM.get('phone').value = '';
+        if (!checked.includes('Email')) DOM.get('email').value = '';
       }
     };
 
